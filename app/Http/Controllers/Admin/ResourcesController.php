@@ -1,0 +1,150 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\MassDestroyResourceRequest;
+use App\Http\Requests\StoreResourceRequest;
+use App\Http\Requests\UpdateResourceRequest;
+use App\Models\City;
+use App\Models\Resource;
+use Gate;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\Facades\DataTables;
+
+class ResourcesController extends Controller
+{
+    public function index(Request $request)
+    {
+        abort_if(Gate::denies('resource_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        if ($request->ajax()) {
+            $query = Resource::with(['city'])->select(sprintf('%s.*', (new Resource())->table));
+            $table = Datatables::of($query);
+
+            $table->addColumn('placeholder', '&nbsp;');
+            $table->addColumn('actions', '&nbsp;');
+
+            $table->editColumn('actions', function ($row) {
+                $viewGate = 'resource_show';
+                $editGate = 'resource_edit';
+                $deleteGate = 'resource_delete';
+                $crudRoutePart = 'resources';
+
+                return view('partials.datatablesActions', compact(
+                'viewGate',
+                'editGate',
+                'deleteGate',
+                'crudRoutePart',
+                'row'
+            ));
+            });
+
+            $table->editColumn('id', function ($row) {
+                return $row->id ? $row->id : '';
+            });
+            $table->addColumn('city_name', function ($row) {
+                return $row->city ? $row->city->name : '';
+            });
+
+            $table->editColumn('city.lat', function ($row) {
+                return $row->city ? (is_string($row->city) ? $row->city : $row->city->lat) : '';
+            });
+            $table->editColumn('city.lng', function ($row) {
+                return $row->city ? (is_string($row->city) ? $row->city : $row->city->lng) : '';
+            });
+            $table->editColumn('city.population', function ($row) {
+                return $row->city ? (is_string($row->city) ? $row->city : $row->city->population) : '';
+            });
+            $table->editColumn('name', function ($row) {
+                return $row->name ? $row->name : '';
+            });
+            $table->editColumn('phone_no', function ($row) {
+                return $row->phone_no ? $row->phone_no : '';
+            });
+            $table->editColumn('email', function ($row) {
+                return $row->email ? $row->email : '';
+            });
+            $table->editColumn('details', function ($row) {
+                return $row->details ? $row->details : '';
+            });
+            $table->editColumn('note', function ($row) {
+                return $row->note ? $row->note : '';
+            });
+            $table->editColumn('up_vote', function ($row) {
+                return $row->up_vote ? $row->up_vote : '';
+            });
+            $table->editColumn('down_vote', function ($row) {
+                return $row->down_vote ? $row->down_vote : '';
+            });
+
+            $table->rawColumns(['actions', 'placeholder', 'city']);
+
+            return $table->make(true);
+        }
+
+        $cities = City::get();
+
+        return view('admin.resources.index', compact('cities'));
+    }
+
+    public function create()
+    {
+        abort_if(Gate::denies('resource_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $cities = City::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('admin.resources.create', compact('cities'));
+    }
+
+    public function store(StoreResourceRequest $request)
+    {
+        $resource = Resource::create($request->all());
+
+        return redirect()->route('admin.resources.index');
+    }
+
+    public function edit(Resource $resource)
+    {
+        abort_if(Gate::denies('resource_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $cities = City::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $resource->load('city');
+
+        return view('admin.resources.edit', compact('cities', 'resource'));
+    }
+
+    public function update(UpdateResourceRequest $request, Resource $resource)
+    {
+        $resource->update($request->all());
+
+        return redirect()->route('admin.resources.index');
+    }
+
+    public function show(Resource $resource)
+    {
+        abort_if(Gate::denies('resource_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $resource->load('city');
+
+        return view('admin.resources.show', compact('resource'));
+    }
+
+    public function destroy(Resource $resource)
+    {
+        abort_if(Gate::denies('resource_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $resource->delete();
+
+        return back();
+    }
+
+    public function massDestroy(MassDestroyResourceRequest $request)
+    {
+        Resource::whereIn('id', request('ids'))->delete();
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+}
