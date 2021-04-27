@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "barryvdh/laravel-debugbar": "^3.5",
         "bugsnag/bugsnag-laravel": "^2.21",
         "doctrine/dbal": "^3.0",
         "fideloper/proxy": "^4.4",
@@ -13,15 +14,16 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/dusk": "^6.11",
         "laravel/framework": "^8.12",
+        "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
-        "yajra/laravel-datatables-oracle": "^9.11",
         "laraveldaily/laravel-charts": "^0.1.24",
-        "spatie/laravel-medialibrary": "^8.7",
         "nuovo/spreadsheet-reader": "^0.5.11",
-        "laravel/sanctum": "^2.8"
+        "spatie/laravel-medialibrary": "^8.7",
+        "yajra/laravel-datatables-oracle": "^9.11"
     },
     "require-dev": {
+        "beyondcode/laravel-query-detector": "^1.5",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",

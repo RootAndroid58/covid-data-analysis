@@ -22,7 +22,7 @@
         <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-State">
             <thead>
                 <tr>
-                    <th width="10">
+                    <th>
 
                     </th>
                     <th>
@@ -50,7 +50,7 @@
                 <tr>
                     <td>
                     </td>
-                    <td>
+                    <td width="20">
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
                     </td>
                     <td>
@@ -122,13 +122,13 @@
     aaSorting: [],
     ajax: "{{ route('admin.states.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'id', name: 'id' },
-{ data: 'name', name: 'name' },
-{ data: 'slug', name: 'slug' },
-{ data: 'state_code', name: 'state_code' },
-{ data: 'lat', name: 'lat' },
-{ data: 'lon', name: 'lon' },
+      { data: 'placeholder', name: 'placeholder',"width": "5%" },
+{ data: 'id', name: 'id',"width": "10%" },
+{ data: 'name', name: 'name',"width": "20%" },
+{ data: 'slug', name: 'slug',"width": "10%" },
+{ data: 'state_code', name: 'state_code',"width": "14%" },
+{ data: 'lat', name: 'lat',"width": "14%" },
+{ data: 'lon', name: 'lon',"width": "13%" },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

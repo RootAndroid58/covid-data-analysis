@@ -25,7 +25,7 @@
                     <th width="10">
 
                     </th>
-                    <th>
+                    <th width="20">
                         {{ trans('cruds.country.fields.id') }}
                     </th>
                     <th>
@@ -122,13 +122,13 @@
     aaSorting: [],
     ajax: "{{ route('admin.countries.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'id', name: 'id' },
-{ data: 'name', name: 'name' },
-{ data: 'slug', name: 'slug' },
-{ data: 'phone_code', name: 'phone_code' },
-{ data: 'region', name: 'region' },
-{ data: 'subregion', name: 'subregion' },
+      { data: 'placeholder', name: 'placeholder',"width": "5%" },
+{ data: 'id', name: 'id',"width": "10%" },
+{ data: 'name', name: 'name',"width": "25%" },
+{ data: 'slug', name: 'slug',"width": "10%" },
+{ data: 'phone_code', name: 'phone_code',"width": "10%" },
+{ data: 'region', name: 'region',"width": "13%" },
+{ data: 'subregion', name: 'subregion',"width": "15%" },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

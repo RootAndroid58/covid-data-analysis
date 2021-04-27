@@ -141,7 +141,7 @@ return [
             'name_helper'       => ' ',
             'lat'               => 'Lat',
             'lat_helper'        => ' ',
-            'lng'               => 'Lng',
+            'lng'               => 'Long',
             'lng_helper'        => ' ',
             'population'        => 'Population',
             'population_helper' => ' ',

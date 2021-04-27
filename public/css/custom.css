@@ -5,6 +5,7 @@ textarea {
 
 .datatable {
     width: 100% !important;
+    table-layout:fixed;
 }
 
 table.dataTable tbody td.select-checkbox::before,
@@ -103,3 +104,7 @@ div.dt-button-collection {
     background-color: rgba(128, 128, 128, 0.1);
     font-weight: bolder;
 }
+td > input {
+    width: -webkit-fill-available;
+}
+

@@ -51,11 +51,8 @@ class ResourcesController extends Controller
             $table->editColumn('city.lat', function ($row) {
                 return $row->city ? (is_string($row->city) ? $row->city : $row->city->lat) : '';
             });
-            $table->editColumn('city.lng', function ($row) {
+            $table->editColumn('city.long', function ($row) {
                 return $row->city ? (is_string($row->city) ? $row->city : $row->city->lng) : '';
-            });
-            $table->editColumn('city.population', function ($row) {
-                return $row->city ? (is_string($row->city) ? $row->city : $row->city->population) : '';
             });
             $table->editColumn('name', function ($row) {
                 return $row->name ? $row->name : '';
@@ -68,9 +65,6 @@ class ResourcesController extends Controller
             });
             $table->editColumn('details', function ($row) {
                 return $row->details ? $row->details : '';
-            });
-            $table->editColumn('note', function ($row) {
-                return $row->note ? $row->note : '';
             });
             $table->editColumn('up_vote', function ($row) {
                 return $row->up_vote ? $row->up_vote : '';
