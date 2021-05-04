@@ -22,10 +22,11 @@ class City extends Model
 
     protected $fillable = [
         'name',
-        'lat',
-        'lng',
+        'latitude',
+        'longitude',
         'population',
         'state_code',
+        'country_code',
         'created_at',
         'updated_at',
         'deleted_at',

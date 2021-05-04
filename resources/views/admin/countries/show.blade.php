@@ -33,10 +33,18 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.country.fields.slug') }}
+                            {{ trans('cruds.country.fields.capital') }}
                         </th>
                         <td>
-                            {{ $country->slug }}
+                            {{ $country->capital }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.country.fields.code') }}
+                        </th>
+                        <td>
+                            {{ $country->code }}
                         </td>
                     </tr>
                     <tr>
@@ -61,6 +69,16 @@
                         </th>
                         <td>
                             {{ $country->subregion }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.country.fields.state') }}
+                        </th>
+                        <td>
+                            @foreach($country->states as $key => $state)
+                                <span class="label label-info">{{ $state->name }}</span>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>

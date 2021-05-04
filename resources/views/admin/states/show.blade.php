@@ -33,10 +33,10 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.state.fields.slug') }}
+                            {{ trans('cruds.state.fields.country_code') }}
                         </th>
                         <td>
-                            {{ $state->slug }}
+                            {{ $state->country_code }}
                         </td>
                     </tr>
                     <tr>
@@ -49,18 +49,28 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.state.fields.lat') }}
+                            {{ trans('cruds.state.fields.latitude') }}
                         </th>
                         <td>
-                            {{ $state->lat }}
+                            {{ $state->latitude }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.state.fields.lon') }}
+                            {{ trans('cruds.state.fields.longitude') }}
                         </th>
                         <td>
-                            {{ $state->lon }}
+                            {{ $state->longitude }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.state.fields.city') }}
+                        </th>
+                        <td>
+                            @foreach($state->cities as $key => $city)
+                                <span class="label label-info">{{ $city->name }}</span>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>
@@ -74,22 +84,6 @@
     </div>
 </div>
 
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.relatedData') }}
-    </div>
-    <ul class="nav nav-tabs" role="tablist" id="relationship-tabs">
-        <li class="nav-item">
-            <a class="nav-link" href="#state_cities" role="tab" data-toggle="tab">
-                {{ trans('cruds.city.title') }}
-            </a>
-        </li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane" role="tabpanel" id="state_cities">
-            @includeIf('admin.states.relationships.stateCities', ['cities' => $state->stateCities])
-        </div>
-    </div>
-</div>
+
 
 @endsection

@@ -41,6 +41,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', '
     // State
     Route::apiResource('states', 'StateApiController');
 
+    Route::get('/states/all',"StateApiController@index");
+
     // Countries
     Route::apiResource('countries', 'CountriesApiController');
 

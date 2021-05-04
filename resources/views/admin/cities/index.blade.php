@@ -32,13 +32,16 @@
                         {{ trans('cruds.city.fields.name') }}
                     </th>
                     <th>
-                        {{ trans('cruds.city.fields.lat') }}
+                        {{ trans('cruds.city.fields.latitude') }}
                     </th>
                     <th>
-                        {{ trans('cruds.city.fields.lng') }}
+                        {{ trans('cruds.city.fields.longitude') }}
                     </th>
                     <th>
                         {{ trans('cruds.city.fields.state_code') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.city.fields.country_code') }}
                     </th>
                     <th>
                         &nbsp;
@@ -46,6 +49,9 @@
                 </tr>
                 <tr>
                     <td>
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
                     </td>
                     <td>
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
@@ -119,9 +125,10 @@
       { data: 'placeholder', name: 'placeholder' },
 { data: 'id', name: 'id' },
 { data: 'name', name: 'name' },
-{ data: 'lat', name: 'lat' },
-{ data: 'lng', name: 'lng' },
+{ data: 'latitude', name: 'latitude' },
+{ data: 'longitude', name: 'longitude' },
 { data: 'state_code', name: 'state_code' },
+{ data: 'country_code', name: 'country_code' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

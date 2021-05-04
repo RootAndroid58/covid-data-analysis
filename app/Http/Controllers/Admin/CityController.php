@@ -49,14 +49,17 @@ class CityController extends Controller
             $table->editColumn('name', function ($row) {
                 return $row->name ? $row->name : '';
             });
-            $table->editColumn('lat', function ($row) {
-                return $row->lat ? $row->lat : '';
+            $table->editColumn('latitude', function ($row) {
+                return $row->latitude ? $row->latitude : '';
             });
-            $table->editColumn('lng', function ($row) {
-                return $row->lng ? $row->lng : '';
+            $table->editColumn('longitude', function ($row) {
+                return $row->longitude ? $row->longitude : '';
             });
             $table->editColumn('state_code', function ($row) {
                 return $row->state_code ? $row->state_code : '';
+            });
+            $table->editColumn('country_code', function ($row) {
+                return $row->country_code ? $row->country_code : '';
             });
 
             $table->rawColumns(['actions', 'placeholder']);

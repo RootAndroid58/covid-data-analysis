@@ -34,12 +34,6 @@
                                 {{ trans('cruds.category.fields.city') }}
                             </th>
                             <th>
-                                {{ trans('cruds.city.fields.lat') }}
-                            </th>
-                            <th>
-                                {{ trans('cruds.city.fields.lng') }}
-                            </th>
-                            <th>
                                 {{ trans('cruds.city.fields.population') }}
                             </th>
                             <th>
@@ -64,12 +58,6 @@
                                 </td>
                                 <td>
                                     {{ $category->city->name ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $category->city->lat ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $category->city->lng ?? '' }}
                                 </td>
                                 <td>
                                     {{ $category->city->population ?? '' }}
@@ -150,6 +138,9 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
+  $('div#sidebar').on('transitionend', function(e) {
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+  })
 
 })
 

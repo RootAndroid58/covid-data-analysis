@@ -11,10 +11,10 @@ class CreateStatesTable extends Migration
         Schema::create('states', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('slug');
+            $table->string('country_code');
             $table->string('state_code')->nullable();
-            $table->string('lat')->nullable();
-            $table->string('lon')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

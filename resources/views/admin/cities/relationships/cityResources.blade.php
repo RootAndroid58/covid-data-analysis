@@ -25,13 +25,13 @@
                                 {{ trans('cruds.resource.fields.id') }}
                             </th>
                             <th>
+                                {{ trans('cruds.resource.fields.country') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.resource.fields.state') }}
+                            </th>
+                            <th>
                                 {{ trans('cruds.resource.fields.city') }}
-                            </th>
-                            <th>
-                                {{ trans('cruds.city.fields.lat') }}
-                            </th>
-                            <th>
-                                {{ trans('cruds.city.fields.lng') }}
                             </th>
                             <th>
                                 {{ trans('cruds.city.fields.population') }}
@@ -72,13 +72,13 @@
                                     {{ $resource->id ?? '' }}
                                 </td>
                                 <td>
+                                    {{ $resource->country->name ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $resource->state->name ?? '' }}
+                                </td>
+                                <td>
                                     {{ $resource->city->name ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $resource->city->lat ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $resource->city->lng ?? '' }}
                                 </td>
                                 <td>
                                     {{ $resource->city->population ?? '' }}
@@ -180,6 +180,9 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
+  $('div#sidebar').on('transitionend', function(e) {
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+  })
 
 })
 

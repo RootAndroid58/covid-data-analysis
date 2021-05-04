@@ -22,18 +22,18 @@ class State extends Model
 
     protected $fillable = [
         'name',
-        'slug',
+        'country_code',
         'state_code',
-        'lat',
-        'lon',
+        'latitude',
+        'longitude',
         'created_at',
         'updated_at',
         'deleted_at',
     ];
 
-    public function stateCities()
+    public function cities()
     {
-        return $this->hasMany(City::class, 'state_id', 'id');
+        return $this->belongsToMany(City::class);
     }
 
     protected function serializeDate(DateTimeInterface $date)

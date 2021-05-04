@@ -25,14 +25,17 @@
                     <th width="10">
 
                     </th>
-                    <th width="20">
+                    <th>
                         {{ trans('cruds.country.fields.id') }}
                     </th>
                     <th>
                         {{ trans('cruds.country.fields.name') }}
                     </th>
                     <th>
-                        {{ trans('cruds.country.fields.slug') }}
+                        {{ trans('cruds.country.fields.capital') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.country.fields.code') }}
                     </th>
                     <th>
                         {{ trans('cruds.country.fields.phone_code') }}
@@ -49,6 +52,9 @@
                 </tr>
                 <tr>
                     <td>
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
                     </td>
                     <td>
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
@@ -122,18 +128,19 @@
     aaSorting: [],
     ajax: "{{ route('admin.countries.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder',"width": "5%" },
-{ data: 'id', name: 'id',"width": "10%" },
-{ data: 'name', name: 'name',"width": "25%" },
-{ data: 'slug', name: 'slug',"width": "10%" },
-{ data: 'phone_code', name: 'phone_code',"width": "10%" },
-{ data: 'region', name: 'region',"width": "13%" },
-{ data: 'subregion', name: 'subregion',"width": "15%" },
+      { data: 'placeholder', name: 'placeholder' },
+{ data: 'id', name: 'id' },
+{ data: 'name', name: 'name' },
+{ data: 'capital', name: 'capital' },
+{ data: 'code', name: 'code' },
+{ data: 'phone_code', name: 'phone_code' },
+{ data: 'region', name: 'region' },
+{ data: 'subregion', name: 'subregion' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
-    pageLength: 50,
+    pageLength: 100,
   };
   let table = $('.datatable-Country').DataTable(dtOverrideGlobals);
   $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){

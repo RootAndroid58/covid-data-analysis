@@ -22,7 +22,8 @@ class Country extends Model
 
     protected $fillable = [
         'name',
-        'slug',
+        'capital',
+        'code',
         'phone_code',
         'region',
         'subregion',
@@ -30,6 +31,11 @@ class Country extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function states()
+    {
+        return $this->belongsToMany(State::class);
+    }
 
     protected function serializeDate(DateTimeInterface $date)
     {

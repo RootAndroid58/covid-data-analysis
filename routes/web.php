@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Country;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,7 +13,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/test', 'TestController@index')->name('test');
+Route::get('/test1', 'TestController@test2')->name('test');
+
+
+
+Route::redirect('/', '/login');
+// Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', function () {
     if (session('status')) {
         return redirect()->route('admin.home')->with('status', session('status'));

@@ -11,7 +11,8 @@ class CreateCountriesTable extends Migration
         Schema::create('countries', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('capital')->nullable();
+            $table->string('code')->unique();
             $table->string('phone_code');
             $table->string('region');
             $table->string('subregion');

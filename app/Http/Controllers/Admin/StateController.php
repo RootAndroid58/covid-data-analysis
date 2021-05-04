@@ -7,6 +7,7 @@ use App\Http\Controllers\Traits\CsvImportTrait;
 use App\Http\Requests\MassDestroyStateRequest;
 use App\Http\Requests\StoreStateRequest;
 use App\Http\Requests\UpdateStateRequest;
+use App\Models\City;
 use App\Models\State;
 use Gate;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class StateController extends Controller
         abort_if(Gate::denies('state_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = State::query()->select(sprintf('%s.*', (new State())->table));
+            $query = State::with(['cities'])->select(sprintf('%s.*', (new State())->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -49,37 +50,50 @@ class StateController extends Controller
             $table->editColumn('name', function ($row) {
                 return $row->name ? $row->name : '';
             });
-            $table->editColumn('slug', function ($row) {
-                return $row->slug ? $row->slug : '';
+            $table->editColumn('country_code', function ($row) {
+                return $row->country_code ? $row->country_code : '';
             });
             $table->editColumn('state_code', function ($row) {
                 return $row->state_code ? $row->state_code : '';
             });
-            $table->editColumn('lat', function ($row) {
-                return $row->lat ? $row->lat : '';
+            $table->editColumn('latitude', function ($row) {
+                return $row->latitude ? $row->latitude : '';
             });
-            $table->editColumn('lon', function ($row) {
-                return $row->lon ? $row->lon : '';
+            $table->editColumn('longitude', function ($row) {
+                return $row->longitude ? $row->longitude : '';
+            });
+            $table->editColumn('city', function ($row) {
+                $labels = [];
+                foreach ($row->cities as $city) {
+                    $labels[] = sprintf('<span class="label label-info label-many">%s</span>', $city->name);
+                }
+
+                return implode(' ', $labels);
             });
 
-            $table->rawColumns(['actions', 'placeholder']);
+            $table->rawColumns(['actions', 'placeholder', 'city']);
 
             return $table->make(true);
         }
 
-        return view('admin.states.index');
+        $cities = City::get();
+
+        return view('admin.states.index', compact('cities'));
     }
 
     public function create()
     {
         abort_if(Gate::denies('state_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.states.create');
+        $cities = City::all()->pluck('name', 'id');
+
+        return view('admin.states.create', compact('cities'));
     }
 
     public function store(StoreStateRequest $request)
     {
         $state = State::create($request->all());
+        $state->cities()->sync($request->input('cities', []));
 
         return redirect()->route('admin.states.index');
     }
@@ -88,12 +102,17 @@ class StateController extends Controller
     {
         abort_if(Gate::denies('state_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.states.edit', compact('state'));
+        $cities = City::all()->pluck('name', 'id');
+
+        $state->load('cities');
+
+        return view('admin.states.edit', compact('cities', 'state'));
     }
 
     public function update(UpdateStateRequest $request, State $state)
     {
         $state->update($request->all());
+        $state->cities()->sync($request->input('cities', []));
 
         return redirect()->route('admin.states.index');
     }
@@ -102,7 +121,7 @@ class StateController extends Controller
     {
         abort_if(Gate::denies('state_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $state->load('stateCities');
+        $state->load('cities');
 
         return view('admin.states.show', compact('state'));
     }

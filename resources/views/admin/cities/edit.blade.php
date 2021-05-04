@@ -19,20 +19,20 @@
                 <span class="help-block">{{ trans('cruds.city.fields.name_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="lat">{{ trans('cruds.city.fields.lat') }}</label>
-                <input class="form-control {{ $errors->has('lat') ? 'is-invalid' : '' }}" type="text" name="lat" id="lat" value="{{ old('lat', $city->lat) }}">
-                @if($errors->has('lat'))
-                    <span class="text-danger">{{ $errors->first('lat') }}</span>
+                <label for="latitude">{{ trans('cruds.city.fields.latitude') }}</label>
+                <input class="form-control {{ $errors->has('latitude') ? 'is-invalid' : '' }}" type="text" name="latitude" id="latitude" value="{{ old('latitude', $city->latitude) }}">
+                @if($errors->has('latitude'))
+                    <span class="text-danger">{{ $errors->first('latitude') }}</span>
                 @endif
-                <span class="help-block">{{ trans('cruds.city.fields.lat_helper') }}</span>
+                <span class="help-block">{{ trans('cruds.city.fields.latitude_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="lng">{{ trans('cruds.city.fields.lng') }}</label>
-                <input class="form-control {{ $errors->has('lng') ? 'is-invalid' : '' }}" type="text" name="lng" id="lng" value="{{ old('lng', $city->lng) }}">
-                @if($errors->has('lng'))
-                    <span class="text-danger">{{ $errors->first('lng') }}</span>
+                <label for="longitude">{{ trans('cruds.city.fields.longitude') }}</label>
+                <input class="form-control {{ $errors->has('longitude') ? 'is-invalid' : '' }}" type="text" name="longitude" id="longitude" value="{{ old('longitude', $city->longitude) }}">
+                @if($errors->has('longitude'))
+                    <span class="text-danger">{{ $errors->first('longitude') }}</span>
                 @endif
-                <span class="help-block">{{ trans('cruds.city.fields.lng_helper') }}</span>
+                <span class="help-block">{{ trans('cruds.city.fields.longitude_helper') }}</span>
             </div>
             <div class="form-group">
                 <label for="population">{{ trans('cruds.city.fields.population') }}</label>
@@ -49,6 +49,14 @@
                     <span class="text-danger">{{ $errors->first('state_code') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.city.fields.state_code_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label for="country_code">{{ trans('cruds.city.fields.country_code') }}</label>
+                <input class="form-control {{ $errors->has('country_code') ? 'is-invalid' : '' }}" type="text" name="country_code" id="country_code" value="{{ old('country_code', $city->country_code) }}">
+                @if($errors->has('country_code'))
+                    <span class="text-danger">{{ $errors->first('country_code') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.city.fields.country_code_helper') }}</span>
             </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">

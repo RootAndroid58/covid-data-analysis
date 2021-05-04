@@ -18,12 +18,20 @@
                 <span class="help-block">{{ trans('cruds.country.fields.name_helper') }}</span>
             </div>
             <div class="form-group">
-                <label class="required" for="slug">{{ trans('cruds.country.fields.slug') }}</label>
-                <input class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}" type="text" name="slug" id="slug" value="{{ old('slug', '') }}" required>
-                @if($errors->has('slug'))
-                    <span class="text-danger">{{ $errors->first('slug') }}</span>
+                <label for="capital">{{ trans('cruds.country.fields.capital') }}</label>
+                <input class="form-control {{ $errors->has('capital') ? 'is-invalid' : '' }}" type="text" name="capital" id="capital" value="{{ old('capital', '') }}">
+                @if($errors->has('capital'))
+                    <span class="text-danger">{{ $errors->first('capital') }}</span>
                 @endif
-                <span class="help-block">{{ trans('cruds.country.fields.slug_helper') }}</span>
+                <span class="help-block">{{ trans('cruds.country.fields.capital_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label class="required" for="code">{{ trans('cruds.country.fields.code') }}</label>
+                <input class="form-control {{ $errors->has('code') ? 'is-invalid' : '' }}" type="text" name="code" id="code" value="{{ old('code', '') }}" required>
+                @if($errors->has('code'))
+                    <span class="text-danger">{{ $errors->first('code') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.country.fields.code_helper') }}</span>
             </div>
             <div class="form-group">
                 <label class="required" for="phone_code">{{ trans('cruds.country.fields.phone_code') }}</label>
@@ -48,6 +56,22 @@
                     <span class="text-danger">{{ $errors->first('subregion') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.country.fields.subregion_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label for="states">{{ trans('cruds.country.fields.state') }}</label>
+                <div style="padding-bottom: 4px">
+                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
+                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                </div>
+                <select class="form-control select2 {{ $errors->has('states') ? 'is-invalid' : '' }}" name="states[]" id="states" multiple>
+                    @foreach($states as $id => $state)
+                        <option value="{{ $id }}" {{ in_array($id, old('states', [])) ? 'selected' : '' }}>{{ $state }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('states'))
+                    <span class="text-danger">{{ $errors->first('states') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.country.fields.state_helper') }}</span>
             </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">

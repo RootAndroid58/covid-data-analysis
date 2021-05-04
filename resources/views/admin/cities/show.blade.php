@@ -33,18 +33,18 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.city.fields.lat') }}
+                            {{ trans('cruds.city.fields.latitude') }}
                         </th>
                         <td>
-                            {{ $city->lat }}
+                            {{ $city->latitude }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.city.fields.lng') }}
+                            {{ trans('cruds.city.fields.longitude') }}
                         </th>
                         <td>
-                            {{ $city->lng }}
+                            {{ $city->longitude }}
                         </td>
                     </tr>
                     <tr>
@@ -61,6 +61,14 @@
                         </th>
                         <td>
                             {{ $city->state_code }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.city.fields.country_code') }}
+                        </th>
+                        <td>
+                            {{ $city->country_code }}
                         </td>
                     </tr>
                 </tbody>

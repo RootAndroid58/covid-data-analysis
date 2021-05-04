@@ -8,6 +8,7 @@ use App\Http\Requests\MassDestroyCountryRequest;
 use App\Http\Requests\StoreCountryRequest;
 use App\Http\Requests\UpdateCountryRequest;
 use App\Models\Country;
+use App\Models\State;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,7 @@ class CountriesController extends Controller
         abort_if(Gate::denies('country_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Country::query()->select(sprintf('%s.*', (new Country())->table));
+            $query = Country::with(['states'])->select(sprintf('%s.*', (new Country())->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -49,8 +50,11 @@ class CountriesController extends Controller
             $table->editColumn('name', function ($row) {
                 return $row->name ? $row->name : '';
             });
-            $table->editColumn('slug', function ($row) {
-                return $row->slug ? $row->slug : '';
+            $table->editColumn('capital', function ($row) {
+                return $row->capital ? $row->capital : '';
+            });
+            $table->editColumn('code', function ($row) {
+                return $row->code ? $row->code : '';
             });
             $table->editColumn('phone_code', function ($row) {
                 return $row->phone_code ? $row->phone_code : '';
@@ -61,25 +65,38 @@ class CountriesController extends Controller
             $table->editColumn('subregion', function ($row) {
                 return $row->subregion ? $row->subregion : '';
             });
+            $table->editColumn('state', function ($row) {
+                $labels = [];
+                foreach ($row->states as $state) {
+                    $labels[] = sprintf('<span class="label label-info label-many">%s</span>', $state->name);
+                }
 
-            $table->rawColumns(['actions', 'placeholder']);
+                return implode(' ', $labels);
+            });
+
+            $table->rawColumns(['actions', 'placeholder', 'state']);
 
             return $table->make(true);
         }
 
-        return view('admin.countries.index');
+        $states = State::get();
+
+        return view('admin.countries.index', compact('states'));
     }
 
     public function create()
     {
         abort_if(Gate::denies('country_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.countries.create');
+        $states = State::all()->pluck('name', 'id');
+
+        return view('admin.countries.create', compact('states'));
     }
 
     public function store(StoreCountryRequest $request)
     {
         $country = Country::create($request->all());
+        $country->states()->sync($request->input('states', []));
 
         return redirect()->route('admin.countries.index');
     }
@@ -88,12 +105,17 @@ class CountriesController extends Controller
     {
         abort_if(Gate::denies('country_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.countries.edit', compact('country'));
+        $states = State::all()->pluck('name', 'id');
+
+        $country->load('states');
+
+        return view('admin.countries.edit', compact('states', 'country'));
     }
 
     public function update(UpdateCountryRequest $request, Country $country)
     {
         $country->update($request->all());
+        $country->states()->sync($request->input('states', []));
 
         return redirect()->route('admin.countries.index');
     }
@@ -101,6 +123,8 @@ class CountriesController extends Controller
     public function show(Country $country)
     {
         abort_if(Gate::denies('country_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $country->load('states');
 
         return view('admin.countries.show', compact('country'));
     }
