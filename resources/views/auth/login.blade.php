@@ -69,8 +69,12 @@
                     </a>
                 </p>
             @endif
-            <p class="mb-1">
+            <p class="mb-1 text-center">
+                or
 
+            </p>
+            <p class="mb-1 text-center">
+                <a class="btn btn-danger" href="{{ url('/login/google') }}">Login With Google <i class="fab fa-google"></i></a>
             </p>
         </div>
         <!-- /.login-card-body -->

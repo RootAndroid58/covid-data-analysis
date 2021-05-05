@@ -6,83 +6,88 @@ use Illuminate\Http\Request;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\State;
+use Laravel\Socialite\Facades\Socialite;
 
 class TestController extends Controller
 {
     public function index()
     {
-        echo "starting";
-        dd(storage_path());
-        // // $nrwe = \DB::table(\DB::raw('countries, states'))->select('*')->where('countries.slug','=','IN')->get();
-        // // $raw = \DB::statement('select * from `countries` , `states` where countries.slug = "IN" AND `countries`.`slug` = `states`.`slug`');
-        // // $dont = \App\Models\City::latest()->paginate(10);
-        // $data = \App\Models\Country::get()->pluck('slug','id');
-        // $data1 = \App\Models\State::get()->pluck('slug','id');
-        // // print_r('done');
-        // dd($data,$data1);
-        // $country = Country::select('id','code')->get();
-        $state = State::select('id','country_code','state_code')->get();
-        $city = city::select('id','state_code','country_code')->get();
+        $token = "ya29.a0AfH6SMDxocPmQa8coi7oLwhmm1OALTdnIXSIr0nSLO-0wgxpuMnQFb4Sz-WOXZuOImUwZXap8vMgqWDB78lAOFSA6W53Bmp_6Su9bkLCvAlE4USj9aDj_f099XT5IAm8KGsSLmoYJU9EGRLdOqUZduSEWAv_";
+        $user = Socialite::driver('google')->userFromToken($token);
+        dd($user);
 
-        $count = count($city) + 1 ;
-        $i = 1;
-        // dd($count);
-        foreach($city as $value){
-            // dd($value['country_code']);
-            if($i > $count){
-                break;
-            }
-            $_country = Country::where('code',$value['country_code'])->first();
-            $_state = State::where('state_code',$value['state_code'])->where('country_code',$_country->code)->first();
-            // $_city = city::where('id',$i)->first();
-            // dd($_city,$_country,$_state);
-            if(isset($_state)  &&  $_state->id ){
-                $data1 = array(
-                    'state_id' => $_state->id,
-                    'city_id' => $value['id'],
-                );
-            }
-            $tochange[] = $data1;
-            echo $i;
-            $i++;
-        }
-        // for ($i=1; $i <= $count; $i++) {
-        //     $_country = Country::where('code',$city[$i]->country_code)->first();
-        //     $_state = State::where('state_code',$city[$i]->state_code)->where('country_code',$_country->code)->first();
-        //     $_city = city::where('id',$i)->first();
+        // echo "starting";
+        // dd(storage_path());
+        // // // $nrwe = \DB::table(\DB::raw('countries, states'))->select('*')->where('countries.slug','=','IN')->get();
+        // // // $raw = \DB::statement('select * from `countries` , `states` where countries.slug = "IN" AND `countries`.`slug` = `states`.`slug`');
+        // // // $dont = \App\Models\City::latest()->paginate(10);
+        // // $data = \App\Models\Country::get()->pluck('slug','id');
+        // // $data1 = \App\Models\State::get()->pluck('slug','id');
+        // // // print_r('done');
+        // // dd($data,$data1);
+        // // $country = Country::select('id','code')->get();
+        // $state = State::select('id','country_code','state_code')->get();
+        // $city = city::select('id','state_code','country_code')->get();
+
+        // $count = count($city) + 1 ;
+        // $i = 1;
+        // // dd($count);
+        // foreach($city as $value){
+        //     // dd($value['country_code']);
+        //     if($i > $count){
+        //         break;
+        //     }
+        //     $_country = Country::where('code',$value['country_code'])->first();
+        //     $_state = State::where('state_code',$value['state_code'])->where('country_code',$_country->code)->first();
+        //     // $_city = city::where('id',$i)->first();
         //     // dd($_city,$_country,$_state);
-        //     if(isset($_state) && isset($_city) &&  $_state->id &&  $_city->id){
+        //     if(isset($_state)  &&  $_state->id ){
         //         $data1 = array(
         //             'state_id' => $_state->id,
-        //             'city_id' => $_city->id,
+        //             'city_id' => $value['id'],
         //         );
         //     }
         //     $tochange[] = $data1;
-
-
-        //     // \DB::table('city_state')->insert($data1);
+        //     echo $i;
+        //     $i++;
         // }
-        print_r('saving to db');
-        $data = array_chunk($tochange,500);
+        // // for ($i=1; $i <= $count; $i++) {
+        // //     $_country = Country::where('code',$city[$i]->country_code)->first();
+        // //     $_state = State::where('state_code',$city[$i]->state_code)->where('country_code',$_country->code)->first();
+        // //     $_city = city::where('id',$i)->first();
+        // //     // dd($_city,$_country,$_state);
+        // //     if(isset($_state) && isset($_city) &&  $_state->id &&  $_city->id){
+        // //         $data1 = array(
+        // //             'state_id' => $_state->id,
+        // //             'city_id' => $_city->id,
+        // //         );
+        // //     }
+        // //     $tochange[] = $data1;
 
-        foreach($data as $datas){
-            // dd($datas);
-            // \DB::table('city_state')->insert($datas);
-        }
-        // dd($data);
-        dd('done');
 
+        // //     // \DB::table('city_state')->insert($data1);
+        // // }
+        // print_r('saving to db');
+        // $data = array_chunk($tochange,500);
 
-        // foreach ($state as $item) {
-        // dd($item);
-        //     $data = array(
-        //         'country_id' => $_country[0]->id,
-        //         'state_id' => $_state[0]->id,
-        //     );
-        //     \DB::table('country_state')->insert($data);
+        // foreach($data as $datas){
+        //     // dd($datas);
+        //     // \DB::table('city_state')->insert($datas);
         // }
+        // // dd($data);
+        // dd('done');
 
-        dd($country[0] ,$state[0],$city[0]);
+
+        // // foreach ($state as $item) {
+        // // dd($item);
+        // //     $data = array(
+        // //         'country_id' => $_country[0]->id,
+        // //         'state_id' => $_state[0]->id,
+        // //     );
+        // //     \DB::table('country_state')->insert($data);
+        // // }
+
+        // dd($country[0] ,$state[0],$city[0]);
 
 
     }

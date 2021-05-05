@@ -18,6 +18,9 @@ class CreateUsersTable extends Migration
             $table->boolean('two_factor')->default(0)->nullable();
             $table->string('two_factor_code')->nullable();
             $table->datetime('two_factor_expires_at')->nullable();
+            $table->string('provider')->nullable();
+            $table->string('provider_id')->nullable();
+            $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });

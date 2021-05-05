@@ -39,6 +39,8 @@ class User extends Authenticatable
         'email_verified_at',
         'two_factor',
         'password',
+        'provider',
+        'provider_id',
         'two_factor_code',
         'remember_token',
         'created_at',

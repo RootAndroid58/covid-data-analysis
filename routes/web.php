@@ -2,6 +2,7 @@
 
 use App\Models\Country;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+/**
+ * Social Login Routes
+ */
+Route::get('login/{provider}', 'SocialController@redirect');
+Route::get('login/{provider}/callback','SocialController@Callback');
+
+
+
+
+
 Route::get('/test', 'TestController@index')->name('test');
 Route::get('/test1', 'TestController@test2')->name('test');
 
@@ -26,7 +37,7 @@ Route::get('/home', function () {
     }
 
     return redirect()->route('admin.home');
-});
+})->name('home');
 
 Auth::routes(['register' => false]);
 

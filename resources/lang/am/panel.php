@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'site_title' => 'covid resources and data analysis',
+    'site_title' => 'CRADA',
 ];
