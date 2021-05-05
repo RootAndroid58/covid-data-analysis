@@ -122,18 +122,18 @@
     aaSorting: [],
     ajax: "{{ route('admin.cities.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'id', name: 'id' },
-{ data: 'name', name: 'name' },
-{ data: 'latitude', name: 'latitude' },
-{ data: 'longitude', name: 'longitude' },
-{ data: 'state_code', name: 'state_code' },
-{ data: 'country_code', name: 'country_code' },
+      { data: 'placeholder', name: 'placeholder',"width": "5%" },
+{ data: 'id', name: 'id',"width": "10%" },
+{ data: 'name', name: 'name',"width": "20%" },
+{ data: 'latitude', name: 'latitude',"width": "11%" },
+{ data: 'longitude', name: 'longitude',"width": "11%" },
+{ data: 'state_code', name: 'state_code',"width": "12%" },
+{ data: 'country_code', name: 'country_code',"width": "13%" },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
-    pageLength: 100,
+    pageLength: 50,
   };
   let table = $('.datatable-City').DataTable(dtOverrideGlobals);
   $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){

@@ -128,19 +128,19 @@
     aaSorting: [],
     ajax: "{{ route('admin.countries.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'id', name: 'id' },
-{ data: 'name', name: 'name' },
-{ data: 'capital', name: 'capital' },
-{ data: 'code', name: 'code' },
-{ data: 'phone_code', name: 'phone_code' },
-{ data: 'region', name: 'region' },
-{ data: 'subregion', name: 'subregion' },
+      { data: 'placeholder', name: 'placeholder',"width": "5%"},
+{ data: 'id', name: 'id',"width": "8%" },
+{ data: 'name', name: 'name',"width": "17%" },
+{ data: 'capital', name: 'capital',"width": "12%" },
+{ data: 'code', name: 'code',"width": "8%" },
+{ data: 'phone_code', name: 'phone_code',"width": "12%" },
+{ data: 'region', name: 'region',"width": "10%" },
+{ data: 'subregion', name: 'subregion',"width": "15%" },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
-    pageLength: 100,
+    pageLength: 50,
   };
   let table = $('.datatable-Country').DataTable(dtOverrideGlobals);
   $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
