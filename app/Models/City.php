@@ -32,11 +32,6 @@ class City extends Model
         'deleted_at',
     ];
 
-    public function cityCategories()
-    {
-        return $this->hasMany(Category::class, 'city_id', 'id');
-    }
-
     public function cityResources()
     {
         return $this->hasMany(Resource::class, 'city_id', 'id');

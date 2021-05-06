@@ -31,7 +31,6 @@ class Category extends Model implements HasMedia
     protected $fillable = [
         'name',
         'slug',
-        'city_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -46,11 +45,6 @@ class Category extends Model implements HasMedia
     public function getImageAttribute()
     {
         return $this->getMedia('image')->last();
-    }
-
-    public function city()
-    {
-        return $this->belongsTo(City::class, 'city_id');
     }
 
     protected function serializeDate(DateTimeInterface $date)

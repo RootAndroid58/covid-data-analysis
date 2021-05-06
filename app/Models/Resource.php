@@ -21,6 +21,8 @@ class Resource extends Model
     ];
 
     protected $fillable = [
+        'country_id',
+        'state_id',
         'city_id',
         'name',
         'phone_no',
@@ -28,13 +30,18 @@ class Resource extends Model
         'address',
         'details',
         'note',
+        'url',
         'up_vote',
         'down_vote',
-        'url',
         'created_at',
         'updated_at',
         'deleted_at',
     ];
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
 
     public function city()
     {

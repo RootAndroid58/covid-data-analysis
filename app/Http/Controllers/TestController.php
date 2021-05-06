@@ -12,10 +12,12 @@ class TestController extends Controller
 {
     public function index()
     {
-        $token = "ya29.a0AfH6SMDxocPmQa8coi7oLwhmm1OALTdnIXSIr0nSLO-0wgxpuMnQFb4Sz-WOXZuOImUwZXap8vMgqWDB78lAOFSA6W53Bmp_6Su9bkLCvAlE4USj9aDj_f099XT5IAm8KGsSLmoYJU9EGRLdOqUZduSEWAv_";
-        $user = Socialite::driver('google')->userFromToken($token);
-        dd($user);
+        // $token = "ya29.a0AfH6SMDxocPmQa8coi7oLwhmm1OALTdnIXSIr0nSLO-0wgxpuMnQFb4Sz-WOXZuOImUwZXap8vMgqWDB78lAOFSA6W53Bmp_6Su9bkLCvAlE4USj9aDj_f099XT5IAm8KGsSLmoYJU9EGRLdOqUZduSEWAv_";
+        // $user = Socialite::driver('google')->userFromToken($token);
+        // dd($user);
 
+        $data = Country::with('states.cities')->where('name','India')->get();
+        dd($data[0]->states[21]->cities[0]);
         // echo "starting";
         // dd(storage_path());
         // // // $nrwe = \DB::table(\DB::raw('countries, states'))->select('*')->where('countries.slug','=','IN')->get();

@@ -10,6 +10,30 @@
         <form method="POST" action="{{ route("admin.resources.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
+                <label class="required" for="country">{{ trans('cruds.country.title') }}</label>
+                <select class="form-control select2 {{ $errors->has('city') ? 'is-invalid' : '' }}" name="country" id="country" required>
+                    @foreach($country as $id => $entry)
+                        <option value="{{ $id }}" {{ old('country') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('city'))
+                    <span class="text-danger">{{ $errors->first('city') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.resource.fields.city_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label class="required" for="state">{{ trans('cruds.state.title') }}</label>
+                <select class="form-control select2 {{ $errors->has('city') ? 'is-invalid' : '' }}" name="state" id="state" required>
+                    @foreach($state as $id => $entry)
+                        <option value="{{ $id }}" {{ old('state') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('city'))
+                    <span class="text-danger">{{ $errors->first('city') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.resource.fields.city_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <label class="required" for="city_id">{{ trans('cruds.resource.fields.city') }}</label>
                 <select class="form-control select2 {{ $errors->has('city') ? 'is-invalid' : '' }}" name="city_id" id="city_id" required>
                     @foreach($cities as $id => $entry)
@@ -88,4 +112,15 @@
 
 
 
+@endsection
+
+@section('scripts')
+    <script>
+        $('#country').on('change', function (){
+            $.post('{{ url()->current() }}', {category:'client', type:'premium'}, function(response){
+                alert("success");
+                console.log(response);
+            });
+        })
+    </script>
 @endsection

@@ -7,6 +7,8 @@ use App\Http\Requests\MassDestroyResourceRequest;
 use App\Http\Requests\StoreResourceRequest;
 use App\Http\Requests\UpdateResourceRequest;
 use App\Models\City;
+use App\Models\State;
+use App\Models\Country;
 use App\Models\Resource;
 use Gate;
 use Illuminate\Http\Request;
@@ -83,13 +85,21 @@ class ResourcesController extends Controller
         return view('admin.resources.index', compact('cities'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         abort_if(Gate::denies('resource_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $cities = City::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        if($request->ajax()){
+            dd($request);
+        }
 
-        return view('admin.resources.create', compact('cities'));
+        $country = Country::with('states')->get()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $state = State::take(0)->get()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $cities = City::take(0)->get()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('admin.resources.create', compact('country','cities','state'));
     }
 
     public function store(StoreResourceRequest $request)

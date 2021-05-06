@@ -35,18 +35,6 @@
                         {{ trans('cruds.category.fields.slug') }}
                     </th>
                     <th>
-                        {{ trans('cruds.category.fields.city') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.city.fields.lat') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.city.fields.lng') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.city.fields.population') }}
-                    </th>
-                    <th>
                         &nbsp;
                     </th>
                 </tr>
@@ -61,15 +49,6 @@
                     </td>
                     <td>
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                    </td>
-                    <td>
-                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
                     </td>
                     <td>
                     </td>
@@ -129,10 +108,6 @@
 { data: 'id', name: 'id' },
 { data: 'name', name: 'name' },
 { data: 'slug', name: 'slug' },
-{ data: 'city_name', name: 'city.name' },
-{ data: 'city.lat', name: 'city.lat' },
-{ data: 'city.lng', name: 'city.lng' },
-{ data: 'city.population', name: 'city.population' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

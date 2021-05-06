@@ -9,7 +9,6 @@ use App\Http\Requests\MassDestroyCategoryRequest;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
-use App\Models\City;
 use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -26,7 +25,7 @@ class CategoriesController extends Controller
         abort_if(Gate::denies('category_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Category::with(['city'])->select(sprintf('%s.*', (new Category())->table));
+            $query = Category::query()->select(sprintf('%s.*', (new Category())->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -56,37 +55,20 @@ class CategoriesController extends Controller
             $table->editColumn('slug', function ($row) {
                 return $row->slug ? $row->slug : '';
             });
-            $table->addColumn('city_name', function ($row) {
-                return $row->city ? $row->city->name : '';
-            });
 
-            $table->editColumn('city.lat', function ($row) {
-                return $row->city ? (is_string($row->city) ? $row->city : $row->city->lat) : '';
-            });
-            $table->editColumn('city.lng', function ($row) {
-                return $row->city ? (is_string($row->city) ? $row->city : $row->city->lng) : '';
-            });
-            $table->editColumn('city.population', function ($row) {
-                return $row->city ? (is_string($row->city) ? $row->city : $row->city->population) : '';
-            });
-
-            $table->rawColumns(['actions', 'placeholder', 'city']);
+            $table->rawColumns(['actions', 'placeholder']);
 
             return $table->make(true);
         }
 
-        $cities = City::get();
-
-        return view('admin.categories.index', compact('cities'));
+        return view('admin.categories.index');
     }
 
     public function create()
     {
         abort_if(Gate::denies('category_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $cities = City::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        return view('admin.categories.create', compact('cities'));
+        return view('admin.categories.create');
     }
 
     public function store(StoreCategoryRequest $request)
@@ -108,11 +90,7 @@ class CategoriesController extends Controller
     {
         abort_if(Gate::denies('category_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $cities = City::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $category->load('city');
-
-        return view('admin.categories.edit', compact('cities', 'category'));
+        return view('admin.categories.edit', compact('category'));
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)
@@ -136,8 +114,6 @@ class CategoriesController extends Controller
     public function show(Category $category)
     {
         abort_if(Gate::denies('category_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $category->load('city');
 
         return view('admin.categories.show', compact('category'));
     }

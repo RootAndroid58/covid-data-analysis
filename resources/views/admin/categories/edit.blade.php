@@ -36,18 +36,6 @@
                 <span class="help-block">{{ trans('cruds.category.fields.image_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="city_id">{{ trans('cruds.category.fields.city') }}</label>
-                <select class="form-control select2 {{ $errors->has('city') ? 'is-invalid' : '' }}" name="city_id" id="city_id">
-                    @foreach($cities as $id => $entry)
-                        <option value="{{ $id }}" {{ (old('city_id') ? old('city_id') : $category->city->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                    @endforeach
-                </select>
-                @if($errors->has('city'))
-                    <span class="text-danger">{{ $errors->first('city') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.category.fields.city_helper') }}</span>
-            </div>
-            <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>

@@ -69,6 +69,10 @@ return [
             'two_factor_code_helper'       => ' ',
             'two_factor_expires_at'        => 'Two-factor expires at',
             'two_factor_expires_at_helper' => ' ',
+            'provider'                     => 'Provider',
+            'provider_helper'              => ' ',
+            'provider_id'                   => 'Provider ID',
+            'provider_id_helper'            => ' ',
         ],
     ],
     'covidResource' => [

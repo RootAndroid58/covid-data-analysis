@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Socialite;
-use App\Models\User;
-use Auth;
 use Illuminate\Support\Carbon;
+use App\Models\User;
+use Socialite;
+use Auth;
 
 class SocialController extends Controller
 {

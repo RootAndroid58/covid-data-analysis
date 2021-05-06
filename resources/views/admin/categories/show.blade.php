@@ -51,14 +51,6 @@
                             @endif
                         </td>
                     </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.category.fields.city') }}
-                        </th>
-                        <td>
-                            {{ $category->city->name ?? '' }}
-                        </td>
-                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

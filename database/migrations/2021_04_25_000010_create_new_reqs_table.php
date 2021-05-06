@@ -13,9 +13,14 @@ class CreateNewReqsTable extends Migration
             $table->string('country')->nullable();
             $table->string('state')->nullable();
             $table->string('city')->nullable();
-            $table->longText('extra')->nullable();
             $table->integer('status')->nullable();
             $table->string('catogary')->nullable();
+            $table->string('phone_no');
+            $table->string('email')->nullable();
+            $table->longText('address')->nullable();
+            $table->string('details')->nullable();
+            $table->longText('note')->nullable();
+            $table->string('url')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
