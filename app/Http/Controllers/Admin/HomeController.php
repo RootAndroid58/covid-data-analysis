@@ -81,36 +81,6 @@ class HomeController
         }
 
         $settings3 = [
-            'chart_title'           => 'Catogary',
-            'chart_type'            => 'latest_entries',
-            'report_type'           => 'group_by_date',
-            'model'                 => 'App\Models\Category',
-            'group_by_field'        => 'created_at',
-            'group_by_period'       => 'day',
-            'aggregate_function'    => 'count',
-            'filter_field'          => 'created_at',
-            'group_by_field_format' => 'Y-m-d H:i:s',
-            'column_class'          => 'col-md-12',
-            'entries_number'        => '20',
-            'fields'                => [
-                'name'  => '',
-                'image' => '',
-            ],
-            'translation_key' => 'category',
-        ];
-
-        $settings3['data'] = [];
-        if (class_exists($settings3['model'])) {
-            $settings3['data'] = $settings3['model']::latest()->with('media')
-                ->take($settings3['entries_number'])
-                ->get();
-        }
-
-        if (!array_key_exists('fields', $settings3)) {
-            $settings3['fields'] = [];
-        }
-
-        $settings4 = [
             'chart_title'           => 'Users',
             'chart_type'            => 'number_block',
             'report_type'           => 'group_by_date',
@@ -123,6 +93,42 @@ class HomeController
             'column_class'          => 'col-md-3',
             'entries_number'        => '5',
             'translation_key'       => 'user',
+        ];
+
+        $settings3['total_number'] = 0;
+        if (class_exists($settings3['model'])) {
+            $settings3['total_number'] = $settings3['model']::when(isset($settings3['filter_field']), function ($query) use ($settings3) {
+                if (isset($settings3['filter_days'])) {
+                    return $query->where($settings3['filter_field'], '>=',
+                now()->subDays($settings3['filter_days'])->format('Y-m-d'));
+                }
+                if (isset($settings3['filter_period'])) {
+                    switch ($settings3['filter_period']) {
+                case 'week': $start = date('Y-m-d', strtotime('last Monday')); break;
+                case 'month': $start = date('Y-m') . '-01'; break;
+                case 'year': $start = date('Y') . '-01-01'; break;
+            }
+                    if (isset($start)) {
+                        return $query->where($settings3['filter_field'], '>=', $start);
+                    }
+                }
+            })
+                ->{$settings3['aggregate_function'] ?? 'count'}($settings3['aggregate_field'] ?? '*');
+        }
+
+        $settings4 = [
+            'chart_title'           => 'Categories',
+            'chart_type'            => 'number_block',
+            'report_type'           => 'group_by_date',
+            'model'                 => 'App\Models\Category',
+            'group_by_field'        => 'created_at',
+            'group_by_period'       => 'day',
+            'aggregate_function'    => 'count',
+            'filter_field'          => 'created_at',
+            'group_by_field_format' => 'Y-m-d H:i:s',
+            'column_class'          => 'col-md-3',
+            'entries_number'        => '5',
+            'translation_key'       => 'category',
         ];
 
         $settings4['total_number'] = 0;
@@ -146,6 +152,69 @@ class HomeController
                 ->{$settings4['aggregate_function'] ?? 'count'}($settings4['aggregate_field'] ?? '*');
         }
 
-        return view('home', compact('settings1', 'settings2', 'settings3', 'settings4'));
+        $settings5 = [
+            'chart_title'           => 'Categories',
+            'chart_type'            => 'latest_entries',
+            'report_type'           => 'group_by_date',
+            'model'                 => 'App\Models\Category',
+            'group_by_field'        => 'created_at',
+            'group_by_period'       => 'day',
+            'aggregate_function'    => 'count',
+            'filter_field'          => 'created_at',
+            'group_by_field_format' => 'Y-m-d H:i:s',
+            'column_class'          => 'col-md-6',
+            'entries_number'        => '20',
+            'fields'                => [
+                'name'  => '',
+                'image' => '',
+            ],
+            'translation_key' => 'category',
+        ];
+
+        $settings5['data'] = [];
+        if (class_exists($settings5['model'])) {
+            $settings5['data'] = $settings5['model']::latest()->with('media')
+                ->take($settings5['entries_number'])
+                ->get();
+        }
+
+        if (!array_key_exists('fields', $settings5)) {
+            $settings5['fields'] = [];
+        }
+
+        $settings6 = [
+            'chart_title'           => 'Resources (Recent 10)',
+            'chart_type'            => 'latest_entries',
+            'report_type'           => 'group_by_date',
+            'model'                 => 'App\Models\Resource',
+            'group_by_field'        => 'created_at',
+            'group_by_period'       => 'day',
+            'aggregate_function'    => 'count',
+            'filter_field'          => 'created_at',
+            'group_by_field_format' => 'Y-m-d H:i:s',
+            'column_class'          => 'col-md-6',
+            'entries_number'        => '10',
+            'fields'                => [
+                'name'      => '',
+                'phone_no'  => '',
+                'up_vote'   => '',
+                'down_vote' => '',
+            ],
+            'translation_key' => 'resource',
+        ];
+
+        $settings6['data'] = [];
+        if (class_exists($settings6['model'])) {
+            $settings6['data'] = $settings6['model']::latest()
+                ->take($settings6['entries_number'])
+                ->get();
+        }
+
+        if (!array_key_exists('fields', $settings6)) {
+            $settings6['fields'] = [];
+        }
+
+        return view('home', compact('settings1', 'settings2', 'settings3', 'settings4', 'settings5', 'settings6'));
+
     }
 }

@@ -28,17 +28,22 @@ class SocialController extends Controller
                 User::where('id',$users->id)->withTrashed()->restore();
                 Auth::login($users);
             }else{
-                $user = User::create([
-                    'name'          => $userSocial->getName(),
-                    'email'         => $userSocial->getEmail(),
-                    'image'         => $userSocial->getAvatar(),
-                    'provider_id'   => $userSocial->getId(),
-                    'provider'      => $provider,
-                    'email_verified_at'      => Carbon::createFromFormat(config('panel.date_format') . ' ' . config('panel.time_format'), now())->format('Y-m-d H:i:s'),
+                if(isset($userSocial->getEmail())){
 
-                ]);
-                $user->roles()->sync(2);
-                Auth::login($user);
+                    $user = User::create([
+                        'name'          => $userSocial->getName(),
+                        'email'         => $userSocial->getEmail(),
+                        'image'         => $userSocial->getAvatar(),
+                        'provider_id'   => $userSocial->getId(),
+                        'provider'      => $provider,
+                        'email_verified_at'      => Carbon::createFromFormat(config('panel.date_format') . ' ' . config('panel.time_format'), now())->format('Y-m-d H:i:s'),
+
+                    ]);
+                    $user->roles()->sync(2);
+                    Auth::login($user);
+                }else{
+                    redirect()->route('login')->withErrors('error','There was an issue while creating an account try again or use other account to login!');
+                }
             }
 
          return redirect()->route('home');
