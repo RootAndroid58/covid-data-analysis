@@ -28,7 +28,7 @@ class SocialController extends Controller
                 User::where('id',$users->id)->withTrashed()->restore();
                 Auth::login($users);
             }else{
-                if(isset($userSocial->getEmail())){
+                if($userSocial->getEmail() != null){
 
                     $user = User::create([
                         'name'          => $userSocial->getName(),

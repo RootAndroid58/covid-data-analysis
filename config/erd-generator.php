@@ -61,7 +61,7 @@ return [
      * your graph.
      */
     'table' => [
-        'header_background_color' => '#41B820',
+        'header_background_color' => '#c0c0c0',
         'header_font_color' => '#333333',
         'row_background_color' => '#ffffff',
         'row_font_color' => '#333333',
