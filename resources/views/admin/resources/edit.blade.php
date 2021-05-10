@@ -11,6 +11,22 @@
             @method('PUT')
             @csrf
             <div class="form-group">
+                <label for="categories">{{ trans('cruds.resource.fields.category') }}</label>
+                <div style="padding-bottom: 4px">
+                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
+                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                </div>
+                <select class="form-control select2 {{ $errors->has('categories') ? 'is-invalid' : '' }}" name="categories[]" id="categories" multiple>
+                    @foreach($categories as $id => $category)
+                        <option value="{{ $id }}" {{ (in_array($id, old('categories', [])) || $resource->categories->contains($id)) ? 'selected' : '' }}>{{ $category }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('categories'))
+                    <span class="text-danger">{{ $errors->first('categories') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.resource.fields.category_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <label class="required" for="city_id">{{ trans('cruds.resource.fields.city') }}</label>
                 <select class="form-control select2 {{ $errors->has('city') ? 'is-invalid' : '' }}" name="city_id" id="city_id" required>
                     @foreach($cities as $id => $entry)

@@ -49,3 +49,10 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', '
     // New Req
     Route::apiResource('new-reqs', 'NewReqApiController');
 });
+
+Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1'], function () {
+    // Permissions
+    Route::post('/getstatebyid', 'ResourceApiController@getStateById')->name('StateById');
+    Route::post('/getCityById', 'ResourceApiController@getCityById')->name('CityById');
+});
+

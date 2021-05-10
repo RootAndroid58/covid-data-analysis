@@ -10,26 +10,42 @@
         <form method="POST" action="{{ route("admin.resources.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
+                <label  class="required" for="categories">{{ trans('cruds.resource.fields.category') }}</label>
+                <div style="padding-bottom: 4px">
+                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
+                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                </div>
+                <select class="form-control select2 {{ $errors->has('categories') ? 'is-invalid' : '' }}" name="categories[]" id="categories" multiple required>
+                    @foreach($categories as $id => $category)
+                        <option value="{{ $id }}" {{ in_array($id, old('categories', [])) ? 'selected' : '' }}>{{ $category }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('categories'))
+                    <span class="text-danger">{{ $errors->first('categories') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.resource.fields.category_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <label class="required" for="country">{{ trans('cruds.country.title') }}</label>
-                <select class="form-control select2 {{ $errors->has('city') ? 'is-invalid' : '' }}" name="country" id="country" required>
+                <select class="form-control select2 {{ $errors->has('country') ? 'is-invalid' : '' }}"name="country_id" id="country_id" required>
                     @foreach($country as $id => $entry)
                         <option value="{{ $id }}" {{ old('country') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                     @endforeach
                 </select>
-                @if($errors->has('city'))
-                    <span class="text-danger">{{ $errors->first('city') }}</span>
+                @if($errors->has('country'))
+                    <span class="text-danger">{{ $errors->first('country') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.resource.fields.city_helper') }}</span>
             </div>
             <div class="form-group">
                 <label class="required" for="state">{{ trans('cruds.state.title') }}</label>
-                <select class="form-control select2 {{ $errors->has('city') ? 'is-invalid' : '' }}" name="state" id="state" required>
+                <select class="form-control select2 {{ $errors->has('state') ? 'is-invalid' : '' }}" name="state_id" id="state_id" required>
                     @foreach($state as $id => $entry)
                         <option value="{{ $id }}" {{ old('state') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                     @endforeach
                 </select>
-                @if($errors->has('city'))
-                    <span class="text-danger">{{ $errors->first('city') }}</span>
+                @if($errors->has('state'))
+                    <span class="text-danger">{{ $errors->first('state') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.resource.fields.city_helper') }}</span>
             </div>
@@ -116,11 +132,62 @@
 
 @section('scripts')
     <script>
-        $('#country').on('change', function (){
-            $.post('{{ url()->current() }}', {category:'client', type:'premium'}, function(response){
-                alert("success");
-                console.log(response);
-            });
+        $('#country_id').on('change', function (e){
+            e.preventDefault();
+
+            var country = $(this).val();
+
+            if(country){
+                let stateBody = "";
+                stateBody += "<option>Select State</option>\n";
+
+                $.ajax({
+                    url: "{{ route('api.StateById') }}",
+                    type: "POST",
+                    data:{
+                        country_id: country
+                    },
+                    success: function (data) {
+
+                        data['states'].forEach(element => {
+                            stateBody += `<option value="${element["id"]}">${element['name']}</option>\n`
+                        });
+                        $('#state_id').html(stateBody);
+                    }
+                })
+            }else{
+                $('#state_id').html("<option>Please Select</option>");
+                $('#city_id').html("<option>Please Select</option>");
+            }
         })
+        $('#state_id').on('change', function (e){
+            e.preventDefault();
+
+            var state = $(this).val();
+
+            if(state){
+                let cityBody = "";
+                cityBody += "<option>Select City</option>\n";
+
+                $.ajax({
+                    url: "{{ route('api.CityById') }}",
+                    type: "POST",
+                    data:{
+                        state_id: state,
+                    },
+                    success: function (data) {
+                        cityBody += `<option value="0">All Cities</option>\n`
+                        data['cities'].forEach(element => {
+                            // console.log(element);
+                            cityBody += `<option value="${element["id"]}">${element['name']}</option>\n`
+                        });
+                        $('#city_id').html(cityBody);
+                    }
+                })
+            }else{
+                $('#city_id').html("<option>Please Select</option>");
+            }
+        })
+
     </script>
 @endsection

@@ -127,6 +127,8 @@ return [
             'down_vote_helper'  => ' ',
             'url'               => 'Url',
             'url_helper'        => ' ',
+            'category'          => 'Category',
+            'category_helper'   => ' ',
             'country'           => 'Country',
             'country_helper'    => ' ',
             'state'             => 'State',

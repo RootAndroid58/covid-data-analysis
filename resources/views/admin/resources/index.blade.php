@@ -25,13 +25,10 @@
                         {{ trans('cruds.resource.fields.id') }}
                     </th>
                     <th>
+                        {{ trans('cruds.resource.fields.category') }}
+                    </th>
+                    <th>
                         {{ trans('cruds.resource.fields.city') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.city.fields.lat') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.city.fields.lng') }}
                     </th>
                     <th>
                         {{ trans('cruds.resource.fields.name') }}
@@ -65,6 +62,7 @@
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
                     </td>
                     <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
                     </td>
                     <td>
                     </td>
@@ -81,8 +79,7 @@
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
                     </td>
                     <td>
-                    </td>
-                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
                     </td>
                     <td>
                     </td>
@@ -138,18 +135,17 @@
     aaSorting: [],
     ajax: "{{ route('admin.resources.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'id', name: 'id', "width": "7%" },
-{ data: 'city_name', name: 'city.name', "width": "10%" },
-{ data: 'city.lat', name: 'city.lat', "visible": false , "width": "7%"},
-{ data: 'city.long', name: 'city.lng', "visible": false , "width": "9%"},
-{ data: 'name', name: 'name', "width": "10%" },
-{ data: 'phone_no', name: 'phone_no', "width": "10%" },
-{ data: 'email', name: 'email' ,"visible": false ,"width": "15%"},
-{ data: 'details', name: 'details', "width": "20%" },
-{ data: 'up_vote', name: 'up_vote', "width": "8%"},
-{ data: 'down_vote', name: 'down_vote', "width": "9%"},
-{ data: 'actions', name: '{{ trans('global.actions') }}', "width": "10%"}
+{ data: 'placeholder', name: 'placeholder' },
+{ data: 'id', name: 'id',"width": "7%" },
+{ data: 'category', name: 'categories.name',"width": "10%" },
+{ data: 'city_name', name: 'city.name',"width": "10%" },
+{ data: 'name', name: 'name',"width": "10%" },
+{ data: 'phone_no', name: 'phone_no',"width": "10%" },
+{ data: 'email', name: 'email',"visible": false ,"width": "15%" },
+{ data: 'details', name: 'details',"width": "20%" },
+{ data: 'up_vote', name: 'up_vote',"width": "8%" },
+{ data: 'down_vote', name: 'down_vote',"width": "9%" },
+{ data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],

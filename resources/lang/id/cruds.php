@@ -133,6 +133,8 @@ return [
             'down_vote_helper'  => ' ',
             'url'               => 'Url',
             'url_helper'        => ' ',
+            'category'          => 'Category',
+            'category_helper'   => ' ',
         ],
     ],
 'city' => [
