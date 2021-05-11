@@ -85,6 +85,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // New Req
     Route::delete('new-reqs/destroy', 'NewReqController@massDestroy')->name('new-reqs.massDestroy');
     Route::resource('new-reqs', 'NewReqController');
+
+    // Sub Categories
+    Route::delete('sub-categories/destroy', 'SubCategoriesController@massDestroy')->name('sub-categories.massDestroy');
+    Route::post('sub-categories/parse-csv-import', 'SubCategoriesController@parseCsvImport')->name('sub-categories.parseCsvImport');
+    Route::post('sub-categories/process-csv-import', 'SubCategoriesController@processCsvImport')->name('sub-categories.processCsvImport');
+    Route::resource('sub-categories', 'SubCategoriesController');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth', '2fa']], function () {
     // Change password

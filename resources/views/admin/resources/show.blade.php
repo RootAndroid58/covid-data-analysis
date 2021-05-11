@@ -25,6 +25,32 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.resource.fields.category') }}
+                        </th>
+                        <td>
+                            @foreach($resource->categories as $key => $category)
+                                <span class="badge badge-info">{{ $category->name }}</span>
+                            @endforeach
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.resource.fields.country') }}
+                        </th>
+                        <td>
+                            {{ $resource->country->name ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.resource.fields.state') }}
+                        </th>
+                        <td>
+                            {{ $resource->state->name ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.resource.fields.city') }}
                         </th>
                         <td>
@@ -47,6 +73,8 @@
                             {{ $resource->phone_no }}
                         </td>
                     </tr>
+                    @if ($resource->email)
+
                     <tr>
                         <th>
                             {{ trans('cruds.resource.fields.email') }}
@@ -55,6 +83,9 @@
                             {{ $resource->email }}
                         </td>
                     </tr>
+                    @endif
+                    @if ($resource->address)
+
                     <tr>
                         <th>
                             {{ trans('cruds.resource.fields.address') }}
@@ -63,6 +94,9 @@
                             {{ $resource->address }}
                         </td>
                     </tr>
+                    @endif
+                    @if ($resource->details)
+
                     <tr>
                         <th>
                             {{ trans('cruds.resource.fields.details') }}
@@ -71,6 +105,9 @@
                             {{ $resource->details }}
                         </td>
                     </tr>
+                    @endif
+                    @if ($resource->note)
+
                     <tr>
                         <th>
                             {{ trans('cruds.resource.fields.note') }}
@@ -79,6 +116,9 @@
                             {{ $resource->note }}
                         </td>
                     </tr>
+                    @endif
+                    @if ($resource->url)
+
                     <tr>
                         <th>
                             {{ trans('cruds.resource.fields.url') }}
@@ -87,12 +127,13 @@
                             {{ $resource->url }}
                         </td>
                     </tr>
+                    @endif
                     <tr>
                         <th>
                             {{ trans('cruds.resource.fields.up_vote') }}
                         </th>
                         <td>
-                            {{ $resource->up_vote }}
+                            {{ $resource->up_vote == '' ? 0 : $resource->up_vote  }}
                         </td>
                     </tr>
                     <tr>
@@ -100,7 +141,7 @@
                             {{ trans('cruds.resource.fields.down_vote') }}
                         </th>
                         <td>
-                            {{ $resource->down_vote }}
+                            {{ $resource->down_vote == '' ? 0 : $resource->down_vote }}
                         </td>
                     </tr>
                 </tbody>

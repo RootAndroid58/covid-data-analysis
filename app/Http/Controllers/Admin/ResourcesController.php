@@ -23,7 +23,7 @@ class ResourcesController extends Controller
         abort_if(Gate::denies('resource_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Resource::with(['categories','city'])->select(sprintf('%s.*', (new Resource())->table));
+            $query = Resource::with(['categories','country', 'state', 'city'])->select(sprintf('%s.*', (new Resource())->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -50,7 +50,7 @@ class ResourcesController extends Controller
             $table->editColumn('category', function ($row) {
                 $labels = [];
                 foreach ($row->categories as $category) {
-                    $labels[] = sprintf('<span class="label label-info label-many">%s</span>', $category->name);
+                    $labels[] = sprintf('<span class="badge badge-info ">%s</span>', $category->name);
                 }
 
                 return implode(' ', $labels);
@@ -75,10 +75,10 @@ class ResourcesController extends Controller
                 return $row->details ? $row->details : '';
             });
             $table->editColumn('up_vote', function ($row) {
-                return $row->up_vote ? $row->up_vote : '';
+                return $row->up_vote == '' ? 0 : $row->up_vote;
             });
             $table->editColumn('down_vote', function ($row) {
-                return $row->down_vote ? $row->down_vote : '';
+                return $row->down_vote == '' ? 0 : $row->down_vote ;
             });
 
             $table->rawColumns(['actions', 'placeholder', 'category', 'city']);

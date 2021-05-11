@@ -51,6 +51,12 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
         ],
+        'cron_temp' => [
+            'driver' => 'local',
+            'root' => storage_path('cron_temp'),
+            'url' => env('APP_URL').'/temp/cron',
+            'visibility' => 'public',
+        ],
 
     ],
 

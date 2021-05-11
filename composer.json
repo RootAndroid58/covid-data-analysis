@@ -23,6 +23,7 @@
         "nuovo/spreadsheet-reader": "^0.5.11",
         "rennokki/laravel-eloquent-query-cache": "^2.6",
         "spatie/laravel-medialibrary": "^8.7",
+        "voku/simple_html_dom": "^4.7",
         "yajra/laravel-datatables-oracle": "^9.11"
     },
     "require-dev": {
@@ -39,7 +40,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Http/Helpers/ScrappingHelper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
