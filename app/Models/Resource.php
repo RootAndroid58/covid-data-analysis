@@ -58,6 +58,12 @@ class Resource extends Model
         return $this->belongsTo(City::class, 'city_id');
     }
 
+    public function subcats()
+    {
+        return $this->belongsToMany(SubCategory::class);
+    }
+
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

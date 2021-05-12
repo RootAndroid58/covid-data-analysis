@@ -8,18 +8,29 @@ use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
 use App\Models\Category;
+use App\Models\Resource;
+use App\Models\SubCategory;
 use \SpreadsheetReader;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class ScrappingHelper
 {
+    /**
+     * ====================================
+     * Scrapper States Here
+     * ====================================
+     *
+     * http://covidhelpnagpur.in/
+     */
+
     static function Scrap_IN_MH_Nagpur()
     {
         $data = array();
-        $data["country"] = 103;
-        $data["state"] = 1630;
-        $data["city"] = 46502;
+        $data["country"] = "India";
+        $data["state"] = "Maharashtra";
+        $data["city"] = "Nagpur";
         $data['path'] = "/INMHNagpur.csv";
         $data['fields'] = array();
         $data['fields'][0] = 'categary';
@@ -30,8 +41,7 @@ class ScrappingHelper
         $data['model'] = 'Resource';
         $data['modelRelationship'] = array();
         $data['modelRelationship'][0] = "Category";
-
-
+        $data['website'] = "http://covidhelpnagpur.in/";
 
         $dom = HtmlDomParser::file_get_html("http://covidhelpnagpur.in/");
         $element = $dom->find('#pool > tr')->innerhtml();
@@ -43,35 +53,42 @@ class ScrappingHelper
         try {
             Storage::disk('cron_temp')->put('INMHNagpur.csv', $csvfile);
             $update = new ScrappingHelper;
-            $update->UpdateViaCSV('Resource',$data);
-            // $this->UpdateViaCSV('Resource',$data);
+            $data['status'] = $update->UpdateViaCSV('Resource',$data);
+
        } catch (\Exception $e) {
-            dd($e);
+
+           throw $e;
        }
 
         return $data;
     }
 
+
+
+    /**
+     * ===========================================
+     * Scrapper Helper Function Starts here
+     * ===========================================
+     */
     public static function UpdateViaCSV($model,$data)
     {
-        dd($data);
         try {
             $filename = $data['path'];
-            $path     = storage_path('cron_temp/' . $filename);
+            $path     = storage_path('cron_temp\\' . $filename);
 
             $hasHeader = $data['hasHeader'];
 
-            // $fields = $request->input('fields', false);
             $fields = $data['fields'];
+            $fields = array_flip(array_filter($fields));
 
             $modelName = $data['model'];
             $model     = 'App\\Models\\' . $modelName;
 
-            $Relationship_Count = count($data['modelRelationship']);
-
-
             $reader = new SpreadsheetReader($path);
             $insert = [];
+
+            $success = array();
+
 
             foreach ($reader as $key => $row) {
                 if ($hasHeader && $key == 0) {
@@ -80,10 +97,12 @@ class ScrappingHelper
 
                 $tmp = [];
                 foreach ($fields as $header => $k) {
+
                     if (isset($row[$k])) {
-                        $tmp[$header] = $row[$k];
+                        $tmp[$header] = trim($row[$k],",");
                     }
                 }
+
 
                 if (count($tmp) > 0) {
                     $insert[] = $tmp;
@@ -93,7 +112,9 @@ class ScrappingHelper
             $for_insert = array_chunk($insert, 100);
 
             foreach ($for_insert as $insert_item) {
-                $model::insert($insert_item);
+
+                $scraper = new ScrappingHelper;
+                $success[] = $scraper->updateorinsert($model,$insert_item,$data);
             }
 
             $rows  = count($insert);
@@ -101,10 +122,10 @@ class ScrappingHelper
 
             File::delete($path);
 
-            session()->flash('message', trans('global.app_imported_rows_to_table', ['rows' => $rows, 'table' => $table]));
+            return array("success"=>$success, 'rows' => $rows, 'table' => $table);
 
-            return 0;
         } catch (\Exception $ex) {
+
             throw $ex;
         }
     }
@@ -120,14 +141,83 @@ class ScrappingHelper
 
     public function getCategory($data)
     {
-        $category = Category::where('name',$data)->orWhere('id',$data)->first();
+        $category = Category::where('name',$data)->first();
+        if($category == null){
+            $sub_category = SubCategory::where('name',$data)->first();
 
-        if(!$category){
-
+            if($sub_category == null){
+                $sub_category = SubCategory::create([
+                    'name' => "$data",
+                    'category_id' => 0,
+                ]);
+            }
+        }else{
+            $sub_category = null;
         }
 
-        return $category;
+        return array('category'=> $category , 'sub_category' => $sub_category);
     }
 
+    public function updateorinsert($model,  $insert_item,$data)
+    {
 
+        foreach($insert_item as $item){
+            $categary = isset($item['categary']) ? $item['categary'] : null;
+            $name = isset($item['name']) ? $item['name']: null;
+            $phone_no = isset($item['phone_no']) ? $item['phone_no'] : null;
+            $details = isset($item['details']) ?$item['details'] : null ;
+            $url = isset($item['url']) ?$item['url'] : null ;
+            $note = isset($item['note']) ?$item['note'] : null ;
+            $address = isset($item['address']) ?$item['address'] : null ;
+            $email = isset($item['email']) ?$item['email'] : null ;
+
+            if($phone_no == null || $name == null || $categary == null) continue;
+            if(filter_var($phone_no, FILTER_VALIDATE_URL)){
+                continue;
+            }
+            $scraper = new ScrappingHelper;
+            $get_category_info = $scraper->getCategory($categary);
+            $categary_id = $get_category_info['category'];
+            $subcategory_id = $get_category_info['sub_category'];
+
+            $location = $scraper->getIDofALL(array('city'=>$data["city"],'state'=> $data["state"], 'country' => $data["country"] ));
+
+            if(!isset($location['city']) ){
+                Log::debug("There is no city for ".$data['website']." #pool id ");
+                continue;
+            }
+            if(!isset($location['state'])) {
+                Log::debug("There is no state for ".$data['website']." #pool id ");
+                continue;
+            }
+            if(!isset($location['country'])) {
+                Log::debug("There is no country for ".$data['website']." #pool id ");
+                continue;
+            }
+            $updatedata = $model::updateOrCreate(
+                [
+                    'name' => $name,
+                    'country_id' => $location['country']->id,
+                    'state_id' => $location['state']->id,
+                    'city_id' => $location['city']->id,
+                ],
+                [
+                    'phone_no' => $phone_no,
+                    'details' => $details,
+                    'url' => $url,
+                    'note' => $note,
+                    'address' => $address,
+                    'email' => $email,
+                ]
+                );
+
+            if($categary_id != null){
+                $updatedata->categories()->sync($categary_id['id']);
+            }
+            if($subcategory_id != null){
+                $updatedata->subcats()->sync($subcategory_id['id']);
+            }
+        }
+        return true;
+    }
 }

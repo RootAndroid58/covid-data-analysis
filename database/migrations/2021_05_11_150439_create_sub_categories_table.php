@@ -12,6 +12,7 @@ class CreateSubCategoriesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->longText('extra')->nullable();
+            $table->integer('status')->nullable();
             $table->timestamps();
         });
     }

@@ -72,7 +72,7 @@
             </div>
             <div class="form-group">
                 <label for="details">{{ trans('cruds.resource.fields.details') }}</label>
-                <input class="form-control {{ $errors->has('details') ? 'is-invalid' : '' }}" type="text" name="details" id="details" value="{{ old('details', $resource->details) }}">
+                <textarea class="form-control {{ $errors->has('details') ? 'is-invalid' : '' }}" type="text" name="details" id="details" >{{ old('details', $resource->details) }}</textarea>
                 @if($errors->has('details'))
                     <span class="text-danger">{{ $errors->first('details') }}</span>
                 @endif

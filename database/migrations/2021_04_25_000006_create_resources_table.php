@@ -14,7 +14,7 @@ class CreateResourcesTable extends Migration
             $table->string('phone_no');
             $table->string('email')->nullable();
             $table->longText('address')->nullable();
-            $table->string('details')->nullable();
+            $table->longText('details')->nullable();
             $table->longText('note')->nullable();
             $table->string('up_vote')->nullable();
             $table->string('down_vote')->nullable();
