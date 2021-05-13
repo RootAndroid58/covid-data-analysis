@@ -22,7 +22,7 @@ Route::get('login/{provider}/callback','SocialController@Callback');
 
 
 Route::get('/test', 'TestController@index')->name('test');
-Route::get('/test1', 'TestController@test2')->name('test');
+Route::get('/test1', 'TestController@test2')->name('test1');
 
 
 

@@ -50,11 +50,14 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', '
     Route::apiResource('new-reqs', 'NewReqApiController');
 });
 
-Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1'], function () {
+Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middleware' => 'throttle:60,1'], function () {
     // Permissions
     Route::post('/getstatebyid', 'ResourceApiController@getStateById')->name('StateById');
     Route::post('/getCityById', 'ResourceApiController@getCityById')->name('CityById');
 
     Route::get('/ping',"PingApiController@ping")->name('ping');
+    Route::get('/country',"WorldApiController@Country")->name('country');
+    Route::get('/state',"WorldApiController@State")->name('state');
+    Route::get('/city',"WorldApiController@City")->name('city');
 });
 
