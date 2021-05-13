@@ -59,5 +59,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middlew
 
     Route::get('/category',"ResourceApiController@Category")->name('category');
     Route::get('/sub-category',"ResourceApiController@SubCategory")->name('subcategory');
+
+    Route::get('/resource',"ResourceApiController@Resources")->name('resources');
+
 });
 
