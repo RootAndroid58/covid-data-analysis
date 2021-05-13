@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\SubCategory;
 
 class Category extends Model implements HasMedia
 {
@@ -18,9 +19,9 @@ class Category extends Model implements HasMedia
 
     public $table = 'categories';
 
-    protected $appends = [
-        'image',
-    ];
+    // protected $appends = [
+    //     'image',
+    // ];
 
     protected $dates = [
         'created_at',
@@ -40,6 +41,15 @@ class Category extends Model implements HasMedia
     {
         $this->addMediaConversion('thumb')->fit('crop', 50, 50);
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
+    }
+
+    public function subcatogary()
+    {
+        return $this->hasMany(SubCategory::class, 'category_id', 'id');
+    }
+    public function subcatogaryshow()
+    {
+        return $this->hasMany(SubCategory::class, 'category_id', 'id')->select('id','name');
     }
 
     public function getImageAttribute()

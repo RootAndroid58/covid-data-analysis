@@ -57,10 +57,10 @@ class WorldApiController extends Controller
             })->paginate(500);
 
 
-            return array(ApiHelper::SuccessorFail(200),$data);
+            return ApiHelper::SuccessorFail(200,$data);
         } catch (\Error $th) {
             // throw $th;
-            return array(ApiHelper::SuccessorFail(500),"error" => $th);
+            return ApiHelper::SuccessorFail(500,array("error" => $th));
         }
     }
 }

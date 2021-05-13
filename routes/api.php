@@ -51,13 +51,13 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', '
 });
 
 Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middleware' => 'throttle:60,1'], function () {
-    // Permissions
-    Route::post('/getstatebyid', 'ResourceApiController@getStateById')->name('StateById');
-    Route::post('/getCityById', 'ResourceApiController@getCityById')->name('CityById');
 
     Route::get('/ping',"PingApiController@ping")->name('ping');
     Route::get('/country',"WorldApiController@Country")->name('country');
     Route::get('/state',"WorldApiController@State")->name('state');
     Route::get('/city',"WorldApiController@City")->name('city');
+
+    Route::get('/catogary',"ResourceApiController@Categary")->name('categary');
+    Route::get('/sub-catogary',"ResourceApiController@SubCategary")->name('subcategary');
 });
 
