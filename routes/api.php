@@ -57,7 +57,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middlew
     Route::get('/state',"WorldApiController@State")->name('state');
     Route::get('/city',"WorldApiController@City")->name('city');
 
-    Route::get('/catogary',"ResourceApiController@Categary")->name('categary');
-    Route::get('/sub-catogary',"ResourceApiController@SubCategary")->name('subcategary');
+    Route::get('/categary',"ResourceApiController@Categary")->name('categary');
+    Route::get('/sub-categary',"ResourceApiController@SubCategary")->name('subcategary');
 });
 
