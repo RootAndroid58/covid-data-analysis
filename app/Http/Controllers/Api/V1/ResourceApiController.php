@@ -15,7 +15,7 @@ use \Illuminate\Database\QueryException;
 
 class ResourceApiController extends Controller
 {
-    public function Categary(Request $request)
+    public function Category(Request $request)
     {
         $request->validate([
             'search' => 'nullable'
@@ -40,7 +40,7 @@ class ResourceApiController extends Controller
 
     }
 
-    public function SubCategary(Request $request)
+    public function SubCategory(Request $request)
     {
         $request->validate([
             'search' => 'nullable'
