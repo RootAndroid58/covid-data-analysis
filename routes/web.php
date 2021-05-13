@@ -110,3 +110,9 @@ Route::group(['namespace' => 'Auth', 'middleware' => ['auth', '2fa']], function 
         Route::get('two-factor/resend', 'TwoFactorController@resend')->name('twoFactor.resend');
     }
 });
+
+Route::group(['prefix'=>'api'] ,function () {
+    Route::get('/', function () {
+        return view('doc.api');
+    });
+});

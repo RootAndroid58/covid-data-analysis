@@ -23,7 +23,7 @@ class ResourceApiController extends Controller
         ]);
         $search = $request->input('search');
         try {
-            $data = Category::with('subcatogary:id,name,category_id,extra')->where(function ($query) use ($search) {
+            $data = Category::with('subcatogary:id,name,category_id')->where(function ($query) use ($search) {
                 if($search != null){
                     $query->orWhere('id','like',"%$search%")
                         ->orWhere('name','like',"%$search%");
@@ -48,7 +48,7 @@ class ResourceApiController extends Controller
         ]);
         $search = $request->input('search');
 
-        $data = SubCategory::with('category:id,name,slug')->where(function ($query) use ($search) {
+        $data = SubCategory::with('category:id,name')->where(function ($query) use ($search) {
             if($search != null){
                 $query->orWhere('id','like',"%$search%")
                     ->orWhere('name','like',"%$search%")
@@ -56,7 +56,7 @@ class ResourceApiController extends Controller
             }
         })->paginate(20);
 
-        return response()->json(array(ApiHelper::SuccessorFail(200),$data));
+        return response()->json(ApiHelper::SuccessorFail(200,$data));
     }
 
     public function Resources(Request $request)
@@ -96,7 +96,7 @@ class ResourceApiController extends Controller
         } catch (\Throwable $th) {
             return ApiHelper::SuccessorFail(500,array("error" => $th));
         }
-        return response()->json(array(ApiHelper::SuccessorFail(200),$data));
+        return response()->json(ApiHelper::SuccessorFail(200,$data));
 
     }
 }
