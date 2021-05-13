@@ -54,5 +54,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1'], functi
     // Permissions
     Route::post('/getstatebyid', 'ResourceApiController@getStateById')->name('StateById');
     Route::post('/getCityById', 'ResourceApiController@getCityById')->name('CityById');
+
+    Route::get('/ping',"PingApiController@ping")->name('ping');
 });
 

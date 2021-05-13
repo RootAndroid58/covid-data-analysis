@@ -28,9 +28,12 @@ class ScrappingHelper
     static function Scrap_IN_MH_Nagpur()
     {
         $data = array();
-        $data["country"] = "India";
-        $data["state"] = "Maharashtra";
+        $data["country"] = "IN";
+        $data["country_key"] = "code";
+        $data["state"] = "MH";
+        $data["state_key"] = "state_code";
         $data["city"] = "Nagpur";
+        $data["city_key"] = "name";
         $data['path'] = "/INMHNagpur.csv";
         $data['fields'] = array();
         $data['fields'][0] = 'categary';
@@ -132,9 +135,10 @@ class ScrappingHelper
 
     public function getIDofALL($data)
     {
-        $city = City::where('id',$data['city'])->orWhere('name',$data['city'])->first();
-        $state = State::where('id',$data['state'])->orWhere('name',$data['state'])->first();
-        $country = Country::where('id',$data['country'])->orWhere('name',$data['country'])->first();
+
+        $country = Country::where($data['country_key'],$data['country'])->first();
+        $state = State::where($data['state_key'],$data['state'])->where('country_code',$country->code)->first();
+        $city = City::where($data['city_key'],$data['city'])->where('state_code',$state->state_code)->where('country_code',$country->code)->first();
 
         return array('city' => $city, 'state' => $state, 'country' => $country);
     }
@@ -143,13 +147,15 @@ class ScrappingHelper
     {
         $category = Category::where('name',$data)->first();
         if($category == null){
-            $sub_category = SubCategory::where('name',$data)->first();
+            $sub_category = SubCategory::with('category')->where('name',$data)->first();
 
             if($sub_category == null){
                 $sub_category = SubCategory::create([
                     'name' => "$data",
                     'category_id' => 0,
                 ]);
+            }else{
+                $category =$sub_category->category;
             }
         }else{
             $sub_category = null;
@@ -180,7 +186,7 @@ class ScrappingHelper
             $categary_id = $get_category_info['category'];
             $subcategory_id = $get_category_info['sub_category'];
 
-            $location = $scraper->getIDofALL(array('city'=>$data["city"],'state'=> $data["state"], 'country' => $data["country"] ));
+            $location = $scraper->getIDofALL($data);
 
             if(!isset($location['city']) ){
                 Log::debug("There is no city for ".$data['website']." #pool id ");
@@ -213,6 +219,8 @@ class ScrappingHelper
 
             if($categary_id != null){
                 $updatedata->categories()->sync($categary_id['id']);
+            }else{
+                $updatedata->categories()->sync(0);
             }
             if($subcategory_id != null){
                 $updatedata->subcats()->sync($subcategory_id['id']);

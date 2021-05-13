@@ -132,6 +132,11 @@
                                     @forelse($settings6['data'] as $entry)
                                         <tr>
                                             @foreach($settings6['fields'] as $key => $value)
+                                            @if ($key == 'up_vote' && $value == '' || $key == 'down_vote' && $value == '')
+                                                @php
+                                                    $entry->{$key} = 0;
+                                                @endphp
+                                            @endif
                                                 <td>
                                                     @if($value === '')
                                                         {{ $entry->{$key} }}
