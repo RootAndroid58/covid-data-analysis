@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Helpers\ApiHelper;
 
 class Handler extends ExceptionHandler
@@ -38,12 +39,12 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (NotFoundHttpException $e, $request) {
             if ($request->expectsJson()) {
-                return response()->json(ApiHelper::SuccessorFail(500,array("error" => $e->getMessage())));
+                return response()->json(ApiHelper::SuccessorFail(404,array("error" => $e->getMessage())));
              }
         });
         $this->reportable(function (Throwable $e, $request) {
             if ($request->expectsJson()) {
-                return response()->json(ApiHelper::SuccessorFail(500,array("error" => $e)));
+                return response()->json(ApiHelper::SuccessorFail(500,array("error" => $e->getMessage())));
              }
         });
         $this->reportable(function (Throwable $e) {
@@ -54,17 +55,20 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception ){
         if ($request->expectsJson()) {
             if ($exception instanceof NotFoundHttpException) {
-                return response()->json(ApiHelper::SuccessorFail(404,array("error" => $exception)));
+                return response()->json(ApiHelper::SuccessorFail(404,array("error" => $exception->getMessage())));
+            }
+            if ($exception instanceof ModelNotFoundException) {
+                return response()->json(ApiHelper::SuccessorFail(404,array("error" => $exception->getMessage())));
             }
             if($exception instanceof \Error){
-                response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception)));
+                response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception->getMessage())));
             }
             if($exception instanceof \Throwable){
-                response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception)));
+                response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception->getMessage())));
             }
         }
         if($exception instanceof \Throwable){
-            response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception)));
+            response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception->getMessage())));
         }
         return parent::render($request, $exception);
     }

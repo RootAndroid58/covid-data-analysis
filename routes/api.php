@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Helpers\ApiHelper;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,4 +64,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middlew
     Route::get('/resource',"ResourceApiController@Resources")->name('resources');
 
 });
+
+Route::fallback(function($e){
+    return response()->json(ApiHelper::SuccessorFail(404,array("error" => "route '".$e."' not found")));
+})->name('api.fallback.404');
 

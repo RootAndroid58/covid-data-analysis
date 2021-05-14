@@ -56,6 +56,14 @@ paths:
           headers:
             Accept: application/json
 
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
         '500':
           description:
           content:
@@ -91,6 +99,14 @@ paths:
           headers:
             Accept: application/json
 
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
         '500':
           description:
           content:
@@ -126,6 +142,14 @@ paths:
           headers:
             Accept: application/json
 
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
         '500':
           description:
           content:
@@ -161,6 +185,14 @@ paths:
           headers:
             Accept: application/json
 
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
         '500':
           description:
           content:
@@ -196,6 +228,14 @@ paths:
           headers:
             Accept: application/json
 
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
         '500':
           description:
           content:
@@ -243,6 +283,14 @@ paths:
           headers:
             Accept: application/json
 
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
         '500':
           description:
           content:
@@ -277,6 +325,14 @@ paths:
           headers:
             Accept: application/json
 
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
         '500':
           description:
           content:
@@ -310,6 +366,10 @@ components:
           type: string
         status_code:
           type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
         data:
           type: object
           properties:
@@ -326,6 +386,10 @@ components:
           type: string
         status_code:
           type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
         meta:
           type: object
           properties:
@@ -394,6 +458,10 @@ components:
           type: string
         status_code:
           type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
         meta:
           type: object
           properties:
@@ -451,6 +519,10 @@ components:
           type: string
         status_code:
           type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
         meta:
           type: object
           properties:
@@ -504,6 +576,10 @@ components:
           type: string
         status_code:
           type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
         meta:
           type: object
           properties:
@@ -564,6 +640,10 @@ components:
           type: string
         status_code:
           type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
         meta:
           type: object
           properties:
@@ -622,6 +702,10 @@ components:
           type: string
         status_code:
           type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
         meta:
           type: object
           properties:
@@ -726,6 +810,7 @@ components:
         total:
           type: integer
     error-500:
+      title: error-500
       type: object
       properties:
         status:
@@ -736,10 +821,32 @@ components:
           type: integer
           enum:
           - 500
+        deprecated:
+          type: boolean
+          enum:
+          - false
         error:
           type: string
           enum:
           - Error Message
+    error-400:
+      title: error-400
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - Bad Request
+        state_code:
+          type: integer
+          enum:
+          - 400
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        error:
+          type: object
 
 
 
