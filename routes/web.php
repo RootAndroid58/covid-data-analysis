@@ -3,6 +3,7 @@
 use App\Models\Country;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +101,7 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
         Route::post('profile', 'ChangePasswordController@updateProfile')->name('password.updateProfile');
         Route::post('profile/destroy', 'ChangePasswordController@destroy')->name('password.destroyProfile');
         Route::post('profile/two-factor', 'ChangePasswordController@toggleTwoFactor')->name('password.toggleTwoFactor');
+        // Route::post('profile/token', 'ChangePasswordController@updateProfile')->name('password.createToken');
     }
 });
 Route::group(['namespace' => 'Auth', 'middleware' => ['auth', '2fa']], function () {

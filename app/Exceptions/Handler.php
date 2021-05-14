@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Helpers\ApiHelper;
 
@@ -59,6 +60,9 @@ class Handler extends ExceptionHandler
             }
             if ($exception instanceof ModelNotFoundException) {
                 return response()->json(ApiHelper::SuccessorFail(404,array("error" => $exception->getMessage())));
+            }
+            if ($exception instanceof MethodNotAllowedHttpException) {
+                return response()->json(ApiHelper::SuccessorFail(400,array("error" => $exception->getMessage())));
             }
             if($exception instanceof \Error){
                 response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception->getMessage())));

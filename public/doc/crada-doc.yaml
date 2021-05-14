@@ -30,7 +30,6 @@ info:
   version: '1.0'
 servers:
 - url: https://crada.ga/api/v1
-  variables: {}
 paths:
   /ping:
     get:
@@ -44,7 +43,8 @@ paths:
           name: Accept
           schema:
             type: string
-            example: application/json
+            enum:
+            - application/json
           required: true
       responses:
         '200':
@@ -74,6 +74,180 @@ paths:
             Accept: application/json
 
       deprecated: false
+  /login:
+    post:
+      tags:
+      - General
+      summary: Login
+      description: Using this endpoint you can get the auth token so you can use may other endpoints where you need to Authorization.
+      operationId: auth/login
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: email
+        in: path
+        description: Email id of the user
+        required: true
+        type: string
+      - name: password
+        in: path
+        description: Super Secret password of the user
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/login'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+
+      deprecated: false
+  /register:
+    post:
+      tags:
+      - General
+      summary: Register
+      description: Using this endpoint you can get the auth token by creating an account so you can use may other endpoints where you need to Authorization.
+      operationId: auth/register
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: name
+        in: path
+        description: name of the user
+        required: true
+        type: string
+      - name: email
+        in: path
+        description: Email id of the user
+        required: true
+        type: string
+      - name: password
+        in: path
+        description: Super Secret password of the user
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/register'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+
+      deprecated: false
+  /logout:
+    post:
+      tags:
+      - General
+      summary: logout
+      description: Using this endpoint you can delete the token so that you can regenerate later when you login again.
+      operationId: auth/logout
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: name
+        in: path
+        description: name of the user
+        required: true
+        type: string
+      - name: email
+        in: path
+        description: Email id of the user
+        required: true
+        type: string
+      - name: password
+        in: path
+        description: Super Secret password of the user
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/register'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+
+      deprecated: false
+
+
   /country:
     get:
       tags:
@@ -88,7 +262,15 @@ paths:
         style: simple
         schema:
           type: string
-          example: application/json
+          enum:
+          - application/json
+      - name: search
+        in: path
+        required: false
+        style: simple
+        Schema:
+          type: string
+          example: India
       responses:
         '200':
           description: ''
@@ -131,7 +313,8 @@ paths:
         style: simple
         schema:
           type: string
-          example: application/json
+          enum:
+          - application/json
       responses:
         '200':
           description: ''
@@ -174,7 +357,8 @@ paths:
         style: simple
         schema:
           type: string
-          example: application/json
+          enum:
+          - application/json
       responses:
         '200':
           description: ''
@@ -217,7 +401,8 @@ paths:
         style: simple
         schema:
           type: string
-          example: application/json
+          enum:
+          - application/json
       responses:
         '200':
           description: ''
@@ -272,7 +457,8 @@ paths:
         style: simple
         schema:
           type: string
-          example: application/json
+          enum:
+          - application/json
       responses:
         '200':
           description: ''
@@ -314,7 +500,8 @@ paths:
         style: simple
         schema:
           type: string
-          example: application/json
+          enum:
+          - application/json
       responses:
         '200':
           description: ''
@@ -342,6 +529,259 @@ paths:
           headers:
             Accept: application/json
       deprecated: false
+  /create-resource:
+    post:
+      tags:
+      - New requests
+      summary: Create new resource
+      operationId: request/new/resource
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/resource'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /create-category:
+    post:
+      tags:
+      - New requests
+      summary: Create new category
+      operationId: request/new/category
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/category'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /create-sub-category:
+    post:
+      tags:
+      - New requests
+      summary: Create new sub-category
+      operationId: request/new/sub-category
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/sub-category'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /create-country:
+    post:
+      tags:
+      - New requests
+      summary: Create new country
+      operationId: request/new/country
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/Country'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /create-state:
+    post:
+      tags:
+      - New requests
+      summary: Create new state
+      operationId: request/new/state
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/State'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /create-city:
+    post:
+      tags:
+      - New requests
+      summary: Create new city
+      operationId: request/new/city
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/City'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+
 tags:
 - name: General
   description: Some general API endpoints which are for tracking or keeping the API alive
@@ -354,6 +794,37 @@ tags:
 
 
     In order to update data using API you need to have access to API token which can be found in profile page same goes for adding new data using API.
+- name: New requests
+  description: >-
+    Here you will be able to send a request to our server to add a new resource where our bot will check if required indo is available and satsifying.
+
+    Here all the API requests needs Authorization Token
+- name: models
+  x-displayName: Models
+  description: |-
+    ## Login
+    <SchemaDefinition schemaRef="#/components/schemas/login" />
+
+    ## Register
+    <SchemaDefinition schemaRef="#/components/schemas/register" />
+
+    ## Country
+    <SchemaDefinition schemaRef="#/components/schemas/Country" />
+
+    ## State
+    <SchemaDefinition schemaRef="#/components/schemas/State" />
+
+    ## City
+    <SchemaDefinition schemaRef="#/components/schemas/City" />
+
+    ## Category
+    <SchemaDefinition schemaRef="#/components/schemas/category" />
+
+    ## Sub Category
+    <SchemaDefinition schemaRef="#/components/schemas/sub-category" />
+
+    ## Resources
+    <SchemaDefinition schemaRef="#/components/schemas/resource" />
 
 components:
   schemas:
@@ -848,6 +1319,63 @@ components:
         error:
           type: object
 
+    login:
+      title: login
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - Success
+        state_code:
+          type: integer
+          enum:
+          - 200
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/token'
 
-
+    register:
+      title: Register
+      type: object
+      required:
+      - name
+      - email
+      - password
+      properties:
+        status:
+          type: string
+          enum:
+          - Success
+        state_code:
+          type: integer
+          enum:
+          - 200
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/token'
+    token:
+      title: token
+      type: object
+      required:
+      - name
+      - email
+      - password
+      properties:
+        token:
+          type: string
+        token_type:
+          type: string
+          enum:
+          - Bearer
 

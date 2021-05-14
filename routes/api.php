@@ -63,7 +63,19 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middlew
 
     Route::get('/resource',"ResourceApiController@Resources")->name('resources');
 
+
+
 });
+Route::group(['prefix' => 'auth', 'as' => 'api.', 'namespace' => 'Api\V1','middleware' => 'throttle:60,1'], function () {
+
+    Route::post('/register', "ApiController@register");
+
+    Route::post('/login', "ApiController@login");
+
+    Route::post('/logout', "ApiController@logout");
+
+});
+
 
 Route::fallback(function($e){
     return response()->json(ApiHelper::SuccessorFail(404,array("error" => "route '".$e."' not found")));
