@@ -59,6 +59,12 @@ class Handler extends ExceptionHandler
             if($exception instanceof \Error){
                 response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception)));
             }
+            if($exception instanceof \Throwable){
+                response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception)));
+            }
+        }
+        if($exception instanceof \Throwable){
+            response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception)));
         }
         return parent::render($request, $exception);
     }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,4 +21,30 @@ data-postman-collection-url="entityId=13642074-7fad3869-3032-45b7-bc83-e8213302b
   }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
 </script>
 </body>
+</html> --}}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CRADA API documentation</title>
+    <!-- needed for adaptive design -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+
+    <!--
+    ReDoc doesn't change outer page styles
+    -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<redoc spec-url='{{ asset('doc\crada-doc.yaml') }}'></redoc>
+<script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
+</body>
 </html>
+

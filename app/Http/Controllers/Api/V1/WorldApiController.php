@@ -56,6 +56,8 @@ class WorldApiController extends Controller
                 }
             })->paginate(500);
 
+            $data->appends(["search"=>$search]);
+
 
             return ApiHelper::SuccessorFail(200,$data);
         } catch (\Error $th) {

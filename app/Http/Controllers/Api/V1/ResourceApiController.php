@@ -12,6 +12,7 @@ use App\Models\SubCategory;
 use App\Http\Helpers\ApiHelper;
 use App\Models\Resource;
 use Error;
+use Exception;
 use \Illuminate\Database\QueryException;
 
 class ResourceApiController extends Controller
@@ -29,11 +30,12 @@ class ResourceApiController extends Controller
                         ->orWhere('name','like',"%$search%");
                 }
             })->paginate(20);
+            $data->appends(['search'  => $search]);
 
         } catch (QueryException $th) {
-            return response()->json(ApiHelper::SuccessorFail(500, array("exception" => $th)));
+            return response()->json(ApiHelper::SuccessorFail(500, array("exception" => $th->getMessage())));
         } catch (Error $th){
-            return response()->json(ApiHelper::SuccessorFail(500, array("exception" => $th)));
+            return response()->json(ApiHelper::SuccessorFail(500, array("exception" => $th->getMessage())));
         }
 
 
@@ -55,6 +57,8 @@ class ResourceApiController extends Controller
                     ->orWhere('category_id','like',"%$search%");
             }
         })->paginate(20);
+
+        $data->appends(['search'  => $search]);
 
         return response()->json(ApiHelper::SuccessorFail(200,$data));
     }
@@ -93,8 +97,16 @@ class ResourceApiController extends Controller
                     $query->orWhere('phone_no',"like","%$phone_no%");
                 }
             })->paginate(50);
+
+            $data->appends([
+                "country_id" => $country_id,
+                "state_id" => $state_id,
+                "city_id" => $city_id,
+                "name" => $name,
+                "phone_no" => $phone_no,
+                ]);
         } catch (\Throwable $th) {
-            return ApiHelper::SuccessorFail(500,array("error" => $th));
+            return ApiHelper::SuccessorFail(500,array("error" => $th->getMessage()));
         }
         return response()->json(ApiHelper::SuccessorFail(200,$data));
 
