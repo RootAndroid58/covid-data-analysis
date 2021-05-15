@@ -113,6 +113,8 @@ Route::group(['namespace' => 'Auth', 'middleware' => ['auth', '2fa']], function 
     }
 });
 
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth','can:log_viewer');
+
 Route::group(['prefix'=>'api'] ,function () {
     Route::get('/', function () {
         return view('doc.api');

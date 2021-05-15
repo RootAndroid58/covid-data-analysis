@@ -6,7 +6,6 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "arcanedev/log-viewer": "^8.1",
         "barryvdh/laravel-debugbar": "^3.5",
         "bugsnag/bugsnag-laravel": "^2.21",
         "doctrine/dbal": "^3.1",
@@ -22,6 +21,7 @@
         "laravel/ui": "^3.2",
         "laraveldaily/laravel-charts": "^0.1.24",
         "nuovo/spreadsheet-reader": "^0.5.11",
+        "rap2hpoutre/laravel-log-viewer": "^1.7",
         "rennokki/laravel-eloquent-query-cache": "^2.6",
         "spatie/laravel-medialibrary": "^8.7",
         "voku/simple_html_dom": "^4.7",
