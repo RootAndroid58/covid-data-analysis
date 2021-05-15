@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\State;
+use Error;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Socialite\Facades\Socialite;
 
 class TestController extends Controller
@@ -109,5 +111,28 @@ dd(count($city));
             // \DB::table('country_state')->insert($data);
         }
         dd('done');
+    }
+
+    public function testMail(Request $request)
+    {
+        try{
+            $to_name = 'ETHYT';
+            $to_email = 'rootand58@gmail.com';
+            $data = array('name'=>"Sam Jose", "body" => "Test mail");
+
+            Mail::send('emails.mail', $data, function($message) use ($to_name, $to_email) {
+                $message->to($to_email, $to_name)
+                        ->subject('Artisans Web Testing Mail');
+                // $message->from('contact@crada.ga','Artisans Web');
+            });
+        }catch(Error $e){
+            dd($e);
+        }
+
+    }
+    public function throwerror(Request $request)
+    {
+        throw new Error('test');
+
     }
 }

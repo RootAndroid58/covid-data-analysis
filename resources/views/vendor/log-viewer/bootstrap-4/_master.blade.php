@@ -214,6 +214,7 @@
         #entries {
             overflow-wrap: anywhere;
         }
+
     </style>
 </head>
 <body>

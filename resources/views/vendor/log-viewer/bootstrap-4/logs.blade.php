@@ -1,7 +1,6 @@
 @extends('log-viewer::bootstrap-4._master')
 
 <?php /** @var  Illuminate\Pagination\LengthAwarePaginator  $rows */ ?>
-
 @section('content')
     <div class="page-header mb-4">
         <h1>@lang('Logs')</h1>
@@ -66,7 +65,8 @@
         </table>
     </div>
 
-    {{ $rows->render() }}
+    {!! $rows->render() !!}
+
 @endsection
 
 @section('modals')
@@ -96,10 +96,10 @@
         </div>
     </div>
 @endsection
-@can('log-viewer')
 @section('scripts')
-    <script>
-        $(function () {
+<script>
+    $(function () {
+            @can('log-viewer')
             var deleteLogModal = $('div#delete-log-modal'),
                 deleteLogForm  = $('form#delete-log-form'),
                 submitBtn      = deleteLogForm.find('button[type=submit]');
@@ -149,8 +149,11 @@
                 deleteLogForm.find('input[name=date]').val('');
                 deleteLogModal.find('.modal-body p').html('');
             });
+            @endcan
         });
     </script>
+    <script>
+        $("body > div.container-fluid > main > div.row > div.col-lg-10 > nav > div.hidden.sm\\:flex-1.sm\\:flex.sm\\:items-center.sm\\:justify-between > div:nth-child(1) > p").css('margin-top',10)
+    </script>
 @endsection
-@endcan
 

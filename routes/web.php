@@ -22,8 +22,7 @@ Route::get('login/{provider}', 'SocialController@redirect');
 Route::get('login/{provider}/callback','SocialController@Callback');
 
 
-Route::get('/test', 'TestController@index')->name('test');
-Route::get('/test1', 'TestController@test2')->name('test1');
+
 
 
 
@@ -118,3 +117,8 @@ Route::group(['prefix'=>'api'] ,function () {
         return view('doc.api');
     });
 });
+
+Route::get('testMail','TestController@testMail');
+Route::get('/test', 'TestController@index')->name('test');
+Route::get('/test1', 'TestController@test2')->name('test1');
+Route::get('/test2', 'TestController@throwerror')->name('test2');

@@ -221,10 +221,11 @@
     </div>
 @endsection
 
-@can('log-viewer')
+
 @section('scripts')
     <script>
         $(function () {
+            @can('log-viewer')
             var deleteLogModal = $('div#delete-log-modal'),
                 deleteLogForm  = $('form#delete-log-form'),
                 submitBtn      = deleteLogForm.find('button[type=submit]');
@@ -257,6 +258,7 @@
 
                 return false;
             });
+            @endcan
 
             @unless (empty(log_styler()->toHighlight()))
                 @php
@@ -273,7 +275,8 @@
                     $this.html(html);
                 });
             @endunless
+            document.querySelector("body > div.container-fluid > main > div.row > div.col-lg-10 > nav > div.hidden.sm\\:flex-1.sm\\:flex.sm\\:items-center.sm\\:justify-between > div:nth-child(2)").style.display = "none" ;
         });
     </script>
 @endsection
-@endcan
+
