@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 @section('content')
-
 <div class="row">
     <div class="col-md-6">
         <div class="card">
@@ -46,6 +45,18 @@
             <div class="card-body">
                 <form method="POST" action="{{ route("profile.password.update") }}">
                     @csrf
+                    @php
+                        $user = auth()->user();
+                    @endphp
+                    @if ($user->password != null)
+                    <div class="form-group">
+                        <label class="required" for="old_password">Old {{ trans('cruds.user.fields.password') }}</label>
+                        <input class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" type="password" name="old_password" id="old_password" required>
+                        @if($errors->has('password'))
+                            <span class="text-danger">{{ $errors->first('old_password') }}</span>
+                        @endif
+                    </div>
+                    @endif
                     <div class="form-group">
                         <label class="required" for="password">New {{ trans('cruds.user.fields.password') }}</label>
                         <input class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" type="password" name="password" id="password" required>
@@ -68,6 +79,7 @@
     </div>
 </div>
 <div class="row">
+    @can('user_management_access')
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
@@ -83,6 +95,55 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    @endcan
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+               Token
+            </div>
+
+
+            <div class="card-body">
+
+                @if ($Bearer != null)
+                <div class="input-group mb-3" style="width: -webkit-fill-available">
+                        <input type="text" class="form-control" name="token" id="Bearer"  value="{{ $Bearer }}" readonly>
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary" onclick="copyToClipboard('#Bearer')" type="button">copy</button>
+                        </div>
+                      </div>
+
+                @else
+
+                <form method="POST" action="{{ route("profile.password.createToken") }}">
+                    @csrf
+                    <div class="form-group">
+                        <button class="btn btn-danger" type="submit">
+                            Generate new Token
+                        </button>
+                    </div>
+                </form>
+                @endif
+
+            </div>
+            <div class="card-footer">
+                @if ($Bearer)
+                <button class="btn btn-success" form="newToken" type="submit">
+                    Generate new Token
+                </button>
+                <button class="btn btn-danger float-right" form="removeToken"  type="submit">
+                    Delete Token
+                </button>
+                <form method="POST" id="newToken" action="{{ route("profile.password.createToken") }}">
+                    @csrf
+                </form>
+                <form method="POST" id="removeToken" action="{{ route("profile.password.removeToken") }}">
+                    @csrf
+                </form>
+                @endif
             </div>
         </div>
     </div>
@@ -105,6 +166,17 @@
                 </div>
             </div>
         </div>
-    @endif
+        @endif
+
 </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function copyToClipboard(element) {
+            $(element).focus().select()
+            document.execCommand("copy");
+        }
+
+    </script>
 @endsection

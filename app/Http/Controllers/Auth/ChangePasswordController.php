@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProfileRequest;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Auth;
 
 class ChangePasswordController extends Controller
 {
@@ -15,12 +16,35 @@ class ChangePasswordController extends Controller
     {
         abort_if(Gate::denies('profile_password_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('auth.passwords.edit');
+        $token = auth()->user()->tokens()->where('name','API Token')->first();
+
+        if($token != null){
+            $Bearer = $token->id. "|".$token->token;
+
+        }else{
+            $Bearer = null;
+        }
+
+
+        return view('auth.passwords.edit',compact('Bearer'));
     }
 
     public function update(UpdatePasswordRequest $request)
     {
-        auth()->user()->update($request->validated());
+        $user = auth()->user();
+        if($user->password != null){
+            $check = Auth::attempt(['email' => $user->email, 'password' => $request->old_password]);
+            if($check){
+
+                auth()->user()->update($request->validated());
+                return redirect()->route('profile.password.edit')->with('message', __('global.change_password_success'));
+            }else{
+                // pass not match
+                return redirect()->route('profile.password.edit')->with('error', "Credentials not match");
+            }
+        }else{
+            auth()->user()->update($request->validated());
+        }
 
         return redirect()->route('profile.password.edit')->with('message', __('global.change_password_success'));
     }
@@ -62,5 +86,24 @@ class ChangePasswordController extends Controller
         $user->save();
 
         return redirect()->route('profile.password.edit')->with('message', $message);
+    }
+
+    public function genToken(Request $request)
+    {
+        $user = auth()->user();
+
+        $user->tokens()->delete();
+
+        $token = auth()->user()->createToken('API Token')->plainTextToken;
+
+        return redirect()->back()->with('message','New Token successfully generated!');
+    }
+    public function removeToken(Request $request)
+    {
+        $user = auth()->user();
+
+        $user->tokens()->delete();
+
+        return redirect()->back()->with('message','Token successfully Removed!');
     }
 }

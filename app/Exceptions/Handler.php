@@ -61,8 +61,10 @@ class Handler extends ExceptionHandler
              // it will have access to the $error that we are passing below
 
              if ($this->shouldReport($exception)) {
-                 Log::alert("There as an error sending Email to user");
-                $this->sendEmail($exception); // sends an email
+                 if(env('APP_ENV_LOCAL',false)){
+                     Log::alert("There as an error sending Email to user");
+                    $this->sendEmail($exception); // sends an email
+                 }
            }
         if ($request->expectsJson()) {
             if ($exception instanceof NotFoundHttpException) {

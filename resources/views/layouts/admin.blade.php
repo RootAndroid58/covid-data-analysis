@@ -8,6 +8,25 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ trans('panel.site_title') }}</title>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
@@ -21,6 +40,26 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
     @yield('styles')
+    <style>
+        @media screen and (max-width: 991px) {
+        .columns {
+            height: 200px;
+            overflow-y: scroll;
+        }
+        }
+
+        @media screen and (min-width: 992px) {
+        .columns {
+            -moz-column-count: 3;
+            /* Firefox */
+            -webkit-column-count: 3;
+            /* Safari and Chrome */
+            column-count: 3;
+            width: 700px;
+            height:600px;
+        }
+        }
+    </style>
 </head>
 
 <body class="sidebar-mini layout-fixed" style="height: auto;">
@@ -31,23 +70,84 @@
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
                 </li>
-            </ul>
-
-            <!-- Right navbar links -->
-            @if(count(config('panel.available_languages', [])) > 1)
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" data-toggle="dropdown" href="#">
-                            {{ strtoupper(app()->getLocale()) }}
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
+                @if(count(config('panel.available_languages', [])) > 1)
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                    {{ strtoupper(app()->getLocale()) }}
+                    </a>
+                    <ul class="dropdown-menu columns">
+                        <li>
                             @foreach(config('panel.available_languages') as $langLocale => $langName)
                                 <a class="dropdown-item" href="{{ url()->current() }}?change_language={{ $langLocale }}">{{ strtoupper($langLocale) }} ({{ $langName }})</a>
                             @endforeach
+                        </li>
+                    </ul>
+
+                    <div class="dropdown-menu dropdown-menu-right">
+
+                    </div>
+                </li>
+                @endif
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+
+                    <li class="nav-item dropdown notifications-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="@if(isset(Auth::user()->avatar)){{ asset(Auth::user()->avatar->getUrl()) }} @else {{ asset('img/avatar.jpg') }} @endif" class="user-image img-circle" alt="User Image" width="40">
+                            <span class="hidden-xs">{{ Auth::user()->name }}</span>
+                          </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <div class="card" style="max-width: 20rem;    box-shadow: none;">
+                                <div class="card-header text-center">
+                                    <img src="@if(isset(Auth::user()->avatar)){{ asset(Auth::user()->avatar->getUrl()) }} @else {{ asset('img/avatar.jpg') }}  @endif" class="img-circle" alt="User Image" width="100" style="">
+                                </div>
+                                <div class="card-body text-center noselect">
+                                    <p>
+                                        {{ Auth::user()->name }} -
+                                        @php
+                                        $count = Auth::user()->roles()->get()->count();
+                                        $item = 1 ;
+                                        $created_at = Auth::user()->created_at;
+                                        @endphp
+                                        @foreach(Auth::user()->roles()->get() as $key => $roles)
+                                            @if($count == $item)
+                                            <span class="label label-info label-many" style="border-radius: 16px; padding: 1px 5px 2px;">{{ $roles->title }}</span>
+
+                                            @else
+                                            <?php $item ++;  ?>
+                                            {{ $roles->title . ", " }}
+                                            @endif
+                                        @endforeach
+                                        <br>
+                                        @if ($created_at)
+                                        <small>Member since - {{ $created_at->toDateString() }}</small>
+                                        @endif
+
+                                    </p>
+                                </div>
+                                <div class="card-footer" style="background: white;">
+                                    <div class="row">
+                                    @can('profile_password_edit')
+                                        @if(file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php')))
+                                            <div class="col">
+                                                <a href="{{ route('profile.password.edit') }}" class="btn btn-success float-left">{{ trans('global.my_profile') }}</a>
+                                            </div>
+                                        @else
+                                            <div class="col">
+
+                                            </div>
+                                        @endif
+                                        @endcan
+                                    <div class="col">
+                                        <a href="#" class="btn btn-danger float-right" onclick="event.preventDefault(); document.getElementById('logoutform').submit();">{{ trans('global.logout') }}</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </li>
                 </ul>
-            @endif
 
         </nav>
 
@@ -59,6 +159,13 @@
                     <div class="row mb-2">
                         <div class="col-lg-12">
                             <div class="alert alert-success" role="alert">{{ session('message') }}</div>
+                        </div>
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="row mb-2">
+                        <div class="col-lg-12">
+                            <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
                         </div>
                     </div>
                 @endif

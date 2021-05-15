@@ -100,7 +100,8 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
         Route::post('profile', 'ChangePasswordController@updateProfile')->name('password.updateProfile');
         Route::post('profile/destroy', 'ChangePasswordController@destroy')->name('password.destroyProfile');
         Route::post('profile/two-factor', 'ChangePasswordController@toggleTwoFactor')->name('password.toggleTwoFactor');
-        // Route::post('profile/token', 'ChangePasswordController@updateProfile')->name('password.createToken');
+        Route::post('profile/token', 'ChangePasswordController@genToken')->name('password.createToken');
+        Route::post('profile/token/del', 'ChangePasswordController@removeToken')->name('password.removeToken');
     }
 });
 Route::group(['namespace' => 'Auth', 'middleware' => ['auth', '2fa']], function () {

@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Helpers\ScrappingHelper;
+use App\Http\Helpers\ScraperHelper;
 
 class IN_MH_Nagpur_Scrapper_JOB extends Command
 {
@@ -38,14 +38,11 @@ class IN_MH_Nagpur_Scrapper_JOB extends Command
      */
     public function handle()
     {
-        \Log::info("Job to scrap IN-MH-Nagpur Started Successfully!");
+        \Log::info("Job to scraper IN-MH-Nagpur Started Successfully!");
 
-        $data = ScrappingHelper::Scrap_IN_MH_Nagpur();
-        // dd(str_replace(['"""','\n'],['',''],$data));
-        dd($data);
+        $data = ScraperHelper::Scrap_IN_MH_Nagpur();
 
-        // \Log::info("Job to scrap IN-MH-Nagpur completed!");
-        $this->info('scrap:INMHNagpur IN-MH-Nagpur successfully!');
+        $this->info('IN-MH-Nagpur successfully scraped of '.$data['status']['rows'].' rows updated:'.$data['status']['updates'].' Added:'.$data['status']['new_data']." new data");
         return 0;
     }
 }

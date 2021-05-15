@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
-class ScrappingHelper
+class ScraperHelper
 {
     /**
      * ====================================
@@ -55,7 +55,7 @@ class ScrappingHelper
         }
         try {
             Storage::disk('cron_temp')->put('INMHNagpur.csv', $csvfile);
-            $update = new ScrappingHelper;
+            $update = new ScraperHelper;
             $data['status'] = $update->UpdateViaCSV('Resource',$data);
 
        } catch (\Exception $e) {
@@ -116,16 +116,24 @@ class ScrappingHelper
 
             foreach ($for_insert as $insert_item) {
 
-                $scraper = new ScrappingHelper;
+                $scraper = new ScraperHelper;
                 $success[] = $scraper->updateorinsert($model,$insert_item,$data);
             }
 
             $rows  = count($insert);
             $table = Str::plural($modelName);
+            $update = 0;
+            $insert = 0;
+            $sus = array();
+            foreach($success as $item){
+                $update = $update + $item['updates'];
+                $insert = $insert + $item['inserts'];
+                $sus[] = $item['success'];
+            }
 
             File::delete($path);
 
-            return array("success"=>$success, 'rows' => $rows, 'table' => $table);
+            return array("success"=>$sus, 'rows' => $rows, 'table' => $table , "updates" => $update , 'new_data' => $insert);
 
         } catch (\Exception $ex) {
 
@@ -166,7 +174,8 @@ class ScrappingHelper
 
     public function updateorinsert($model,  $insert_item,$data)
     {
-
+        $new_updates = 0;
+        $new_data = 0;
         foreach($insert_item as $item){
             $categary = isset($item['categary']) ? $item['categary'] : null;
             $name = isset($item['name']) ? $item['name']: null;
@@ -181,7 +190,7 @@ class ScrappingHelper
             if(filter_var($phone_no, FILTER_VALIDATE_URL)){
                 continue;
             }
-            $scraper = new ScrappingHelper;
+            $scraper = new ScraperHelper;
             $get_category_info = $scraper->getCategory($categary);
             $categary_id = $get_category_info['category'];
             $subcategory_id = $get_category_info['sub_category'];
@@ -225,7 +234,18 @@ class ScrappingHelper
             if($subcategory_id != null){
                 $updatedata->subcats()->sync($subcategory_id['id']);
             }
+            if ($updatedata->wasRecentlyCreated) {
+                $new_data ++;
+            } else {
+                if ($updatedata->wasChanged()) {
+                    $new_updates ++;
+                } else {
+                    // model has NOT been assigned new values to one of its attributes and saved as is
+                }
+
+            }
         }
-        return true;
+        // dd($updatedata);
+        return array('updates'=> $new_updates,'inserts' => $new_data , 'success' => true);
     }
 }
