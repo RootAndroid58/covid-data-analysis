@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use \DateTimeInterface;
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class SubCategory extends Model
 {
     use HasFactory;
+    use Auditable;
 
     public $table = 'sub_categories';
 

@@ -95,13 +95,13 @@
 
                     <li class="nav-item dropdown notifications-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="@if(isset(Auth::user()->avatar)){{ asset(Auth::user()->avatar->getUrl()) }} @else {{ asset('img/avatar.jpg') }} @endif" class="user-image img-circle" alt="User Image" width="40">
+                            <img src="https://unavatar.vercel.app/{{ auth()->user()->email }}?fallback=https://ui-avatars.com/api/?name={{ str_replace('+',' ',auth()->user()->name) }}&color=7F9CF4&background=EBF4FF" class="user-image img-circle" alt="User Image" width="40">
                             <span class="hidden-xs">{{ Auth::user()->name }}</span>
                           </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <div class="card" style="max-width: 20rem;    box-shadow: none;">
                                 <div class="card-header text-center">
-                                    <img src="@if(isset(Auth::user()->avatar)){{ asset(Auth::user()->avatar->getUrl()) }} @else {{ asset('img/avatar.jpg') }}  @endif" class="img-circle" alt="User Image" width="100" style="">
+                                    <img src="https://unavatar.now.sh/{{ auth()->user()->email }}?fallback=https://ui-avatars.com/api/?name={{ str_replace('+',' ',auth()->user()->name) }}&color=7F9CF4&background=EBF4FF" class="img-circle" alt="User Image" width="100" style="">
                                 </div>
                                 <div class="card-body text-center noselect">
                                     <p>

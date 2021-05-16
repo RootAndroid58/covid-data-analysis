@@ -132,7 +132,9 @@ dd(count($city));
     }
     public function throwerror(Request $request)
     {
-        throw new Error('test');
-
+        // throw new Error('test');
+        $state= new State;
+        $state->getAttributes();
+        dd($state->getFillable(),$state);
     }
 }

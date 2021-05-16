@@ -66,13 +66,13 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middlew
 
 
 });
-Route::group(['prefix' => 'auth', 'as' => 'api.', 'namespace' => 'Api\V1','middleware' => 'throttle:60,1'], function () {
+Route::group(['prefix' => 'auth', 'as' => 'api.', 'namespace' => 'Api\V1','middleware' => 'throttle:15,1'], function () {
 
-    Route::post('/register', "ApiController@register");
+    Route::post('/register', 'ValidationApiController@register');
 
-    Route::post('/login', "ApiController@login");
+    Route::post('/login', "ValidationApiController@login");
 
-    Route::post('/logout', "ApiController@logout");
+    Route::post('/logout', "ValidationApiController@logout");
 
 });
 

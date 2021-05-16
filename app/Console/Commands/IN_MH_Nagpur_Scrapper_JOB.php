@@ -12,7 +12,7 @@ class IN_MH_Nagpur_Scrapper_JOB extends Command
      *
      * @var string
      */
-    protected $signature = 'scrap:INMHNagpur';
+    protected $signature = 'scraper:INMHNagpur';
 
     /**
      * The console command description.

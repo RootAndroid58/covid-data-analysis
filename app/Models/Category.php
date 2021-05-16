@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use \DateTimeInterface;
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,6 +17,7 @@ class Category extends Model implements HasMedia
     use SoftDeletes;
     use InteractsWithMedia;
     use HasFactory;
+    use Auditable;
 
     public $table = 'categories';
 

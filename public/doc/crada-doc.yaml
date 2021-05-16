@@ -1,8 +1,9 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   title: CRADA API
   contact:
     name: CRADA staff team
+    url: "https://crada.ga/api"
     email: "contact@crada.ga"
   description: |-
     # Introduction

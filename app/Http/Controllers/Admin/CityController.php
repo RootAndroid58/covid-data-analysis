@@ -79,7 +79,7 @@ class CityController extends Controller
 
     public function store(StoreCityRequest $request)
     {
-        $city = City::create($request->all());
+        City::create($request->all());
 
         return redirect()->route('admin.cities.index');
     }

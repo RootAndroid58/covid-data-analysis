@@ -17,19 +17,17 @@ class UpdateNewReqRequest extends FormRequest
     public function rules()
     {
         return [
-            'catogary' => [
-                'string',
-                'nullable',
+            'model' => [
+                'required',
             ],
-            'country' => [
-                'string',
-                'nullable',
+            'email_id' => [
+                'required',
+                'integer',
             ],
-            'state' => [
-                'string',
-                'nullable',
+            'data' => [
+                'required',
             ],
-            'city' => [
+            'message' => [
                 'string',
                 'nullable',
             ],

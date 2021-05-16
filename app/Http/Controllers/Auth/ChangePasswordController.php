@@ -17,14 +17,11 @@ class ChangePasswordController extends Controller
         abort_if(Gate::denies('profile_password_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $token = auth()->user()->tokens()->where('name','API Token')->first();
+        $Bearer = null;
 
         if($token != null){
             $Bearer = $token->id. "|".$token->token;
-
-        }else{
-            $Bearer = null;
         }
-
 
         return view('auth.passwords.edit',compact('Bearer'));
     }
@@ -42,10 +39,9 @@ class ChangePasswordController extends Controller
                 // pass not match
                 return redirect()->route('profile.password.edit')->with('error', "Credentials not match");
             }
-        }else{
-            auth()->user()->update($request->validated());
         }
 
+        auth()->user()->update($request->validated());
         return redirect()->route('profile.password.edit')->with('message', __('global.change_password_success'));
     }
 

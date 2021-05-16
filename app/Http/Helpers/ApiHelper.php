@@ -26,9 +26,9 @@ class ApiHelper
         }
         if($array != null){
             if(is_array($array)){
-                $status = array_merge($status,$array);
+                return array_merge($status,$array);
             }elseif(!is_array($array)){
-                $status = array_merge($status,array("meta" => $array));
+                return array_merge($status,array("meta" => $array));
             }
         }
         return $status;

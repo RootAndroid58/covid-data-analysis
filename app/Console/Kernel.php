@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
         Commands\IN_MH_Nagpur_Scrapper_JOB::class,
+        Commands\scrapeStartCommand::class,
+        Commands\TruncateAuditLogs::class,
     ];
 
     /**
@@ -26,7 +28,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('scrap:INMHNagpur')->everyTenMinutes();
+        $schedule->command('scraper:start')->everyTenMinutes()->withoutOverlapping();
+        $schedule->command('truncate:audit')->daily();
     }
 
     /**

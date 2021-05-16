@@ -8,7 +8,7 @@ use App\Http\Controllers\Traits\ApiResponser;
 use App\Models\User;
 use Auth;
 
-class ApiController extends Controller
+class ValidationApiController extends Controller
 {
     use ApiResponser;
 
@@ -47,10 +47,17 @@ class ApiController extends Controller
         if (!Auth::attempt($attr)) {
             return $this->error('Credentials not match', 401);
         }
-        $user->tokens()->delete();
+        $token = auth()->user()->tokens()->where('name','API Token')->first();
+        $Bearer = null;
+
+        if($token != null){
+            $Bearer = $token->id. "|".$token->token;
+        }else{
+            $Bearer = auth()->user()->createToken('API Token')->plainTextToken;
+        }
 
         return $this->success([
-            'token' => auth()->user()->createToken('API Token')->plainTextToken,
+            'token' => $Bearer,
             'token_type' => 'Bearer',
         ]);
     }
