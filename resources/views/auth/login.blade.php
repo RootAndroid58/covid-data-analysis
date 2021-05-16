@@ -70,12 +70,29 @@
                 </p>
             @endif
             <p class="mb-1 text-center">
-                or
+                OR <br>
+                Signin / Signup with Social Account
 
             </p>
-            <p class="mb-1 text-center">
-                <a class="btn btn-danger" href="{{ url('/login/google') }}">Login With Google <i class="fab fa-google"></i></a>
-            </p>
+            <div class="col">
+                <div class="row text-center justify-content-center">
+                    <p class="mb-1 text-center ml-2">
+                        <a class="btn btn-danger" href="{{ url('/login/google') }}" title="Login with Google"><i class="fab fa-google"></i></a>
+                    </p>
+                    <p class="mb-1 text-center ml-2">
+                        <a class="btn btn-dark" href="{{ url('/login/github') }}" title="Login with Github"><i class="fab fa-github"></i></a>
+                    </p>
+                    <p class="mb-1 text-center ml-2">
+                        <a class="btn" href="{{ url('/login/facebook') }}" style="background: #3b5998; color: white;" title="Login with Facebook"><i class="fab fa-facebook"></i></a>
+                    </p>
+                    <p class="mb-1 text-center ml-2">
+                        <a class="btn" href="{{ url('/login/linkedin') }}" style="background: #337ab7; color: white;" title="Login with LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </p>
+                    <p class="mb-1 text-center ml-2">
+                        <a class="btn" href="{{ url('/login/bitbucket') }}" style="background: #205081; color: white;" title="Login with Bitbucket"><i class="fab fa-bitbucket"></i></a>
+                    </p>
+                </div>
+            </div>
         </div>
         <!-- /.login-card-body -->
     </div>
