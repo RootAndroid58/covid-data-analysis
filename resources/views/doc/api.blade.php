@@ -43,7 +43,7 @@ data-postman-collection-url="entityId=13642074-7fad3869-3032-45b7-bc83-e8213302b
     </style>
 </head>
 <body>
-<redoc spec-url='{{ secure_asset('doc\crada-doc.yaml') }}'></redoc>
+<redoc spec-url='{{ asset('doc\crada-doc.yaml') }}'></redoc>
 <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
 </body>
 </html>
