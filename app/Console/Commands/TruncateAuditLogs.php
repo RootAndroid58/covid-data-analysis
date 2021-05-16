@@ -39,6 +39,6 @@ class TruncateAuditLogs extends Command
      */
     public function handle()
     {
-        AuditLog::where('created_at',"<",Carbon::now()->subDays(30));
+        AuditLog::where('created_at',"<",Carbon::now()->subDays(30))->delete();
     }
 }
