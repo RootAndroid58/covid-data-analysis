@@ -25,42 +25,34 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.newReq.fields.catogary') }}
+                            {{ trans('cruds.newReq.fields.model') }}
                         </th>
                         <td>
-                            {{ $newReq->catogary }}
+                            {{ App\Models\NewReq::MODEL_SELECT[$newReq->model] ?? '' }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.newReq.fields.country') }}
+                            {{ trans('cruds.newReq.fields.email') }}
                         </th>
                         <td>
-                            {{ $newReq->country }}
+                            {{ $newReq->email->email ?? '' }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.newReq.fields.state') }}
+                            {{ trans('cruds.newReq.fields.data') }}
                         </th>
                         <td>
-                            {{ $newReq->state }}
+                            {{ $newReq->data }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.newReq.fields.city') }}
+                            {{ trans('cruds.newReq.fields.message') }}
                         </th>
                         <td>
-                            {{ $newReq->city }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.newReq.fields.extra') }}
-                        </th>
-                        <td>
-                            {{ $newReq->extra }}
+                            {{ $newReq->message }}
                         </td>
                     </tr>
                     <tr>
@@ -69,6 +61,14 @@
                         </th>
                         <td>
                             {{ $newReq->status }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.newReq.fields.admin_message') }}
+                        </th>
+                        <td>
+                            {!! $newReq->admin_message !!}
                         </td>
                     </tr>
                 </tbody>

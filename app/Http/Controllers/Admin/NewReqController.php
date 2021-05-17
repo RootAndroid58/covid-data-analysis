@@ -51,12 +51,9 @@ class NewReqController extends Controller
             $table->editColumn('model', function ($row) {
                 return $row->model ? NewReq::MODEL_SELECT[$row->model] : '';
             });
-            $table->addColumn('email_email', function ($row) {
-                return $row->email ? $row->email->email : '';
-            });
 
             $table->editColumn('email.email', function ($row) {
-                return $row->email ? (is_string($row->email) ? $row->email : $row->email->email) : '';
+                return $row->email ? (is_string($row->email) ? $row->email : $row->email->email) : ($row->email ? $row->email->email : '');
             });
             $table->editColumn('status', function ($row) {
                 return $row->status ? $row->status : '';

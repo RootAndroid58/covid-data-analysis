@@ -25,19 +25,10 @@
                         {{ trans('cruds.newReq.fields.id') }}
                     </th>
                     <th>
-                        {{ trans('cruds.newReq.fields.catogary') }}
+                        {{ trans('cruds.newReq.fields.model') }}
                     </th>
                     <th>
-                        {{ trans('cruds.newReq.fields.country') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.newReq.fields.state') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.newReq.fields.city') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.newReq.fields.extra') }}
+                        {{ trans('cruds.newReq.fields.email') }}
                     </th>
                     <th>
                         {{ trans('cruds.newReq.fields.status') }}
@@ -53,16 +44,12 @@
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
                     </td>
                     <td>
-                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                    </td>
-                    <td>
-                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                    </td>
-                    <td>
-                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                    </td>
-                    <td>
-                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                        <select class="search" strict="true">
+                            <option value>{{ trans('global.all') }}</option>
+                            @foreach(App\Models\NewReq::MODEL_SELECT as $key => $item)
+                                <option value="{{ $key }}">{{ $item }}</option>
+                            @endforeach
+                        </select>
                     </td>
                     <td>
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
@@ -125,13 +112,10 @@
     ajax: "{{ route('admin.new-reqs.index') }}",
     columns: [
       { data: 'placeholder', name: 'placeholder' },
-{ data: 'id', name: 'id' },
-{ data: 'catogary', name: 'catogary' },
-{ data: 'country', name: 'country' },
-{ data: 'state', name: 'state' },
-{ data: 'city', name: 'city' },
-{ data: 'extra', name: 'extra' },
-{ data: 'status', name: 'status' },
+{ data: 'id', name: 'id' ,"width": '8%'},
+{ data: 'model', name: 'model',"width": '35%' },
+{ data: 'email.email', name: 'email.email',"width": '25%' },
+{ data: 'status', name: 'status' ,"width": '15%'},
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

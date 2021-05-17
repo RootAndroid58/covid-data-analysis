@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use \DateTimeInterface;
+use App\Traits\MultiTenantModelTrait;
 use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ class NewReq extends Model implements HasMedia
     use InteractsWithMedia;
     use Auditable;
     use HasFactory;
+    use MultiTenantModelTrait;
 
     public const MODEL_SELECT = [
         'Resource'     => 'Add New Resource',
@@ -48,6 +50,7 @@ class NewReq extends Model implements HasMedia
         'created_at',
         'updated_at',
         'deleted_at',
+        'created_by_id',
     ];
 
     public function registerMediaConversions(Media $media = null): void
@@ -59,6 +62,11 @@ class NewReq extends Model implements HasMedia
     public function email()
     {
         return $this->belongsTo(User::class, 'email_id');
+    }
+
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'created_by_id');
     }
 
     protected function serializeDate(DateTimeInterface $date)
