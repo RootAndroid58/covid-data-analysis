@@ -25,10 +25,10 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.category.fields.name') }}
+                            {{ trans('cruds.category.fields.category_name') }}
                         </th>
                         <td>
-                            {{ $category->name }}
+                            {{ $category->category_name }}
                         </td>
                     </tr>
                     <tr>
@@ -62,30 +62,6 @@
     </div>
 </div>
 
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.relatedData') }}
-    </div>
-    <ul class="nav nav-tabs" role="tablist" id="relationship-tabs">
-        <li class="nav-item">
-            <a class="nav-link" href="#category_sub_categories" role="tab" data-toggle="tab">
-                {{ trans('cruds.subCategory.title') }}
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#category_resources" role="tab" data-toggle="tab">
-                {{ trans('cruds.resource.title') }}
-            </a>
-        </li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane" role="tabpanel" id="category_sub_categories">
-            @includeIf('admin.categories.relationships.categorySubCategories', ['subCategories' => $category->categorySubCategories])
-        </div>
-        <div class="tab-pane" role="tabpanel" id="category_resources">
-            @includeIf('admin.categories.relationships.categoryResources', ['resources' => $category->categoryResources])
-        </div>
-    </div>
-</div>
+
 
 @endsection

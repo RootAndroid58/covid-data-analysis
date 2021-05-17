@@ -32,27 +32,27 @@ return [
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => url('/login/google/callback')
+        'redirect' => env('APP_URL').'/'.env('GOOGLE_REDIRECT')
     ],
     'github' => [
         'client_id' => env('GITHUB_CLIENT_ID'),
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
-        'redirect' => url('/login/github/callback')
+        'redirect' => env('APP_URL').'/'.env('GITHUB_REDIRECT')
     ],
     'facebook' => [
         'client_id' => env('FACEBOOK_CLIENT_ID'),
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
-        'redirect' => url('/login/facebook/callback'),
+        'redirect' => env('APP_URL').'/'.env('FACEBOOK_REDIRECT')
     ],
     'linkedin' => [
         'client_id' => env('LINKEDIN_CLIENT_ID'),
         'client_secret' => env('LINKEDIN_CLIENT_SECRET'),
-        'redirect' => url('/login/linkedin/callback'),
+        'redirect' => env('APP_URL').'/'.env('LINKEDIN_REDIRECT')
     ],
     'bitbucket' => [
         'client_id' => env('BITBUCKET_CLIENT_ID'),
         'client_secret' => env('BITBUCKET_CLIENT_SECRET'),
-        'redirect' => url('/login/bitbucket/callback'),
+        'redirect' => env('APP_URL').'/'.env('BITBUCKET_REDIRECT')
     ],
 
 ];

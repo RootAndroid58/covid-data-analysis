@@ -29,7 +29,7 @@
                         {{ trans('cruds.category.fields.id') }}
                     </th>
                     <th>
-                        {{ trans('cruds.category.fields.name') }}
+                        {{ trans('cruds.category.fields.category_name') }}
                     </th>
                     <th>
                         {{ trans('cruds.category.fields.slug') }}
@@ -106,7 +106,7 @@
     columns: [
       { data: 'placeholder', name: 'placeholder' },
 { data: 'id', name: 'id' },
-{ data: 'name', name: 'name' },
+{ data: 'category_name', name: 'category_name' },
 { data: 'slug', name: 'slug' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],

@@ -65,4 +65,41 @@ class WorldApiController extends Controller
             return ApiHelper::SuccessorFail(500,array("error" => $th));
         }
     }
+
+    public function StateById(Request $request)
+    {
+        $request->validate([
+            'country_id' => 'required'
+        ]);
+        $country_id = $request->input('country_id');
+
+        $country = $this->getByID(Country::class,'id',$country_id);
+
+        $data = State::where('country_code',$country->code)->get();
+        $data = ApiHelper::SuccessorFail(200,$data);
+        return $data;
+    }
+    public function CityById(Request $request)
+    {
+        $request->validate([
+            'state_id' => 'required',
+            'country_id' => 'required'
+        ]);
+        $state_id = $request->input('state_id');
+        $country_id = $request->input('country_id');
+
+        $state = $this->getByID(State::class,'id',$state_id);
+        $country = $this->getByID(Country::class,'id',$country_id);
+
+        $data = City::where('state_code',$state->state_code)->where('country_code',$country->code)->get();
+        $data = ApiHelper::SuccessorFail(200,$data);
+        return $data;
+    }
+
+    public function getByID($model ,$param = null , $value = null)
+    {
+        $data = $model::where($param,$value)->first();
+
+        return $data;
+    }
 }

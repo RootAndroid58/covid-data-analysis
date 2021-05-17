@@ -47,8 +47,8 @@ class SubCategoriesController extends Controller
             $table->editColumn('id', function ($row) {
                 return $row->id ? $row->id : '';
             });
-            $table->addColumn('category_name', function ($row) {
-                return $row->category ? $row->category->name : '';
+            $table->addColumn('category_category_name', function ($row) {
+                return $row->category ? $row->category->category_name  : '';
             });
 
             $table->editColumn('category.slug', function ($row) {
@@ -73,7 +73,7 @@ class SubCategoriesController extends Controller
     {
         abort_if(Gate::denies('sub_category_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $categories = Category::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $categories = Category::all()->pluck('category_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         return view('admin.subCategories.create', compact('categories'));
     }
@@ -89,7 +89,7 @@ class SubCategoriesController extends Controller
     {
         abort_if(Gate::denies('sub_category_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $categories = Category::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $categories = Category::all()->pluck('category_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $subCategory->load('category');
 

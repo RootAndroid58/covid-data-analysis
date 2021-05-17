@@ -84,6 +84,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     // New Req
     Route::delete('new-reqs/destroy', 'NewReqController@massDestroy')->name('new-reqs.massDestroy');
+    Route::post('new-reqs/media', 'NewReqController@storeMedia')->name('new-reqs.storeMedia');
+    Route::post('new-reqs/ckmedia', 'NewReqController@storeCKEditorImages')->name('new-reqs.storeCKEditorImages');
     Route::resource('new-reqs', 'NewReqController');
 
     // Sub Categories
@@ -91,6 +93,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('sub-categories/parse-csv-import', 'SubCategoriesController@parseCsvImport')->name('sub-categories.parseCsvImport');
     Route::post('sub-categories/process-csv-import', 'SubCategoriesController@processCsvImport')->name('sub-categories.processCsvImport');
     Route::resource('sub-categories', 'SubCategoriesController');
+
+    // Audit Logs
+    Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth', '2fa']], function () {
     // Change password

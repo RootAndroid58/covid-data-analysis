@@ -97,7 +97,7 @@
     columns: [
       { data: 'placeholder', name: 'placeholder' },
 { data: 'id', name: 'id' },
-{ data: 'category_name', name: 'category.name' },
+{ data: 'category_category_name', name: 'category.category_name' },
 { data: 'category.slug', name: 'category.slug' },
 { data: 'name', name: 'name' },
 { data: 'extra', name: 'extra' },

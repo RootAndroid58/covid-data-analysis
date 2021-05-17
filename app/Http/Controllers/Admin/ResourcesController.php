@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyResourceRequest;
 use App\Http\Requests\StoreResourceRequest;
 use App\Http\Requests\UpdateResourceRequest;
+use App\Models\Category;
 use App\Models\City;
-use App\Models\State;
 use App\Models\Country;
 use App\Models\Resource;
-use App\Models\Category;
+use App\Models\State;
+use App\Models\SubCategory;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,7 @@ class ResourcesController extends Controller
         abort_if(Gate::denies('resource_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Resource::with(['categories','country', 'state', 'city'])->select(sprintf('%s.*', (new Resource())->table));
+            $query = Resource::with(['categories', 'country', 'state', 'city', 'subcats'])->select(sprintf('%s.*', (new Resource())->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -47,10 +48,10 @@ class ResourcesController extends Controller
             $table->editColumn('id', function ($row) {
                 return $row->id ? $row->id : '';
             });
-            $table->editColumn('category', function ($row) {
+            $table->editColumn('category_category_name', function ($row) {
                 $labels = [];
                 foreach ($row->categories as $category) {
-                    $labels[] = sprintf('<span class="badge badge-info ">%s</span>', $category->name);
+                    $labels[] = sprintf('<span class="badge badge-info ">%s</span>', $category->category_name);
                 }
 
                 return implode(' ', $labels);
@@ -59,8 +60,17 @@ class ResourcesController extends Controller
                 return $row->city ? $row->city->name : '';
             });
 
-            $table->editColumn('city.population', function ($row) {
-                return $row->city ? (is_string($row->city) ? $row->city : $row->city->population) : '';
+            $table->editColumn('city.state_code', function ($row) {
+                return $row->city ? (is_string($row->city) ? $row->city : $row->city->state_code) : '';
+            });
+            $table->editColumn('city.latitude', function ($row) {
+                return $row->city ? (is_string($row->city) ? $row->city : $row->city->latitude) : '';
+            });
+            $table->editColumn('city.longitude', function ($row) {
+                return $row->city ? (is_string($row->city) ? $row->city : $row->city->longitude) : '';
+            });
+            $table->editColumn('city.country_code', function ($row) {
+                return $row->city ? (is_string($row->city) ? $row->city : $row->city->country_code) : '';
             });
             $table->editColumn('name', function ($row) {
                 return $row->name ? $row->name : '';
@@ -75,23 +85,24 @@ class ResourcesController extends Controller
                 return $row->details ? $row->details : '';
             });
             $table->editColumn('up_vote', function ($row) {
-                return $row->up_vote == '' ? 0 : $row->up_vote;
+                return $row->up_vote ?  $row->up_vote : 0;
             });
             $table->editColumn('down_vote', function ($row) {
-                return $row->down_vote == '' ? 0 : $row->down_vote ;
+                return $row->down_vote ? $row->down_vote : 0;
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'category', 'city']);
+            $table->rawColumns(['actions', 'placeholder', 'category_category_name', 'city']);
 
             return $table->make(true);
         }
 
-        $categories = Category::get();
+        $categories     = Category::get();
+        $countries      = Country::get();
+        $states         = State::get();
+        $cities         = City::get();
+        $sub_categories = SubCategory::get();
 
-        // $cities = City::get();
-        $cities = array(trans('global.pleaseSelect') => '');
-
-        return view('admin.resources.index', compact('cities','categories'));
+        return view('admin.resources.index', compact('categories', 'countries', 'states', 'cities', 'sub_categories'));
     }
 
     public function create(Request $request)
@@ -102,7 +113,7 @@ class ResourcesController extends Controller
             dd($request);
         }
 
-        $categories = Category::all()->pluck('name', 'id');
+        $categories = Category::all()->pluck('category_name', 'id');
 
         $country = Country::with('states')->get()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -126,7 +137,7 @@ class ResourcesController extends Controller
     {
         abort_if(Gate::denies('resource_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $categories = Category::all()->pluck('name', 'id');
+        $categories = Category::all()->pluck('category_name', 'id');
         $resource->load('city');
         $cities = City::where('id',$resource->city_id)->get()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 

@@ -11,12 +11,12 @@
             @method('PUT')
             @csrf
             <div class="form-group">
-                <label class="required" for="name">{{ trans('cruds.category.fields.name') }}</label>
-                <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="name" id="name" value="{{ old('name', $category->name) }}" required>
-                @if($errors->has('name'))
-                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                <label class="required" for="category_name">{{ trans('cruds.category.fields.category_name') }}</label>
+                <input class="form-control {{ $errors->has('category_name') ? 'is-invalid' : '' }}" type="text" name="category_name" id="category_name" value="{{ old('category_name', $category->category_name) }}" required>
+                @if($errors->has('category_name'))
+                    <span class="text-danger">{{ $errors->first('category_name') }}</span>
                 @endif
-                <span class="help-block">{{ trans('cruds.category.fields.name_helper') }}</span>
+                <span class="help-block">{{ trans('cruds.category.fields.category_name_helper') }}</span>
             </div>
             <div class="form-group">
                 <label class="required" for="slug">{{ trans('cruds.category.fields.slug') }}</label>

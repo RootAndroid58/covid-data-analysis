@@ -29,7 +29,7 @@
                         </th>
                         <td>
                             @foreach($resource->categories as $key => $category)
-                                <span class="badge badge-info">{{ $category->name }}</span>
+                                <span class="badge badge-info">{{ $category->category_name  }}</span>
                             @endforeach
                         </td>
                     </tr>

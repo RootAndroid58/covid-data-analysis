@@ -27,7 +27,7 @@ class ResourceApiController extends Controller
             $data = Category::with('subcatogary:id,name,category_id')->where(function ($query) use ($search) {
                 if($search != null){
                     $query->orWhere('id','like',"%$search%")
-                        ->orWhere('name','like',"%$search%");
+                        ->orWhere('category_name','like',"%$search%");
                 }
             })->paginate(20);
             $data->appends(['search'  => $search]);
@@ -50,7 +50,7 @@ class ResourceApiController extends Controller
         ]);
         $search = $request->input('search');
 
-        $data = SubCategory::with('category:id,name')->where(function ($query) use ($search) {
+        $data = SubCategory::with('category:id,category_name')->where(function ($query) use ($search) {
             if($search != null){
                 $query->orWhere('id','like',"%$search%")
                     ->orWhere('name','like',"%$search%")
@@ -80,7 +80,7 @@ class ResourceApiController extends Controller
         $phone_no = $request->input('phone_no');
 
         try {
-            $data = Resource::with('categories:id,name,slug','city:id,name','state:id,name,state_code','country:id,name,code')->where(function ($query) use ($country_id,$state_id,$city_id,$name,$phone_no){
+            $data = Resource::with('categories:id,category_name,slug','city:id,name','state:id,name,state_code','country:id,name,code')->where(function ($query) use ($country_id,$state_id,$city_id,$name,$phone_no){
                 if($country_id != null){
                     $query->orWhere('country_id',$country_id);
                 }

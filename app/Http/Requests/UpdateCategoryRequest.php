@@ -17,10 +17,10 @@ class UpdateCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
+            'category_name' => [
                 'string',
                 'required',
-                'unique:categories,name,' . request()->route('category')->id,
+                'unique:categories,category_name,' . request()->route('category')->id,
             ],
             'slug' => [
                 'string',

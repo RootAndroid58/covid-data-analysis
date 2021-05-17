@@ -47,12 +47,20 @@ class ScraperHelper
         $data['website'] = "http://covidhelpnagpur.in/";
 
         $dom = HtmlDomParser::file_get_html("http://covidhelpnagpur.in/");
-        $element = $dom->find('#pool > tr')->innerhtml();
+        $element = $dom->find('#pool > tr');
 
-        $csvfile = '';
-        foreach($element as $el){
-            $csvfile .= trim(preg_replace('/\s+/',' ',strip_tags(str_replace(["&#13;","\t","\r","\n","<td>","</td>","<th>","</th>"],["","",'',",",'"','"','"','"'],$el))),",") . "\n";
+        $header = '';
+        foreach ($element[0]->find('th')->text() as $value) {
+            $header .= '"' . $value . '",';
         }
+        $body = '';
+        foreach($element as $node){
+            foreach($node->find('td')->text() as $el){
+                $body .= '"'. str_replace(array("\n", "\r", "\t"), [' ',',',''],$el) . '",';
+            }
+            $body .=  "\n";
+        }
+        $csvfile = $header  . $body;
         try {
             Storage::disk('cron_temp')->put('INMHNagpur.csv', $csvfile);
             $update = new ScraperHelper;
@@ -62,8 +70,26 @@ class ScraperHelper
 
            throw $e;
        }
-
+       dd($data);
         return $data;
+    }
+
+    public function COVID_worldometers()
+    {
+        $dom = HtmlDomParser::file_get_html("https://www.worldometers.info/coronavirus/");
+        $element = $dom->find('#main_table_countries_today > tbody:nth-child(2) > tr')->innerhtml();
+        $element1 = $dom->find('#main_table_countries_today > thead > tr')->innerhtml();
+        $csvData = '';
+        $csvhead = '';
+        foreach($element1 as $el){
+            $csvhead .= trim(preg_replace('/\s+/',' ',strip_tags(str_replace(["&#13;","\t","\r","\n","<td>","</td>","<th>","</th>"],["","",'',",",'"','"','"','"'],$el))),",") . "\n";
+        }
+        $csvBody = '';
+        foreach($element as $el){
+            $csvBody .= trim(preg_replace('/\s+/',' ',strip_tags(str_replace(["&#13;","\t","\r","\n","<td>","</td>","<th>","</th>"],["","",'',",",'"','"','"','"'],$el))),",") . "\n";
+        }
+
+        $csvData = $csvhead . $csvBody;
     }
 
 
@@ -153,7 +179,7 @@ class ScraperHelper
 
     public function getCategory($data)
     {
-        $category = Category::where('name',$data)->first();
+        $category = Category::where('category_name',$data)->first();
         if($category == null){
             $sub_category = SubCategory::with('category')->where('name',$data)->first();
 

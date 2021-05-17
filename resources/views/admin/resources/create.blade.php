@@ -140,16 +140,17 @@
             if(country){
                 let stateBody = "";
                 stateBody += "<option>Select State</option>\n";
+                stateBody += "<option value='0'>All States</option>\n";
 
                 $.ajax({
                     url: "{{ route('api.StateById') }}",
-                    type: "POST",
+                    type: "GET",
                     data:{
                         country_id: country
                     },
                     success: function (data) {
 
-                        data['states'].forEach(element => {
+                        data['meta'].forEach(element => {
                             stateBody += `<option value="${element["id"]}">${element['name']}</option>\n`
                         });
                         $('#state_id').html(stateBody);
@@ -164,6 +165,7 @@
             e.preventDefault();
 
             var state = $(this).val();
+            var country = $('#country_id').val();
 
             if(state){
                 let cityBody = "";
@@ -171,14 +173,15 @@
 
                 $.ajax({
                     url: "{{ route('api.CityById') }}",
-                    type: "POST",
+                    type: "GET",
                     data:{
                         state_id: state,
+                        country_id: country,
                     },
                     success: function (data) {
+                        console.log(data['meta']);
                         cityBody += `<option value="0">All Cities</option>\n`
-                        data['cities'].forEach(element => {
-                            // console.log(element);
+                        data['meta'].forEach(element => {
                             cityBody += `<option value="${element["id"]}">${element['name']}</option>\n`
                         });
                         $('#city_id').html(cityBody);

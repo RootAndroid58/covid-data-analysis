@@ -25,7 +25,7 @@
         "rennokki/laravel-eloquent-query-cache": "^2.6",
         "spatie/laravel-medialibrary": "^8.7",
         "voku/simple_html_dom": "^4.7",
-        "yajra/laravel-datatables-oracle": "^9.11"
+        "yajra/laravel-datatables-oracle": "^9.18"
     },
     "require-dev": {
         "beyondcode/laravel-query-detector": "^1.5",

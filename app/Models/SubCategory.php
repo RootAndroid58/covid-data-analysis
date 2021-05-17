@@ -6,11 +6,13 @@ use \DateTimeInterface;
 use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\CacheClear;
 
 class SubCategory extends Model
 {
     use HasFactory;
     use Auditable;
+    use CacheClear;
 
     public $table = 'sub_categories';
 

@@ -7,12 +7,14 @@ use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CacheClear;
 
 class Resource extends Model
 {
     use SoftDeletes;
     use HasFactory;
     use Auditable;
+    use CacheClear;
 
     public $table = 'resources';
 

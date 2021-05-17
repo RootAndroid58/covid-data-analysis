@@ -11,6 +11,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Models\SubCategory;
+use App\Traits\CacheClear;
 
 class Category extends Model implements HasMedia
 {
@@ -18,6 +19,7 @@ class Category extends Model implements HasMedia
     use InteractsWithMedia;
     use HasFactory;
     use Auditable;
+    use CacheClear;
 
     public $table = 'categories';
 
