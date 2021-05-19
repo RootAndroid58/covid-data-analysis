@@ -14,6 +14,7 @@ use voku\helper\HtmlDomParser;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Helpers\ScraperHelper;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use \SpreadsheetReader;
 
@@ -21,11 +22,7 @@ class TestController extends Controller
 {
 public function index()
     {
-        $array = Cache::get('historical');
-        // dd($array);
-        $response = $this->getDays($array,30);
-        dd($response);
-
+        Artisan::call('covid:historical');
     }
 
     public function test2()
