@@ -184,14 +184,8 @@ class ScraperHelper
 
         foreach($scraper_data as $data){
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $data['website']);
-            curl_setopt($ch, CURLOPT_POST, 0);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            $csvfile = curl_exec ($ch);
-            $err = curl_error($ch);  //if you need
-            curl_close ($ch);
+            $dom = HtmlDomParser::file_get_html($data['website']);
+            $csvfile = $dom->html();
 
             Storage::disk('cron_temp')->put($data['path'], $csvfile);
 
@@ -226,7 +220,7 @@ class ScraperHelper
     {
         try {
             $filename = $data['path'];
-            $path     = storage_path('cron_temp\\' . $filename);
+            $path     = storage_path('cron_temp//' . $filename);
 
             $hasHeader = $data['hasHeader'];
 

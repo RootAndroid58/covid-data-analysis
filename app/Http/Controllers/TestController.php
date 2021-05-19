@@ -54,7 +54,7 @@ public function index()
                 $csvfile = $dom->html();
                 Storage::disk('cron_temp')->put($data['path'], $csvfile);
 
-                $path = storage_path('cron_temp\\' . $data['path']);
+                $path = storage_path('cron_temp//' . $data['path']);
                 $header = new SpreadsheetReader($path);
 
                 foreach($header as $key => $row){

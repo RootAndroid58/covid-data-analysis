@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Traits\ApiResponser;
+use App\Http\Helpers\ApiHelper;
 use App\Models\User;
 use Auth;
 
@@ -41,11 +42,11 @@ class ValidationApiController extends Controller
 
         $user = User::where('email',$request->input('email'))->first();
         if($user->password == null){
-            return $this->error('Password Not Created Create new password in profile page!',403);
+            return response()->json(ApiHelper::SuccessorFail(403,['error' =>'Password Not Created Create new password in profile page!']));
         }
 
         if (!Auth::attempt($attr)) {
-            return $this->error('Credentials not match', 401);
+            return response()->json(ApiHelper::SuccessorFail(403,['error' =>'Credentials not match']));
         }
         $token = auth()->user()->tokens()->where('name','API Token')->first();
         $Bearer = null;
