@@ -201,7 +201,7 @@ class ScraperHelper
             //     throw new \Error($th);
             // }
 
-            $path = storage_path('cron_temp\\' . $data['path']);
+            $path = storage_path('cron_temp//' . $data['path']);
             $header = new SpreadsheetReader($path);
 
             foreach($header as $key => $row){
