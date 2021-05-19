@@ -67,6 +67,13 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middlew
 
 
 
+    // COVID API ROUTES
+
+    Route::get('/covid-19/historical/', 'JHUCSSEApiController@historical');
+    Route::get('/covid-19/historical/{country}', 'JHUCSSEApiController@historicalbyCountry');
+
+
+
 });
 Route::group(['prefix' => 'auth', 'as' => 'api.', 'namespace' => 'Api\V1','middleware' => 'throttle:15,1'], function () {
 

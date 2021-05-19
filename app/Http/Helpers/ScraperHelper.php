@@ -14,6 +14,7 @@ use \SpreadsheetReader;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class ScraperHelper
 {
@@ -70,26 +71,139 @@ class ScraperHelper
 
            throw $e;
        }
-       dd($data);
         return $data;
     }
 
-    public function COVID_worldometers()
+    static public function COVID_worldometers()
     {
+        $fields = array('index', 'country', 'cases', 'todayCases', 'deaths', 'todayDeaths', 'recovered', 'todayRecovered', 'active',
+        'critical', 'casesPerOneMillion', 'deathsPerOneMillion', 'tests', 'testsPerOneMillion', 'population', 'continent', 'oneCasePerPeople', 'oneDeathPerPeople', 'oneTestPerPeople');
+            $scraper_data = array();
+            $scraper_data[] = array(
+                'cache_key' => 'worldometers_today',
+                'path' => 'worldometers_today.csv',
+                'hasHeader' => true,
+                'website' => "https://www.worldometers.info/coronavirus/",
+                'fields' => $fields,
+            );
+            $scraper_data[] = array(
+                'cache_key' => 'worldometers_yesterday',
+                'path' => 'worldometers_yesterday.csv',
+                'hasHeader' => true,
+                'website' => "https://www.worldometers.info/coronavirus/",
+                'fields' => $fields,
+            );
+            $scraper_data[]    = array(
+                'cache_key' => 'worldometers_yesterday2',
+                'path' => 'worldometers_yesterday2.csv',
+                'hasHeader' => true,
+                'website' => "https://www.worldometers.info/coronavirus/",
+                'fields' => $fields,
+            );
+
         $dom = HtmlDomParser::file_get_html("https://www.worldometers.info/coronavirus/");
-        $element = $dom->find('#main_table_countries_today > tbody:nth-child(2) > tr')->innerhtml();
-        $element1 = $dom->find('#main_table_countries_today > thead > tr')->innerhtml();
-        $csvData = '';
-        $csvhead = '';
-        foreach($element1 as $el){
-            $csvhead .= trim(preg_replace('/\s+/',' ',strip_tags(str_replace(["&#13;","\t","\r","\n","<td>","</td>","<th>","</th>"],["","",'',",",'"','"','"','"'],$el))),",") . "\n";
-        }
-        $csvBody = '';
-        foreach($element as $el){
-            $csvBody .= trim(preg_replace('/\s+/',' ',strip_tags(str_replace(["&#13;","\t","\r","\n","<td>","</td>","<th>","</th>"],["","",'',",",'"','"','"','"'],$el))),",") . "\n";
+
+        // $header_element = $dom->find('#main_table_countries_today > thead > tr');
+        $header = '';
+        foreach($fields as $node){
+            $header .= '"'.str_replace(["\n",",",'&nbsp;'],['',"/","al "],$node). '",';
         }
 
-        $csvData = $csvhead . $csvBody;
+        $data_element_today = $dom->findMulti('#main_table_countries_today > tbody:nth-child(2) > tr');
+        $csvFile_today = $header . "\n";
+        foreach($data_element_today as $node){
+            $data = '';
+            foreach($node->find('td')->text() as $td){
+                $data .= '"'.$td . '",';
+            }
+            $data .= "\n";
+            $csvFile_today .= $data;
+        }
+
+        $data_element_yesterday = $dom->findMulti('#main_table_countries_yesterday > tbody:nth-child(2) > tr');
+        $csvFile_yestarday = $header . "\n";
+        foreach($data_element_yesterday as $node){
+            $data = '';
+            foreach($node->find('td')->text() as $td){
+                $data .= '"' . $td . '",';
+            }
+            $data .= "\n";
+            $csvFile_yestarday .= $data;
+        }
+
+        $data_element_yesterday2 = $dom->findMulti('#main_table_countries_yesterday2 > tbody:nth-child(2) > tr');
+        $csvFile_yestarday2 = $header . "\n";
+        foreach($data_element_yesterday2 as $node){
+            $data = '';
+            foreach($node->find('td')->text() as $td){
+                $data .= '"' . $td . '",';
+            }
+            $data .= "\n";
+            $csvFile_yestarday2 .= $data;
+        }
+        try {
+            Storage::disk('cron_temp')->put('worldometers_today.csv', $csvFile_today);
+            Storage::disk('cron_temp')->put('worldometers_yesterday.csv', $csvFile_yestarday);
+            Storage::disk('cron_temp')->put('worldometers_yesterday2.csv', $csvFile_yestarday2);
+            $scraper = new ScraperHelper;
+            foreach($scraper_data as $item){
+                $arrays = $scraper->csvtoarray($item);
+                Cache::forget($item['cache_key']);
+                $success = Cache::put($item['cache_key'], $arrays, now()->addMinutes(10));
+                $values[] = $success ? true : false;
+                // dd($arrays);
+            }
+            $scraper_data['success'] = $values;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return $scraper_data;
+    }
+
+    static public function covid_hestorical()
+    {
+        $scraper_data = array();
+            $scraper_data[] = array(
+                'cache_key' => 'casesResponse_temp',
+                'path' => 'hestorical_casesResponse.csv',
+                'hasHeader' => true,
+                'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+            );
+            $scraper_data[] = array(
+                'cache_key' => 'deathsResponse_temp',
+                'path' => 'hestorical_deathsResponse.csv',
+                'hasHeader' => true,
+                'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
+            );
+            $scraper_data[]    = array(
+                'cache_key' => 'recoveredResponse_temp',
+                'path' => 'hestorical_recoveredResponse.csv',
+                'hasHeader' => true,
+                'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",
+            );
+
+            foreach($scraper_data as $data){
+
+                $dom = HtmlDomParser::file_get_html($data['website']);
+                $csvfile = $dom->html();
+                Storage::disk('cron_temp')->put($data['path'], $csvfile);
+
+                $path = storage_path('cron_temp\\' . $data['path']);
+                $header = new SpreadsheetReader($path);
+
+                foreach($header as $key => $row){
+                    if($key == 0){
+                        $fields = $row;
+                    }else break;
+                }
+                $scraper = new ScraperHelper;
+                $response[] = $scraper->csvtoarray(array('hasHeader'=> true , 'path', $data['path'], 'fields' => $fields));
+                Cache::put($data['cache_key'],$response);//, now()->addMinutes(10));
+            }
+            $sorted_data = cacheUpdater::historical();
+            return true;
+
     }
 
 
@@ -99,7 +213,7 @@ class ScraperHelper
      * Scrapper Helper Function Starts here
      * ===========================================
      */
-    public static function UpdateViaCSV($model,$data)
+    static public function UpdateViaCSV($model,$data)
     {
         try {
             $filename = $data['path'];
@@ -165,6 +279,39 @@ class ScraperHelper
 
             throw $ex;
         }
+    }
+
+    static public function csvtoarray($data)
+    {
+        $hasHeader = $data['hasHeader'];
+        $filename = $data['path'];
+        $path     = storage_path('cron_temp\\' . $filename);
+        $fields = $data['fields'];
+        $fields = array_flip(array_filter($fields));
+
+        $reader = new SpreadsheetReader($path);
+            $insert = [];
+
+            foreach ($reader as $key => $row) {
+                if ($hasHeader && $key == 0) {
+                    continue;
+                }
+
+                $tmp = [];
+                foreach ($fields as $header => $k) {
+
+                    if (isset($row[$k])) {
+                        $tmp[$header] = trim($row[$k],",");
+                    }
+                }
+
+
+                if (count($tmp) > 0) {
+                    $insert[] = $tmp;
+                }
+            }
+            File::delete($path);
+            return $insert;
     }
 
     public function getIDofALL($data)

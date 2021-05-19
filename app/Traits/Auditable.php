@@ -24,13 +24,24 @@ trait Auditable
 
     protected static function audit($description, $model)
     {
-        AuditLog::create([
-            'description'  => $description,
-            'subject_id'   => $model->id ?? null,
-            'subject_type' => get_class($model) ?? null,
-            'user_id'      => auth()->id() ?? null,
-            'properties'   => $model ?? null,
-            'host'         => request()->ip() ?? null,
-        ]);
+        if(auth()->id() != null){
+            AuditLog::create([
+                'description'  => $description,
+                'subject_id'   => $model->id ?? null,
+                'subject_type' => get_class($model) ?? null,
+                'user_id'      => auth()->id() ?? null,
+                'properties'   => $model ?? null,
+                'host'         => request()->ip() ?? null,
+            ]);
+        }else if($description == 'created'){
+            AuditLog::create([
+                'description'  => $description,
+                'subject_id'   => $model->id ?? null,
+                'subject_type' => get_class($model) ?? null,
+                'user_id'      => auth()->id() ?? null,
+                'properties'   => $model ?? null,
+                'host'         => request()->ip() ?? null,
+            ]);
+        }
     }
 }
