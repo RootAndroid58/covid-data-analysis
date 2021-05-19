@@ -30,7 +30,7 @@ info:
     As of now global limit of 60 requests per minute per IP address is in effect.
   version: '1.0'
 servers:
-- url: https://crada.ga/api/v1
+- url: https://www.crada.ga/api/v1
 paths:
   /ping:
     get:
