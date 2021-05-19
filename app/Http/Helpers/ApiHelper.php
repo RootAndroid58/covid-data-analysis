@@ -41,6 +41,11 @@ class ApiHelper
     {
         $data = Cache::get('historical');
 
+        if($data == null){
+            ScraperHelper::covid_hestorical();
+            $data = Cache::get('historical');
+        }
+
         $ApiHelper = new ApiHelper;
 
         $response = $ApiHelper->getDays($data,$days);
@@ -51,17 +56,16 @@ class ApiHelper
 
     Static public function historicalbyCountry($name, $code ,$days)
     {
-        // $data = Cache::get('casesResponse');
-        // $data1 = Cache::get('deathsResponse');
-        // $data2 = Cache::get('recoveredResponse');
-
         $data = Cache::get('historical');
+        if($data == null){
+            ScraperHelper::covid_hestorical();
+            $data = Cache::get('historical');
+        }
         $find = Country::where('name',$name)->orWhere('code',$code)->first();
 
         $ApiHelper = new ApiHelper;
 
         $search_key = $ApiHelper->searcharray($data,$find);
-        // dd($search_key);
 
         if($search_key != null){
 

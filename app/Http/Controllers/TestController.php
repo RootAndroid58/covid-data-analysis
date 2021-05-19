@@ -105,20 +105,8 @@ public function index()
         // dd($data,$data1,$data2);
         $response = $this->sort($data,$data1,$data2,'all');
         Cache::put('historical', $response);
-        dd($response,Cache::get('historical'));
 
-        // dd(array_merge_recursive($data,$data1));
-        $find = Country::where('name','nagpur')->orWhere('code','IN')->first();
-
-        $search_key = $this->searcharray($data,$find);
-        $search_key1 = $this->searcharray($data1,$find);
-        $search_key2 = $this->searcharray($data2,$find);
-        // dd($search_key);
-        $response = $this->sort($data[$search_key],$data1[$search_key1],$data2[$search_key2],'all');
         return $response;
-
-        // dd(array_search($data,["Country/Region" =>'India']));
-        // dd(Cache::get('deathsResponse')[10]);
     }
 
     public function searcharray($array,$find)
