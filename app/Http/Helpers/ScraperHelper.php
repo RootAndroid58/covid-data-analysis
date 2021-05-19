@@ -193,15 +193,10 @@ class ScraperHelper
             $err = curl_error($ch);  //if you need
             curl_close ($ch);
 
-            // $dom = HtmlDomParser::file_get_html($data['website']);
-            // $csvfile = $dom->html();
-            // try {
-                Storage::disk('cron_temp')->put($data['path'], $csvfile);
-            // } catch (\ErrorException $th) {
-            //     throw new \Error($th);
-            // }
+            Storage::disk('cron_temp')->put($data['path'], $csvfile);
 
-            $path = storage_path('cron_temp//' . $data['path']);
+
+            $path = storage_path('cron_temp//'.$data['path']);
             $header = new SpreadsheetReader($path);
 
             foreach($header as $key => $row){
@@ -210,7 +205,7 @@ class ScraperHelper
                 }else break;
             }
             $scraper = new ScraperHelper;
-            // dd(array('hasHeader'=> true , 'path', $data['path'], 'fields' => $fields));
+
             $response = $scraper->csvtoarray(array('hasHeader'=> true , 'path'=> $data['path'], 'fields' => $fields));
             Cache::put($data['cache_key'],$response);//, now()->addMinutes(10));
         }
@@ -299,7 +294,8 @@ class ScraperHelper
     {
         $hasHeader = $data['hasHeader'];
         $filename = $data['path'];
-        $path     = storage_path('cron_temp\\' . $filename);
+        // $path     = Storage::disk('cron_temp')->path($filename);;
+        $path     = storage_path('cron_temp//' . $filename);
         $fields = $data['fields'];
         $fields = array_flip(array_filter($fields));
 
