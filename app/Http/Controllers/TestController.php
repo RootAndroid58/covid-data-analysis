@@ -122,7 +122,7 @@ public function index()
     public function sort($array,$array1,$array2)
     {
         $remove = ['Province/State','Country/Region','Lat','Long'];
-
+        // dd($array,$array1,$array2);
         for ($i=0; $i < max(count($array),count($array1),count($array2)); $i++) {
 
             $timeline = array_diff_key($array[$i],array_flip($remove));

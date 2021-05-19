@@ -97,7 +97,7 @@ class ApiHelper
         $remove = ['Province/State','Country/Region','Lat','Long'];
 
         for ($i=0; $i < max(count($array),count($array1),count($array2)); $i++) {
-            dd($array);
+            // dd($array);
 
             $timeline = array_diff_key($array[$i],array_flip($remove));
             if( isset($array1[$i])){
