@@ -8,6 +8,7 @@
         "php": "^7.3|^8.0",
         "barryvdh/laravel-debugbar": "^3.5",
         "bugsnag/bugsnag-laravel": "^2.21",
+        "cache/filesystem-adapter": "^1.1",
         "doctrine/dbal": "^3.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -24,6 +25,7 @@
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "rennokki/laravel-eloquent-query-cache": "^2.6",
         "spatie/laravel-medialibrary": "^8.7",
+        "swayok/alternative-laravel-cache": "^6.1",
         "voku/simple_html_dom": "^4.7",
         "yajra/laravel-datatables-oracle": "^9.18"
     },

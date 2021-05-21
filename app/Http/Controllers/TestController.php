@@ -22,7 +22,8 @@ class TestController extends Controller
 {
 public function index()
     {
-        Artisan::call('covid:historical');
+        Artisan::call('covid:worldometers');
+        dd(Cache::get('worldometer.states'));
     }
 
     public function test2()
@@ -100,7 +101,7 @@ public function index()
         $data1 = Cache::get('deathsResponse_temp');
         $data2 = Cache::get('recoveredResponse_temp');
         // dd($data,$data1,$data2);
-        $response = $this->sort($data,$data1,$data2,'all');
+        $response = $this->hostorical_sort($data,$data1,$data2,'all');
         Cache::put('historical', $response);
 
         return $response;

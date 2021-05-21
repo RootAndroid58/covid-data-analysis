@@ -80,21 +80,21 @@ class ScraperHelper
         'critical', 'casesPerOneMillion', 'deathsPerOneMillion', 'tests', 'testsPerOneMillion', 'population', 'continent', 'oneCasePerPeople', 'oneDeathPerPeople', 'oneTestPerPeople');
             $scraper_data = array();
             $scraper_data[] = array(
-                'cache_key' => 'worldometers_today',
+                'cache_key' => 'temp.worldometers.today',
                 'path' => 'worldometers_today.csv',
                 'hasHeader' => true,
                 'website' => "https://www.worldometers.info/coronavirus/",
                 'fields' => $fields,
             );
             $scraper_data[] = array(
-                'cache_key' => 'worldometers_yesterday',
+                'cache_key' => 'temp.worldometers.yesterday',
                 'path' => 'worldometers_yesterday.csv',
                 'hasHeader' => true,
                 'website' => "https://www.worldometers.info/coronavirus/",
                 'fields' => $fields,
             );
             $scraper_data[]    = array(
-                'cache_key' => 'worldometers_yesterday2',
+                'cache_key' => 'temp.worldometers.yesterday2',
                 'path' => 'worldometers_yesterday2.csv',
                 'hasHeader' => true,
                 'website' => "https://www.worldometers.info/coronavirus/",
@@ -102,7 +102,7 @@ class ScraperHelper
             );
 
         $dom = HtmlDomParser::file_get_html("https://www.worldometers.info/coronavirus/");
-
+        // $usStates = HtmlDomParser::file_get_html("https://www.worldometers.info/coronavirus/country/us/");
         // $header_element = $dom->find('#main_table_countries_today > thead > tr');
         $header = '';
         foreach($fields as $node){
@@ -149,14 +149,85 @@ class ScraperHelper
             foreach($scraper_data as $item){
                 $arrays = $scraper->csvtoarray($item);
                 Cache::forget($item['cache_key']);
-                $success = Cache::put($item['cache_key'], $arrays, now()->addMinutes(10));
+                $success = Cache::tags(['temp','temp.worldometers'])->put($item['cache_key'], $arrays, now()->addMinutes(10));
                 $values[] = $success ? true : false;
             }
             $scraper_data['success'] = $values;
         } catch (\Throwable $e) {
             throw $e;
         }
+        $sort = new cacheUpdater;
+        $sort->worldometer();
 
+        return $scraper_data;
+    }
+
+    static public function COVID_worldometers_usa()
+    {
+        $fields = array('index', 'state', 'cases', 'todayCases', 'deaths', 'todayDeaths',
+        'recovered', 'active', 'casesPerOneMillion', 'deathsPerOneMillion', 'tests',
+        'testsPerOneMillion', 'population');
+        $scraper_data = array();
+        $scraper_data[] = array(
+            'cache_key' => 'temp.worldometers.states.today',
+            'path' => 'worldometers_states_today.csv',
+            'hasHeader' => true,
+            'website' => "https://www.worldometers.info/coronavirus/country/us/",
+            'fields' => $fields,
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.worldometers.states.yesterday',
+            'path' => 'worldometers_states_yesterday.csv',
+            'hasHeader' => true,
+            'website' => "https://www.worldometers.info/coronavirus/country/us/",
+            'fields' => $fields,
+        );
+
+        $dom = HtmlDomParser::file_get_html("https://www.worldometers.info/coronavirus/country/us/");
+        $header = '';
+        foreach($fields as $node){
+            $header .= '"'.str_replace(["\n",",",'&nbsp;'],['',"/","al "],$node). '",';
+        }
+
+        $data_element_today = $dom->findMulti('#usa_table_countries_today > tbody:nth-child(2) > tr');
+
+        $csvFile_today = $header . "\n";
+        foreach($data_element_today as $node){
+            $data = '';
+            foreach($node->find('td')->text() as $td){
+                $data .= '"'.$td . '",';
+            }
+            $data .= "\n";
+            $csvFile_today .= $data;
+        }
+
+        $data_element_yesterday = $dom->findMulti('#usa_table_countries_yesterday > tbody:nth-child(2) > tr');
+        $csvFile_yestarday = $header . "\n";
+        foreach($data_element_yesterday as $node){
+            $data = '';
+            foreach($node->find('td')->text() as $td){
+                $data .= '"' . $td . '",';
+            }
+            $data .= "\n";
+            $csvFile_yestarday .= $data;
+        }
+
+        try {
+            Storage::disk('cron_temp')->put('worldometers_states_today.csv', $csvFile_today);
+            Storage::disk('cron_temp')->put('worldometers_states_yesterday.csv', $csvFile_yestarday);
+            $scraper = new ScraperHelper;
+            foreach($scraper_data as $item){
+                $arrays = $scraper->csvtoarray($item);
+                Cache::forget($item['cache_key']);
+                $success = Cache::tags(['temp','temp.worldometers.states'])->put($item['cache_key'], $arrays, now()->addMinutes(10));
+                $values[] = $success ? true : false;
+            }
+            $scraper_data['success'] = $values;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->COVID_worldometers_usa();
         return $scraper_data;
     }
 
@@ -201,7 +272,7 @@ class ScraperHelper
             $scraper = new ScraperHelper;
 
             $response = $scraper->csvtoarray(array('hasHeader'=> true , 'path'=> $data['path'], 'fields' => $fields));
-            Cache::put($data['cache_key'],$response);//, now()->addMinutes(10));
+            Cache::tags(['temp','temp.hestorical'])->put($data['cache_key'],$response, now()->addMinutes(10));
         }
         $sorted_data = cacheUpdater::historical();
 
