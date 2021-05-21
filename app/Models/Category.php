@@ -34,7 +34,7 @@ class Category extends Model implements HasMedia
     ];
 
     protected $fillable = [
-        'name',
+        'category_name',
         'slug',
         'created_at',
         'updated_at',

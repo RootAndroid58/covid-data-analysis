@@ -86,7 +86,7 @@ return [
             'id'                            => 'ID',
             'id_helper'                     => ' ',
             'category_name'                 => 'Name',
-            'category_namename_helper'      => ' ',
+            'category_name_helper'      => ' ',
             'slug'                          => 'Slug',
             'slug_helper'                   => ' ',
             'image'                         => 'Image',

@@ -165,7 +165,7 @@ class HomeController
             'column_class'          => 'col-md-6',
             'entries_number'        => '20',
             'fields'                => [
-                'name'  => '',
+                'category_name'  => '',
                 'image' => '',
             ],
             'translation_key' => 'category',
@@ -213,7 +213,6 @@ class HomeController
         if (!array_key_exists('fields', $settings6)) {
             $settings6['fields'] = [];
         }
-        // dd($settings6);
 
         return view('home', compact('settings1', 'settings2', 'settings3', 'settings4', 'settings5', 'settings6'));
 
