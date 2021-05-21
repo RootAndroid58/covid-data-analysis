@@ -99,6 +99,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
 
     Route::get('/clear-cache', function () {
+        Artisan::call('storage:link');
         Artisan::call('cache:all-clear');
         return redirect()->back();
     })->middleware('can:cache-clear');
