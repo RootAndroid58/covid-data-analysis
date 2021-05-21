@@ -40,6 +40,8 @@ class covid_worldometers extends Command
     {
         $data = ScraperHelper::COVID_worldometers();
         $this->info("scraped and saved COVID_worldometers into cache of today:". ($data['success'][0] ? "success": "failed") ." ,yesterday:". ($data['success'][1] ? "success": "failed") ." ,yesterday2:". ($data['success'][2] ? "success": "failed"));
+        $data1 = ScraperHelper::COVID_worldometers_usa();
+        $this->info("scraped and saved COVID_worldometers into cache of today:". ($data1['success'][0] ? "success": "failed") ." ,yesterday:". ($data1['success'][1] ? "success": "failed"));
         return 0;
     }
 }

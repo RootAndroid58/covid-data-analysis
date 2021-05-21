@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Country;
+use Illuminate\Support\Facades\Artisan;
 
 class ApiHelper
 {
@@ -37,13 +38,97 @@ class ApiHelper
         return $status;
     }
 
+    Static public function worldometer($param,$search = null)
+    {
+        $search_param = ['today','yesterday','yesterday2'];
+        try {
+            $data = Cache::get('worldometer');
+            if($data == null){
+                Artisan::call('covid:worldometers');
+                $data = Cache::get('worldometer');
+            }
+
+            $ApiHelper = new ApiHelper;
+            if($param == 'today'){
+                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
+            }else if($param == 'yesterday'){
+                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
+            }else if($param == 'yesterday2'){
+                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
+            }else{
+                $response = $data;
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        if($search != null){
+            $response_key = $ApiHelper->searcharray($response,$search,'country');
+            $response = $data[$response_key];
+        }
+        return $ApiHelper->SuccessorFail(200,['meta' =>$response]);
+    }
+    Static public function worldometer_state($param,$search)
+    {
+        $search_param = ['today','yesterday'];
+        try {
+            $data = Cache::get('worldometer.states');
+            if($data == null){
+                Artisan::call('covid:worldometers');
+                $data = Cache::get('worldometer.states');
+            }
+
+            $ApiHelper = new ApiHelper;
+            if($param == 'today'){
+                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
+            }else if($param == 'yesterday'){
+                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
+            }else{
+                $response = $data;
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        if($search != null){
+            $response_key = $ApiHelper->searcharray($response,$search,'state');
+            $response = $data[$response_key];
+        }
+        return $ApiHelper->SuccessorFail(200,['meta' =>$response]);
+    }
+    Static public function worldometer_continents($param,$search)
+    {
+        $search_param = ['today','yesterday'];
+        try {
+            $data = Cache::get('worldometer.states');
+            if($data == null){
+                Artisan::call('covid:worldometers');
+                $data = Cache::get('worldometer.states');
+            }
+
+            $ApiHelper = new ApiHelper;
+            if($param == 'today'){
+                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
+            }else if($param == 'yesterday'){
+                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
+            }else{
+                $response = $data;
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        if($search != null){
+            $response_key = $ApiHelper->searcharray($response,$search,'state');
+            $response = $data[$response_key];
+        }
+        return $ApiHelper->SuccessorFail(200,['meta' =>$response]);
+    }
+
     Static public function historical($days)
     {
-        $data = Cache::get('historical');
+        $data = Cache::get('historical_all');
 
         if($data == null){
             ScraperHelper::covid_hestorical();
-            $data = Cache::get('historical');
+            $data = Cache::get('historical_all');
         }
 
         $ApiHelper = new ApiHelper;
@@ -56,16 +141,16 @@ class ApiHelper
 
     Static public function historicalbyCountry($name, $code ,$days)
     {
-        $data = Cache::get('historical');
+        $data = Cache::get('historical_all');
         if($data == null){
             ScraperHelper::covid_hestorical();
-            $data = Cache::get('historical');
+            $data = Cache::get('historical_all');
         }
         $find = Country::where('name',$name)->orWhere('code',$code)->first();
 
         $ApiHelper = new ApiHelper;
 
-        $search_key = $ApiHelper->searcharray($data,$find);
+        $search_key = $ApiHelper->searcharray($data,$find->name,'country');
 
         if($search_key != null){
 
@@ -80,11 +165,19 @@ class ApiHelper
         return $response;
     }
 
-    public function searcharray($array,$find)
+
+
+
+
+
+
+
+
+    public function searcharray($array,$find,$search_key)
     {
         if(isset($find)){
             foreach ($array as $key => $val) {
-                if ($val['country'] === $find->name) {
+                if ($val[$search_key] === $find) {
                     return $key;
                 }
             }
@@ -92,33 +185,18 @@ class ApiHelper
         return null;
     }
 
-    public function sort($array,$array1,$array2,$day)
-    {
-        $remove = ['Province/State','Country/Region','Lat','Long'];
+    // public function getcontinents($array,$find)
+    // {
+    //     if(isset($find)){
+    //         foreach($array as $key => $val){
+    //             if($key == 'index' && $val == null){
 
-        for ($i=0; $i < max(count($array),count($array1),count($array2)); $i++) {
-            // dd($array);
+    //             }
+    //         }
+    //     }
+    // }
 
-            $timeline = array_diff_key($array[$i],array_flip($remove));
-            if( isset($array1[$i])){
-                if($array[$i]['Country/Region'] != $array1[$i]['Country/Region']){
-                    $search_key = $this->SearchKey($array1,$array[$i]['Country/Region']);
-                    if($search_key != null) $timeline1 = array_diff_key($array1[$search_key],array_flip($remove));
-                    else $timeline1 = null;
-                }else $timeline1 = array_diff_key($array1[$i],array_flip($remove));
-            }else $timeline1 = null;
-            if( isset($array2[$i])){
-                if($array[$i]['Country/Region'] != $array2[$i]['Country/Region']){
-                    $search_key = $this->SearchKey($array2,$array[$i]['Country/Region']);
-                    if($search_key != null) $timeline2 = array_diff_key($array2[$search_key],array_flip($remove));
-                    else $timeline2 = null;
-                }else $timeline2 = array_diff_key($array2[$i],array_flip($remove));
-            }else $timeline2 = null;
 
-            $app[$i] = array('country' => $array[$i]['Country/Region'], 'province' => $array[$i]['Province/State'], 'timeline' => array('cases' => $timeline , 'deaths' =>$timeline1 , 'recovered' => $timeline2));
-        }
-        return $app;
-    }
 
     public function getDays($array ,$day)
     {
@@ -138,10 +216,10 @@ class ApiHelper
                     $cases = array_slice($cases, - intval($day));
                 }
                 if($deaths != null){
-                    $deaths= array_slice($deaths, -intval($day));
+                    $deaths= array_slice($deaths, - intval($day));
                 }
                 if($recovered != null){
-                    $recovered= array_slice($recovered, -intval($day));
+                    $recovered= array_slice($recovered, - intval($day));
                 }
 
                 $array[$i]['timeline']['cases'] = $cases;
@@ -150,7 +228,6 @@ class ApiHelper
             }
             return $array;
         }else{
-            // dd($array);
             $cases = $array['timeline']['cases'];
             $deaths = $array['timeline']['deaths'];
             $recovered = $array['timeline']['recovered'];
@@ -179,6 +256,21 @@ class ApiHelper
                 return $key;
             }
         }
+    }
+
+    public function worldometer_output($array,$search,$data)
+    {
+        $remove = array_values(array_diff($data,[$search]));
+        if(isset($array[0])){
+            for ($i=0; $i < count($array); $i++) {
+                unset($array[$i]['timeline'][$remove[0]]);
+                if(isset($remove[1])){
+                    unset($array[$i]['timeline'][$remove[1]]);
+                }
+            }
+
+        }
+        return $array;
     }
 
 }

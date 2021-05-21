@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Country;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +27,8 @@ Route::get('login/{provider}/callback','SocialController@Callback');
 
 
 
-Route::redirect('/', '/login');
-// Route::get('/', 'HomeController@index')->name('home');
+// Route::redirect('/', '/login');
+Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', function () {
     if (session('status')) {
         return redirect()->route('admin.home')->with('status', session('status'));
@@ -96,6 +97,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     // Audit Logs
     Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
+
+    Route::get('/clear-cache', function () {
+        Artisan::call('cache:all-clear');
+        return redirect()->back();
+    })->middleware('can:cache-clear');
+
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth', '2fa']], function () {
     // Change password

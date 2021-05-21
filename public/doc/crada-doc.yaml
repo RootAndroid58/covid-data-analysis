@@ -6,6 +6,10 @@ info:
     url: "https://www.crada.ga/api"
     email: "contact@crada.ga"
   description: |-
+    <a target="_blank" href="https://god.postman.co/run-collection/13642074-7fad3869-3032-45b7-bc83-e8213302b87e?action=collection%2Ffork&collection-url=entityId%3D13642074-7fad3869-3032-45b7-bc83-e8213302b87e%26entityType%3Dcollection">
+         <img alt="Qries" src="https://run.pstmn.io/button.svg" alt="run in Postman"
+         width=150" height="70">
+      </a>
     # Introduction
 
     CRADA is an initiative for common people to provide them with various
@@ -14,6 +18,7 @@ info:
     plasma and blood donor etc. will be provided here.
 
     To make developers job easier we are providing the API for the same.
+
 
     # Authentication
 

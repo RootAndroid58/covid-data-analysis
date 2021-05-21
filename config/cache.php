@@ -49,9 +49,22 @@ return [
             'lock_connection' => null,
         ],
 
+        // 'file' => [
+        //     'driver' => 'file',
+        //     'path' => storage_path('framework/cache/data'),
+        // ],
+
         'file' => [
             'driver' => 'file',
             'path' => storage_path('framework/cache/data'),
+            'permissions' => [
+                'file' => [
+                    'public' => 0644,
+                ],
+                'dir' => [
+                    'public' => 0755,
+                ],
+            ]
         ],
 
         'memcached' => [
