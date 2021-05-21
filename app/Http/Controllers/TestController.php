@@ -22,8 +22,8 @@ class TestController extends Controller
 {
 public function index()
     {
-        Artisan::call('covid:worldometers');
-        dd(Cache::get('worldometer.states'));
+        Artisan::call('storage:link');
+        // dd(Cache::get('worldometer.states'));
     }
 
     public function test2()
