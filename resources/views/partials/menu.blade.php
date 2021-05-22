@@ -1,7 +1,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4" style="min-height: 917px;">
     <!-- Brand Logo -->
     <a href="#" class="brand-link">
-        <img src="{{ asset('/image/favicon-96x96.png') }}" width="50" alt="img" srcset="">
+        <img src="{{ asset('/image/favcon-500x500.jpeg') }}" width="50" alt="img" srcset="">
         <span class="brand-text font-weight-light">{{ trans('panel.site_title') }}</span>
     </a>
 
