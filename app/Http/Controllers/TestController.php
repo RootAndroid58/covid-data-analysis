@@ -22,7 +22,8 @@ class TestController extends Controller
 {
 public function index()
     {
-        Artisan::call('scraper:start');
+        phpinfo();
+        // Artisan::call('scraper:start');
         // dd(Cache::get('worldometer.states'));
     }
 

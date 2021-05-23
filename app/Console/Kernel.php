@@ -30,9 +30,9 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('schedule-monitor:sync')->everyTenMinutes();
         $schedule->command('schedule-monitor:clean')->daily();
-        $schedule->command('scraper:start')->everyTenMinutes()->withoutOverlapping()->appendOutputTo(storage_path('logs/schedule.log'));
-        $schedule->command('scraper:covid')->everyTenMinutes()->withoutOverlapping()->appendOutputTo(storage_path('logs/schedule.log'));
-        $schedule->command('truncate:audit')->daily()->appendOutputTo(storage_path('logs/schedule.log'));
+        $schedule->command('scraper:start')->everyTenMinutes()->withoutOverlapping()->appendOutputTo(storage_path('logs//schedule.log'));
+        $schedule->command('scraper:covid')->everyTenMinutes()->withoutOverlapping()->appendOutputTo(storage_path('logs//schedule.log'));
+        $schedule->command('truncate:audit')->daily()->appendOutputTo(storage_path('logs//schedule.log'));
     }
 
     /**
