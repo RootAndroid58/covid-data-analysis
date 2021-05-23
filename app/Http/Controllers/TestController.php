@@ -22,7 +22,7 @@ class TestController extends Controller
 {
 public function index()
     {
-        Artisan::call('storage:link');
+        Artisan::call('scraper:start');
         // dd(Cache::get('worldometer.states'));
     }
 

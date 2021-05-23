@@ -28,6 +28,9 @@ class ScraperHelper
 
     static function Scrap_IN_MH_Nagpur()
     {
+        $fields = array(
+            'Service','Name','Contact','Comments'
+        );
         $data = array();
         $data["country"] = "IN";
         $data["country_key"] = "code";
@@ -48,29 +51,30 @@ class ScraperHelper
         $data['website'] = "http://covidhelpnagpur.in/";
 
         $dom = HtmlDomParser::file_get_html("http://covidhelpnagpur.in/");
-        $element = $dom->find('#pool > tr');
 
-        $header = '';
-        foreach ($element[0]->find('th')->text() as $value) {
-            $header .= '"' . $value . '",';
-        }
-        $body = '';
-        foreach($element as $node){
-            foreach($node->find('td')->text() as $el){
-                $body .= '"'. str_replace(array("\n", "\r", "\t"), [' ',',',''],$el) . '",';
+            $element = $dom->find('#pool > tr');
+
+            $header = '';
+            foreach ($fields as $value) {
+                $header .= '"' . $value . '",';
             }
-            $body .=  "\n";
-        }
-        $csvfile = $header  . $body;
-        try {
-            Storage::disk('cron_temp')->put('INMHNagpur.csv', $csvfile);
-            $update = new ScraperHelper;
-            $data['status'] = $update->UpdateViaCSV('Resource',$data);
+            $body = '';
+            foreach($element as $node){
+                foreach($node->find('td')->text() as $el){
+                    $body .= '"'. str_replace(array("\n", "\r", "\t"), [' ',',',''],$el) . '",';
+                }
+                $body .=  "\n";
+            }
+            $csvfile = $header  . $body;
+            try {
+                Storage::disk('cron_temp')->put('INMHNagpur.csv', $csvfile);
+                $update = new ScraperHelper;
+                $data['status'] = $update->UpdateViaCSV('Resource',$data);
 
-       } catch (\Exception $e) {
+           } catch (\Exception $e) {
 
-           throw $e;
-       }
+               throw $e;
+           }
         return $data;
     }
 

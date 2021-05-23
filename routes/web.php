@@ -98,12 +98,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Audit Logs
     Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
 
-    Route::get('/clear-cache', function () {
-        Artisan::call('storage:link');
+    Route::group(['prefix' => 'application', 'as' => 'app.'],function () {
 
-        Artisan::call('cache:all-clear');
-        return redirect()->back();
-    })->middleware('can:cache-clear');
+        Route::get('','ApplicationController@index')->name('index');
+        Route::get('clear', 'ApplicationController@ClearCache')->name('cache');
+        Route::get('clear/audit', 'ApplicationController@ClearAudit')->name('audit');
+        Route::get('clear/media', 'ApplicationController@cleanMedia')->name('media');
+        Route::get('clear/token', 'ApplicationController@clearTokens')->name('token');
+        Route::get('clear/all-cache', 'ApplicationController@clearAllCache')->name('all-cache');
+        Route::get('linkstorage', 'ApplicationController@linkStorage')->name('sys-link');
+        Route::get('scraper/start', 'ApplicationController@scraperStart')->name('scraper');
+        Route::get('scraper/start/covid', 'ApplicationController@scraperStartCovid')->name('covid-scrapper');
+        Route::get('run', 'ApplicationController@covidCommands')->name('covid-commands');
+        Route::get('site/down', 'ApplicationController@startMaintainance')->name('down');
+        Route::get('site/up', 'ApplicationController@stopMaintainance')->name('up');
+    });
+
 
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth', '2fa']], function () {

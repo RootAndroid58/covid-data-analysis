@@ -25,6 +25,7 @@
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "rennokki/laravel-eloquent-query-cache": "^2.6",
         "spatie/laravel-medialibrary": "^8.7",
+        "spatie/laravel-schedule-monitor": "^2.3",
         "swayok/alternative-laravel-cache": "^6.1",
         "voku/simple_html_dom": "^4.7",
         "yajra/laravel-datatables-oracle": "^9.18"

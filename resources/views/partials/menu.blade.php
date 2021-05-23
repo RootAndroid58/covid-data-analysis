@@ -183,6 +183,18 @@
                         </a>
                     </li>
                 @endcan
+                @can('new_req_access')
+                    <li class="nav-item">
+                        <a href="{{ route("admin.app.index") }}" class="nav-link {{ request()->is("admin/application") || request()->is("admin/application/*") ? "active" : "" }}">
+                            <i class="fa-fw nav-icon fas fa-cog">
+
+                            </i>
+                            <p>
+                                Settings
+                            </p>
+                        </a>
+                    </li>
+                @endcan
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

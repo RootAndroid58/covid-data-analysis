@@ -20,7 +20,7 @@ class TruncateAuditLogs extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Deletes Audit logs > 30 days';
 
     /**
      * Create a new command instance.
