@@ -50,10 +50,7 @@ class ScraperHelper
         $data['modelRelationship'][0] = "Category";
         $data['website'] = "http://covidhelpnagpur.in/";
 
-        $update = new ScraperHelper;
-        $resp = $update->curlUrl("http://covidhelpnagpur.in/");
-
-        $dom = HtmlDomParser::str_get_html($resp);
+        $dom = HtmlDomParser::file_get_html("http://covidhelpnagpur.in/");
 
             $element = $dom->find('#pool > tr');
 
@@ -71,7 +68,7 @@ class ScraperHelper
             $csvfile = $header  . $body;
             try {
                 Storage::disk('cron_temp')->put('INMHNagpur.csv', $csvfile);
-
+                $update = new ScraperHelper;
                 $data['status'] = $update->UpdateViaCSV('Resource',$data);
 
            } catch (\Exception $e) {
@@ -107,9 +104,8 @@ class ScraperHelper
                 'website' => "https://www.worldometers.info/coronavirus/",
                 'fields' => $fields,
             );
-        $update = new ScraperHelper;
-        $resp = $update->curlUrl("https://www.worldometers.info/coronavirus/");
-        $dom = HtmlDomParser::str_get_html($resp);
+
+        $dom = HtmlDomParser::file_get_html("https://www.worldometers.info/coronavirus/");
         // $usStates = HtmlDomParser::file_get_html("https://www.worldometers.info/coronavirus/country/us/");
         // $header_element = $dom->find('#main_table_countries_today > thead > tr');
         $header = '';
@@ -190,9 +186,8 @@ class ScraperHelper
             'website' => "https://www.worldometers.info/coronavirus/country/us/",
             'fields' => $fields,
         );
-        $update = new ScraperHelper;
-        $resp = $update->curlUrl("https://www.worldometers.info/coronavirus/country/us/");
-        $dom = HtmlDomParser::str_get_html($resp);
+
+        $dom = HtmlDomParser::file_get_html("https://www.worldometers.info/coronavirus/country/us/");
         $header = '';
         foreach($fields as $node){
             $header .= '"'.str_replace(["\n",",",'&nbsp;'],['',"/","al "],$node). '",';
@@ -264,9 +259,7 @@ class ScraperHelper
 
         foreach($scraper_data as $data){
 
-            $resp = $update->curlUrl(($data['website']);
-            $dom = HtmlDomParser::str_get_html($resp);
-
+            $dom = HtmlDomParser::file_get_html($data['website']);
             $csvfile = $dom->html();
 
             Storage::disk('cron_temp')->put($data['path'], $csvfile);
@@ -505,20 +498,5 @@ class ScraperHelper
             }
         }
         return array('updates'=> $new_updates,'inserts' => $new_data , 'success' => true);
-    }
-
-    public function curlUrl($site)
-    {
-        $curl = curl_init($site);
-        curl_setopt($curl, CURLOPT_URL, $site);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-        // //for debug only!
-        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-        $resp = curl_exec($curl);
-        curl_close($curl);
-        return $resp;
     }
 }
