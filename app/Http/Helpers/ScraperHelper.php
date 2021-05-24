@@ -263,7 +263,7 @@ class ScraperHelper
         );
 
         foreach($scraper_data as $data){
-
+            $update = new ScraperHelper;
             $resp = $update->curlUrl($data['website']);
             $dom = HtmlDomParser::str_get_html($resp);
 
