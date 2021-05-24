@@ -28,11 +28,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('schedule-monitor:sync')->everyTenMinutes();
-        $schedule->command('schedule-monitor:clean')->daily();
-        $schedule->command('scraper:start')->everyTenMinutes()->withoutOverlapping()->appendOutputTo(storage_path('logs//schedule.log'));
-        $schedule->command('scraper:covid')->everyTenMinutes()->withoutOverlapping()->appendOutputTo(storage_path('logs//schedule.log'));
-        $schedule->command('truncate:audit')->daily()->appendOutputTo(storage_path('logs//schedule.log'));
+        $schedule->command('cron:sync')->everyTenMinutes();
+        $schedule->command('cron:clean')->daily();
+        $schedule->command('scraper:start')->everyTenMinutes()->withoutOverlapping()->storeOutputInDb();
+        $schedule->command('scraper:covid')->everyTenMinutes()->withoutOverlapping()->storeOutputInDb();
+        $schedule->command('truncate:audit')->daily()->storeOutputInDb();
     }
 
     /**
