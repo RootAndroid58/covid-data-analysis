@@ -51,8 +51,18 @@ public function index()
             );
 
             foreach($scraper_data as $data){
+                $curl = curl_init($data['website']);
+                curl_setopt($curl, CURLOPT_URL, $data['website']);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-                $dom = HtmlDomParser::file_get_html($data['website']);
+                //for debug only!
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+                $resp = curl_exec($curl);
+                curl_close($curl);
+
+                $dom = HtmlDomParser::str_get_html($resp);
                 $csvfile = $dom->html();
                 Storage::disk('cron_temp')->put($data['path'], $csvfile);
 
