@@ -108,15 +108,16 @@ public function index()
     public function throwerror(Request $request)
     {
         // throw new Error('test');
+        Artisan::call('schedule-monitor:sync');
         // Cache::forget('deathsResponse ');
-        $data = Cache::get('casesResponse_temp');
-        $data1 = Cache::get('deathsResponse_temp');
-        $data2 = Cache::get('recoveredResponse_temp');
-        // dd($data,$data1,$data2);
-        $response = $this->hostorical_sort($data,$data1,$data2,'all');
-        Cache::put('historical', $response);
+        // $data = Cache::get('casesResponse_temp');
+        // $data1 = Cache::get('deathsResponse_temp');
+        // $data2 = Cache::get('recoveredResponse_temp');
+        // // dd($data,$data1,$data2);
+        // $response = $this->hostorical_sort($data,$data1,$data2,'all');
+        // Cache::put('historical', $response);
 
-        return $response;
+        // return $response;
     }
 
     public function searcharray($array,$find)
