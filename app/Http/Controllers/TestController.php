@@ -30,59 +30,60 @@ public function index()
     public function test2()
     {
 
-            $scraper_data = array();
-            $scraper_data[] = array(
-                'cache_key' => 'casesResponse_temp',
-                'path' => 'hestorical_casesResponse.csv',
-                'hasHeader' => true,
-                'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
-            );
-            $scraper_data[] = array(
-                'cache_key' => 'deathsResponse_temp',
-                'path' => 'hestorical_deathsResponse.csv',
-                'hasHeader' => true,
-                'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
-            );
-            $scraper_data[]    = array(
-                'cache_key' => 'recoveredResponse_temp',
-                'path' => 'hestorical_recoveredResponse.csv',
-                'hasHeader' => true,
-                'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",
-            );
+            // $scraper_data = array();
+            // $scraper_data[] = array(
+            //     'cache_key' => 'casesResponse_temp',
+            //     'path' => 'hestorical_casesResponse.csv',
+            //     'hasHeader' => true,
+            //     'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+            // );
+            // $scraper_data[] = array(
+            //     'cache_key' => 'deathsResponse_temp',
+            //     'path' => 'hestorical_deathsResponse.csv',
+            //     'hasHeader' => true,
+            //     'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
+            // );
+            // $scraper_data[]    = array(
+            //     'cache_key' => 'recoveredResponse_temp',
+            //     'path' => 'hestorical_recoveredResponse.csv',
+            //     'hasHeader' => true,
+            //     'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",
+            // );
 
-            foreach($scraper_data as $data){
-                $curl = curl_init($data['website']);
-                curl_setopt($curl, CURLOPT_URL, $data['website']);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            // foreach($scraper_data as $data){
+            //     $curl = curl_init($data['website']);
+            //     curl_setopt($curl, CURLOPT_URL, $data['website']);
+            //     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-                //for debug only!
-                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            //     //for debug only!
+            //     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            //     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
-                $resp = curl_exec($curl);
-                curl_close($curl);
+            //     $resp = curl_exec($curl);
+            //     curl_close($curl);
 
-                $dom = HtmlDomParser::str_get_html($resp);
-                $csvfile = $dom->html();
-                Storage::disk('cron_temp')->put($data['path'], $csvfile);
+            //     $dom = HtmlDomParser::str_get_html($resp);
+            //     $csvfile = $dom->html();
+            //     Storage::disk('cron_temp')->put($data['path'], $csvfile);
 
-                $path = storage_path('cron_temp//' . $data['path']);
-                $header = new SpreadsheetReader($path);
+            //     $path = storage_path('cron_temp//' . $data['path']);
+            //     $header = new SpreadsheetReader($path);
 
-                foreach($header as $key => $row){
-                    if($key == 0){
-                        $fields = $row;
-                    }else break;
-                }
-                $scraper = new ScraperHelper;
-                // dd(array('hasHeader'=> true , 'path', $data['path'], 'fields' => $fields));
-                $response = $scraper->csvtoarray(array('hasHeader'=> true , 'path'=> $data['path'], 'fields' => $fields));
-                Cache::put($data['cache_key'],$response);//, now()->addMinutes(10));
+            //     foreach($header as $key => $row){
+            //         if($key == 0){
+            //             $fields = $row;
+            //         }else break;
+            //     }
+            //     $scraper = new ScraperHelper;
+            //     // dd(array('hasHeader'=> true , 'path', $data['path'], 'fields' => $fields));
+            //     $response = $scraper->csvtoarray(array('hasHeader'=> true , 'path'=> $data['path'], 'fields' => $fields));
+            //     Cache::put($data['cache_key'],$response);//, now()->addMinutes(10));
 
-            }
+            // }
 
 
-            dd($dom->html());
+            // dd($dom->html());
+            dd(Artisan::all());
 
 
     }

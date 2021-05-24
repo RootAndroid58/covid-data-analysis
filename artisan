@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-
+ini_set('eaccelerator.enable', 0);
 define('LARAVEL_START', microtime(true));
 
 /*
