@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\AuditLog;
+use App\Models\ScheduleEvents;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -40,5 +41,6 @@ class TruncateAuditLogs extends Command
     public function handle()
     {
         AuditLog::where('created_at',"<",Carbon::now()->subDays(30))->delete();
+        ScheduleEvents::where('created_at',"<",Carbon::now()->subDays(30))->delete();
     }
 }

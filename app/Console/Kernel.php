@@ -4,9 +4,11 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Traits\MonitorsSchedule;
 
 class Kernel extends ConsoleKernel
 {
+    use MonitorsSchedule;
     /**
      * The Artisan commands provided by your application.
      *
@@ -28,9 +30,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('scraper:start')->everyTenMinutes()->withoutOverlapping()->appendOutputTo(storage_path('logs//schedule.log'));
-        $schedule->command('scraper:covid')->everyTenMinutes()->withoutOverlapping()->appendOutputTo(storage_path('logs//schedule.log'));
-        $schedule->command('truncate:audit')->daily()->appendOutputTo(storage_path('logs//schedule.log'));
+        $schedule->command('scraper:start')->everyTenMinutes()->withoutOverlapping();
+        $schedule->command('scraper:covid')->everyTenMinutes()->withoutOverlapping();
+        $schedule->command('truncate:audit')->daily();
+
+        $this->monitor($schedule);
     }
 
     /**
