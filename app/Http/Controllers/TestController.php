@@ -108,7 +108,7 @@ public function index()
     public function throwerror(Request $request)
     {
         // throw new Error('test');
-        Artisan::call('schedule-monitor:sync');
+        Artisan::call('cron:sync');
         // Cache::forget('deathsResponse ');
         // $data = Cache::get('casesResponse_temp');
         // $data1 = Cache::get('deathsResponse_temp');
