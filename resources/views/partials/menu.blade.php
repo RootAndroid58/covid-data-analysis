@@ -183,7 +183,7 @@
                         </a>
                     </li>
                 @endcan
-                @can('new_req_access')
+                @can('application_Control')
                     <li class="nav-item">
                         <a href="{{ route("admin.app.index") }}" class="nav-link {{ request()->is("admin/application") || request()->is("admin/application/*") ? "active" : "" }}">
                             <i class="fa-fw nav-icon fas fa-cog">

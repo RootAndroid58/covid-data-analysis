@@ -13,6 +13,8 @@ class ApplicationController extends Controller
 {
     public function index(Request $request)
     {
+        abort_if(Gate::denies('application_Control'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         return view('admin.application.index');
     }
     public function ClearCache(Request $request)
