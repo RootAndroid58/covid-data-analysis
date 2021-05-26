@@ -86,6 +86,9 @@
                         <a class="btn" href="{{ url('/login/facebook') }}" style="background: #3b5998; color: white;" title="Login with Facebook"><i class="fab fa-facebook"></i></a>
                     </p>
                     <p class="mb-1 text-center ml-2">
+                        <a class="btn" href="{{ url('/login/twitter') }}" style="background: #55acee; color: white;" title="Login with Twitter"><i class="fab fa-twitter"></i></a>
+                    </p>
+                    <p class="mb-1 text-center ml-2">
                         <a class="btn" href="{{ url('/login/linkedin') }}" style="background: #337ab7; color: white;" title="Login with LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </p>
                     <p class="mb-1 text-center ml-2">

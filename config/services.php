@@ -54,10 +54,10 @@ return [
         'client_secret' => env('BITBUCKET_CLIENT_SECRET'),
         'redirect' => env('APP_URL').'/'.env('BITBUCKET_REDIRECT')
     ],
-    // 'twitter' => [
-    //     'client_id' => env('TWITTER_API_KEY'),
-    //     'client_secret' => env('TWITTER_API_SECRET_KEY'),
-    //     'redirect' => env('APP_URL').'/'.env('TWITTER_REDIRECT')
-    // ],
+    'twitter' => [
+        'client_id' => env('TWITTER_API_KEY'),
+        'client_secret' => env('TWITTER_API_SECRET_KEY'),
+        'redirect' => env('APP_URL').'/'.env('TWITTER_REDIRECT')
+    ],
 
 ];
