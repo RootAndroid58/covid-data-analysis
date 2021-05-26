@@ -145,6 +145,16 @@ Route::group(['prefix'=>'api'] ,function () {
     });
 });
 
+
+
+Route::group(['as' => 'web.','namespace' => 'Website'],function () {
+    Route::get('/privacy-policy','PolicyController@PrivacyPolicy')->name('privacy_policy');
+    Route::get('/terms_of_service','PolicyController@termsofService')->name('tos');
+});
+
+
+
+
 Route::get('testMail','TestController@testMail');
 Route::get('/test', 'TestController@index')->name('test');
 Route::get('/test1', 'TestController@test2')->name('test1');
