@@ -145,8 +145,8 @@ class CacheSorter
             'continent' => $today['continent'] ? $today['continent'] : '',
             'iso2'      => $location['iso2'] ?  $location['iso2'] : null,
             'location'  =>  array(
-                'latitude'  => $location['lat'] ? $location['lat'] : null ,
-                'longitude' => $location['long'] ? $location['long'] : null,
+                'latitude'  => $location['lat'] ? round($location['lat'],7) : null ,
+                'longitude' => $location['long'] ? round($location['long'],7) : null,
             ),
             'timeline'  => array(
                 'today' => array(
