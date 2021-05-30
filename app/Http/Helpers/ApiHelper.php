@@ -49,11 +49,7 @@ class ApiHelper
             }
 
             $ApiHelper = new ApiHelper;
-            if($param == 'today'){
-                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
-            }else if($param == 'yesterday'){
-                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
-            }else if($param == 'yesterday2'){
+            if($param == 'today' || $param == 'yesterday' || $param == 'yesterday2'){
                 $response = $ApiHelper->worldometer_output($data,$param,$search_param);
             }else{
                 $response = $data;
@@ -78,9 +74,7 @@ class ApiHelper
             }
 
             $ApiHelper = new ApiHelper;
-            if($param == 'today'){
-                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
-            }else if($param == 'yesterday'){
+            if($param == 'today' || $param == 'yesterday'){
                 $response = $ApiHelper->worldometer_output($data,$param,$search_param);
             }else{
                 $response = $data;
@@ -96,31 +90,60 @@ class ApiHelper
     }
     Static public function worldometer_continents($param,$search)
     {
-        $search_param = ['today','yesterday'];
+        $search_param = ['today','yesterday','yesterday2'];
         try {
-            $data = Cache::get('worldometer.states');
+            $data = Cache::get('worldometer.continents');
             if($data == null){
                 Artisan::call('covid:worldometers');
-                $data = Cache::get('worldometer.states');
+                $data = Cache::get('worldometer.continents');
             }
-
             $ApiHelper = new ApiHelper;
-            if($param == 'today'){
-                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
-            }else if($param == 'yesterday'){
+            if($param == 'today' || $param == 'yesterday' || $param == 'yesterday2'){
                 $response = $ApiHelper->worldometer_output($data,$param,$search_param);
             }else{
                 $response = $data;
             }
+
+            if($search != null){
+                if($search == 'Oceania'|| $search == 'Australia'){
+                    $search = 'Australia/Oceania';
+                }
+                $response_key = $ApiHelper->searcharray($response,$search,'continent');
+                $response = $data[$response_key];
+            }
         } catch (\Throwable $th) {
             throw $th;
         }
-        if($search != null){
-            $response_key = $ApiHelper->searcharray($response,$search,'state');
-            $response = $data[$response_key];
+        return $ApiHelper->SuccessorFail(200,['meta' =>$response]);
+    }
+
+    Static public function worldometer_countries($param,$search)
+    {
+        $search_param = ['today','yesterday','yesterday2'];
+        try {
+            $data = Cache::get('worldometer.countries');
+            if($data == null){
+                Artisan::call('covid:worldometers');
+                $data = Cache::get('worldometer.countries');
+            }
+            $ApiHelper = new ApiHelper;
+            if($param == 'today' || $param == 'yesterday' || $param == 'yesterday2'){
+                $response = $ApiHelper->worldometer_output($data,$param,$search_param);
+            }else{
+                $response = $data;
+            }
+
+            if($search != null){
+                $response_key = $ApiHelper->searcharray($response,$search,'country');
+                $response = $data[$response_key];
+            }
+        } catch (\Throwable $th) {
+            throw $th;
         }
         return $ApiHelper->SuccessorFail(200,['meta' =>$response]);
     }
+
+
 
     Static public function historical($days)
     {
@@ -177,7 +200,7 @@ class ApiHelper
     {
         if(isset($find)){
             foreach ($array as $key => $val) {
-                if ($val[$search_key] === $find) {
+                if ($val[$search_key] === $find || strcasecmp($val[$search_key],$find) == 0) {
                     return $key;
                 }
             }
@@ -252,7 +275,7 @@ class ApiHelper
     public function SearchKey($array, $search)
     {
         foreach($array as $key => $val){
-            if($search == $val){
+            if($search == $val || strcasecmp($search,$val) == 0){
                 return $key;
             }
         }

@@ -97,21 +97,17 @@ class ResourcesController extends Controller
         }
 
         $categories     = Category::get();
-        $countries      = Country::get();
-        $states         = State::get();
-        $cities         = City::get();
-        $sub_categories = SubCategory::get();
 
-        return view('admin.resources.index', compact('categories', 'countries', 'states', 'cities', 'sub_categories'));
+        return view('admin.resources.index',compact('categories'));
     }
 
     public function create(Request $request)
     {
         abort_if(Gate::denies('resource_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        if($request->ajax()){
-            dd($request);
-        }
+        // if($request->ajax()){
+        //     dd($request);
+        // }
 
         $categories = Category::all()->pluck('category_name', 'id');
 

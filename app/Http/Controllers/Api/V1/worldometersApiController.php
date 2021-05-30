@@ -31,7 +31,6 @@ class worldometersApiController extends Controller
 
         $type = $request->input('type');
         $search = $request->input('search');
-        // dd($search);
 
         $response = ApiHelper::worldometer_state($type,$search,'state');
 
@@ -42,14 +41,28 @@ class worldometersApiController extends Controller
     {
         $request->validate([
             'type' => 'sometimes|in:today,yesterday|nullable',
-            'search'=> 'sometimes|in:Asia,North America,South America,Europe,Africa,Oceania,Australia,Australia-Oceania|nullable',
+            'search'=> 'sometimes|in:Asia,North America,South America,Europe,Africa,Oceania,Australia,Australia/Oceania|nullable',
         ]);
 
         $type = $request->input('type');
         $search = $request->input('search');
-        // dd($search);
 
         $response = ApiHelper::worldometer_continents($type,$search);
+
+        return response()->json($response);
+
+    }
+    public function getcountries(Request $request)
+    {
+        $request->validate([
+            'type' => 'sometimes|in:today,yesterday,yesterday2|nullable',
+            'search'=> 'sometimes|nullable',
+        ]);
+
+        $type = $request->input('type');
+        $search = $request->input('search');
+
+        $response = ApiHelper::worldometer_countries($type,$search);
 
         return response()->json($response);
 

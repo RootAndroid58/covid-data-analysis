@@ -1,7 +1,7 @@
 <?php
 namespace App\Traits;
 
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 
 trait CacheClear
 {
@@ -13,7 +13,7 @@ trait CacheClear
          * After model is created, or whatever action, clear cache.
          */
         static::updated(function () {
-            Artisan::call('cache:clear');
+            Cache::tags('prod')->flush();
         });
     }
 }

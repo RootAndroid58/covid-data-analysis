@@ -27,7 +27,7 @@ class StoreResourceRequest extends FormRequest
             ],
             'phone_no' => [
                 'string',
-                'required',
+                'sometimes',
             ],
             'email' => [
                 'string',
@@ -39,7 +39,7 @@ class StoreResourceRequest extends FormRequest
             ],
             'url' => [
                 'string',
-                'nullable',
+                'required_without:phone_no|nullable',
             ],
         ];
     }

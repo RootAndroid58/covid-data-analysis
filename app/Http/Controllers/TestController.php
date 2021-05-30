@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\CacheSorter;
+use App\Http\Helpers\cacheUpdater;
+use App\Http\Helpers\DataHelper;
 use Illuminate\Http\Request;
 use App\Models\City;
 use App\Models\Country;
@@ -29,63 +32,119 @@ public function index()
 
     public function test2()
     {
+        $response = Cache::get('worldometer.countries');
+        dd($response);
+        $DataHelper = new DataHelper;
+        $locations = $DataHelper->contries;
 
-            // $scraper_data = array();
-            // $scraper_data[] = array(
-            //     'cache_key' => 'casesResponse_temp',
-            //     'path' => 'hestorical_casesResponse.csv',
-            //     'hasHeader' => true,
-            //     'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
-            // );
-            // $scraper_data[] = array(
-            //     'cache_key' => 'deathsResponse_temp',
-            //     'path' => 'hestorical_deathsResponse.csv',
-            //     'hasHeader' => true,
-            //     'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
-            // );
-            // $scraper_data[]    = array(
-            //     'cache_key' => 'recoveredResponse_temp',
-            //     'path' => 'hestorical_recoveredResponse.csv',
-            //     'hasHeader' => true,
-            //     'website' => "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",
-            // );
+        // dd($countries[0]);
+        $data = $filter_data = Cache::get('worldometer');
+        if($data == null){
+            Artisan::call('covid:worldometers');
+            $data = $filter_data = Cache::get('worldometer');
+        }
+        $sort = new CacheSorter;
+        $continents_keys = array();
+        $continents = array();
+        $find = array(
+            'North America',
+            'Asia',
+            'South America',
+            'Europe',
+            'Africa',
+            'Oceania',
+            'World'
+        );
+        foreach($find as $val){
+            $continents_keys[] = $sort->search($data,$val,'country');
+        }
 
-            // foreach($scraper_data as $data){
-            //     $curl = curl_init($data['website']);
-            //     curl_setopt($curl, CURLOPT_URL, $data['website']);
-            //     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        foreach($continents_keys as $key){
+            unset($filter_data[$key]);
+        }
+        for ($i=0; $i < count($continents_keys); $i++) {
+            $continents[$i] = $data[$continents_keys[$i]];
+        }
+        $filter_data = array_values($filter_data);
+        // dd($filter_data);
 
-            //     //for debug only!
-            //     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-            //     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // $response = array();
+        // foreach($continents as $continent){
+        //     $response[] = $this->worldometer_continent($continent,$filter_data);
+        // }
+        Cache::tags(['prod','prod.worldometer','worldometer.countries'])->put('worldometer.countries',$filter_data, now()->addMinutes(30));
 
-            //     $resp = curl_exec($curl);
-            //     curl_close($curl);
-
-            //     $dom = HtmlDomParser::str_get_html($resp);
-            //     $csvfile = $dom->html();
-            //     Storage::disk('cron_temp')->put($data['path'], $csvfile);
-
-            //     $path = storage_path('cron_temp//' . $data['path']);
-            //     $header = new SpreadsheetReader($path);
-
-            //     foreach($header as $key => $row){
-            //         if($key == 0){
-            //             $fields = $row;
-            //         }else break;
-            //     }
-            //     $scraper = new ScraperHelper;
-            //     // dd(array('hasHeader'=> true , 'path', $data['path'], 'fields' => $fields));
-            //     $response = $scraper->csvtoarray(array('hasHeader'=> true , 'path'=> $data['path'], 'fields' => $fields));
-            //     Cache::put($data['cache_key'],$response);//, now()->addMinutes(10));
-
-            // }
+        return $filter_data;
 
 
-            // dd($dom->html());
-            dd(Artisan::all());
 
+    }
 
+    public function worldometer_continent($data,$filter_data)
+    {
+        $dataset = $filter_data;
+        $location = array(
+            'Asia'              =>  array('lat' => 23.7027273,'long' => 62.3750637 ),
+            'North America'     =>  array('lat' => 31.6768272,'long' => -146.4707474 ),
+            'South America'     =>  array('lat' => -15.6551563,'long' => -100.7484231 ),
+            'Europe'            =>  array('lat' => 25.771324,'long' => -35.6012256),
+            'Africa'            =>  array('lat' => 1.7383867,'long' => -16.3094636),
+            'Australia/Oceania' =>  array('lat' => -8.6599161,'long' => 91.1469847)
+        );
+        $sort = new CacheSorter;
+
+        $country_name = array();
+
+        foreach($filter_data as $search){
+            $country_key = $sort->search($filter_data,$data['continent'],'continent');
+            $key[] = $country_key;
+            unset($filter_data[$country_key]);
+        }
+        $key = array_filter($key, fn($value) => !is_null($value) && $value !== '' );
+        $filter_data = array_values($filter_data);
+
+        foreach($key as $search){
+            $country_name[] = $dataset[$search]['country'];
+        }
+
+        $response = array(
+            'continent' => $data['continent'],
+            'continentInfo' => $location[$data['continent']],
+            'countries' => $country_name,
+            'timeline' => array(
+                'today' => array(
+                    'cases'         => $data['timeline']['today']['cases'],
+                    'todayCases'    => $data['timeline']['today']['todayCases'],
+                    'deaths'        => $data['timeline']['today']['deaths'],
+                    'todayDeaths'   => $data['timeline']['today']['todayDeaths'],
+                    'recovered'     => $data['timeline']['today']['recovered'],
+                    'todayRecovered'=> $data['timeline']['today']['todayRecovered'],
+                    'active'        => $data['timeline']['today']['active'],
+                    'critical'      => $data['timeline']['today']['critical'],
+                ),
+                'yesterday' => array(
+                    'cases'         => $data['timeline']['yesterday']['cases'],
+                    'todayCases'    => $data['timeline']['yesterday']['todayCases'],
+                    'deaths'        => $data['timeline']['yesterday']['deaths'],
+                    'todayDeaths'   => $data['timeline']['yesterday']['todayDeaths'],
+                    'recovered'     => $data['timeline']['yesterday']['recovered'],
+                    'todayRecovered'=> $data['timeline']['yesterday']['todayRecovered'],
+                    'active'        => $data['timeline']['yesterday']['active'],
+                    'critical'      => $data['timeline']['yesterday']['critical'],
+                ),
+                'yesterday2' => array(
+                    'cases'         => $data['timeline']['yesterday2']['cases'],
+                    'todayCases'    => $data['timeline']['yesterday2']['todayCases'],
+                    'deaths'        => $data['timeline']['yesterday2']['deaths'],
+                    'todayDeaths'   => $data['timeline']['yesterday2']['todayDeaths'],
+                    'recovered'     => $data['timeline']['yesterday2']['recovered'],
+                    'todayRecovered'=> $data['timeline']['yesterday2']['todayRecovered'],
+                    'active'        => $data['timeline']['yesterday2']['active'],
+                    'critical'      => $data['timeline']['yesterday2']['critical'],
+                ),
+            ),
+        );
+        return $response;
     }
 
     public function testMail(Request $request)

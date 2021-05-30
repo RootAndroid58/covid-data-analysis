@@ -5,6 +5,7 @@ namespace App\Http\Helpers;
 use App\Http\Helpers\ApiHelper;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 class CacheSorter
 {
@@ -26,6 +27,71 @@ class CacheSorter
 
         return $sorted_all;
     }
+
+    static public function worldometer_continent($data,$filter_data)
+    {
+        $sort = new CacheSorter;
+        $continents_keys = array();
+        $world_key = $sort->search($data,'World','country');
+        $continents = array();
+        $find = array(
+            'North America',
+            'Asia',
+            'South America',
+            'Europe',
+            'Africa',
+            'Oceania'
+        );
+        foreach($find as $val){
+            $continents_keys[] = $sort->search($data,$val,'country');
+        }
+
+        foreach($continents_keys as $key){
+            unset($filter_data[$key]);
+        }
+        for ($i=0; $i < count($continents_keys); $i++) {
+            $continents[$i] = $data[$continents_keys[$i]];
+        }
+        unset($filter_data[$world_key]);
+        $filter_data = array_values($filter_data);
+
+        $response = array();
+        foreach($continents as $continent){
+            $response[] = $sort->worldometer_continent_sort($continent,$filter_data);
+        }
+
+        return $response;
+    }
+    static public function worldometer_countries($data,$filter_data)
+    {
+        $sort = new CacheSorter;
+        $continents_keys = array();
+        $world_key = $sort->search($data,'World','country');
+        $continents = array();
+        $find = array(
+            'North America',
+            'Asia',
+            'South America',
+            'Europe',
+            'Africa',
+            'Oceania'
+        );
+        foreach($find as $val){
+            $continents_keys[] = $sort->search($data,$val,'country');
+        }
+
+        foreach($continents_keys as $key){
+            unset($filter_data[$key]);
+        }
+        for ($i=0; $i < count($continents_keys); $i++) {
+            $continents[$i] = $data[$continents_keys[$i]];
+        }
+        unset($filter_data[$world_key]);
+        $filter_data = array_values($filter_data);
+
+        return $filter_data;
+    }
+
     static public function worldometer_states($today,$yesterday)
     {
         $sort = new CacheSorter;
@@ -64,10 +130,24 @@ class CacheSorter
 
     public function worldometer_sort($today,$yesterday,$yesterday2)
     {
+        $DataHelper = new DataHelper;
+        $CacheSorter = new CacheSorter;
+        $locations = $DataHelper->contries;
+        $locations_key = $CacheSorter->search($locations,$today['country'],'country');
+        if($locations_key == null){
+            $location = array('iso2' => null , 'lat' => null , 'long' => null);
+        }else{
+            $location = $locations[$locations_key];
+        }
         $sorted = array(
             'index'     => $today['index'] ? $today['index'] : null,
             'country'   => $today['country'],
             'continent' => $today['continent'] ? $today['continent'] : '',
+            'iso2'      => $location['iso2'] ?  $location['iso2'] : null,
+            'location'  =>  array(
+                'latitude'  => $location['lat'] ? $location['lat'] : null ,
+                'longitude' => $location['long'] ? $location['long'] : null,
+            ),
             'timeline'  => array(
                 'today' => array(
                     'cases'                 => $today['cases']              ? $today['cases'] : '',
@@ -194,11 +274,94 @@ class CacheSorter
 
     }
 
+    public function worldometer_continent_sort($data,$filter_data)
+    {
+        $DataHelper = new DataHelper;
+        $location = $DataHelper->continent;
+        $sort = new CacheSorter;
+
+        $dataset = $filter_data;
+
+        $country_name = array();
+        foreach($filter_data as $search){
+            $country_key = $sort->search($filter_data,$data['continent'],'continent');
+            $key[] = $country_key;
+            unset($filter_data[$country_key]);
+        }
+        $key = array_filter($key, fn($value) => !is_null($value) && $value !== '' );
+        $filter_data = array_values($filter_data);
+
+        foreach($key as $search){
+            $country_name[] = $dataset[$search]['country'];
+        }
+
+        $response = array(
+            'continent' => $data['continent'],
+            'continentInfo' => $location[$data['continent']],
+            'countries' => $country_name,
+            'timeline' => array(
+                'today' => array(
+                    'cases'         => $data['timeline']['today']['cases'],
+                    'todayCases'    => $data['timeline']['today']['todayCases'],
+                    'deaths'        => $data['timeline']['today']['deaths'],
+                    'todayDeaths'   => $data['timeline']['today']['todayDeaths'],
+                    'recovered'     => $data['timeline']['today']['recovered'],
+                    'todayRecovered'=> $data['timeline']['today']['todayRecovered'],
+                    'active'        => $data['timeline']['today']['active'],
+                    'critical'      => $data['timeline']['today']['critical'],
+                ),
+                'yesterday' => array(
+                    'cases'         => $data['timeline']['yesterday']['cases'],
+                    'todayCases'    => $data['timeline']['yesterday']['todayCases'],
+                    'deaths'        => $data['timeline']['yesterday']['deaths'],
+                    'todayDeaths'   => $data['timeline']['yesterday']['todayDeaths'],
+                    'recovered'     => $data['timeline']['yesterday']['recovered'],
+                    'todayRecovered'=> $data['timeline']['yesterday']['todayRecovered'],
+                    'active'        => $data['timeline']['yesterday']['active'],
+                    'critical'      => $data['timeline']['yesterday']['critical'],
+                ),
+                'yesterday2' => array(
+                    'cases'         => $data['timeline']['yesterday2']['cases'],
+                    'todayCases'    => $data['timeline']['yesterday2']['todayCases'],
+                    'deaths'        => $data['timeline']['yesterday2']['deaths'],
+                    'todayDeaths'   => $data['timeline']['yesterday2']['todayDeaths'],
+                    'recovered'     => $data['timeline']['yesterday2']['recovered'],
+                    'todayRecovered'=> $data['timeline']['yesterday2']['todayRecovered'],
+                    'active'        => $data['timeline']['yesterday2']['active'],
+                    'critical'      => $data['timeline']['yesterday2']['critical'],
+                ),
+            ),
+        );
+        return $response;
+    }
+
     public function search($array,$find,$search_key)
     {
         if(isset($find)){
             foreach ($array as $key => $val) {
                 if ($val[$search_key] === $find) {
+                    return $key;
+                }
+            }
+        }
+        return null;
+    }
+    public function search_key($array,$find)
+    {
+        if(isset($find)){
+            foreach ($array as $key => $val) {
+                if ($val === $find || strcasecmp($val,$find) == 0) {
+                    return $key;
+                }
+            }
+        }
+        return null;
+    }
+    public function search_key_by_find($array,$find,$search)
+    {
+        if(isset($find)){
+            foreach ($array as $key => $val) {
+                if ($val === $find[$search] || strcasecmp($val,$find[$search]) == 0) {
                     return $key;
                 }
             }

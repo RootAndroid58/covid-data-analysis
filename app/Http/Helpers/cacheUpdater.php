@@ -37,7 +37,8 @@ class cacheUpdater
 
         $sort = new CacheSorter;
         $response = $sort->worldometer($today,$yesterday,$yesterday2);
-        Cache::put('historical_all', $response,now()->addMinutes(10));
+        Cache::tags('prod.worldometer')->flush();
+        Cache::tags(['prod','prod.worldometer'])->put('worldometer', $response,now()->addMinutes(10));
 
         return $response;
     }
@@ -53,7 +54,41 @@ class cacheUpdater
 
         $sort = new CacheSorter;
         $response = $sort->worldometer_states($today,$yesterday);
-        Cache::put('historical_all', $response,now()->addMinutes(10));
+        Cache::tags('prod.worldometer.usa')->flush();
+        Cache::tags(['prod','prod.worldometer','prod.worldometer.usa'])->put('worldometer.usa', $response,now()->addMinutes(10));
+
+        return $response;
+    }
+
+    static public function COVID_worldometers_continent()
+    {
+        $data = Cache::get('worldometer');
+        if($data == null){
+            Artisan::call('covid:worldometers');
+            $data = Cache::get('worldometer');
+        }
+
+        $sort = new CacheSorter;
+        $response = $sort->worldometer_continent($data,$data);
+
+        Cache::tags('prod.worldometer.continents')->flush();
+        Cache::tags(['prod','prod.worldometer','prod.worldometer.continents'])->put('worldometer.continents',$response, now()->addMinutes(10));
+
+        return $response;
+    }
+    static public function COVID_worldometers_countries()
+    {
+        $data = Cache::get('worldometer');
+        if($data == null){
+            Artisan::call('covid:worldometers');
+            $data = Cache::get('worldometer');
+        }
+
+        $sort = new CacheSorter;
+        $response = $sort->worldometer_countries($data,$data);
+
+        Cache::tags('prod.worldometer.countries')->flush();
+        Cache::tags(['prod','prod.worldometer','prod.worldometer.countries'])->put('worldometer.countries',$response, now()->addMinutes(10));
 
         return $response;
     }

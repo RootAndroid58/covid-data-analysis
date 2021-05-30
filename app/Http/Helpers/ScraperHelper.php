@@ -166,6 +166,8 @@ class ScraperHelper
         }
         $sort = new cacheUpdater;
         $sort->worldometer();
+        $sort->COVID_worldometers_continent();
+        $sort->COVID_worldometers_countries();
 
         return $scraper_data;
     }

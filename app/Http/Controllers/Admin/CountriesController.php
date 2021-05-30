@@ -79,9 +79,7 @@ class CountriesController extends Controller
             return $table->make(true);
         }
 
-        $states = State::get();
-
-        return view('admin.countries.index', compact('states'));
+        return view('admin.countries.index');
     }
 
     public function create()

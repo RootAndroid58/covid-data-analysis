@@ -70,6 +70,9 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middlew
 
     Route::get('/covid-19/all', 'worldometersApiController@getAll');
     Route::get('/covid-19/states/', 'worldometersApiController@getStates');
+    Route::get('/covid-19/continents/', 'worldometersApiController@getcontinents');
+    Route::get('/covid-19/countries/', 'worldometersApiController@getcountries');
+
     // Route::get('/covid-19/states/{states}', 'worldometersApiController@getStates');
     Route::get('/covid-19/historical/', 'JHUCSSEApiController@historical');
     Route::get('/covid-19/historical/{country}', 'JHUCSSEApiController@historicalbyCountry');

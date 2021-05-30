@@ -76,9 +76,7 @@ class StateController extends Controller
             return $table->make(true);
         }
 
-        $cities = City::get();
-
-        return view('admin.states.index', compact('cities'));
+        return view('admin.states.index');
     }
 
     public function create()
