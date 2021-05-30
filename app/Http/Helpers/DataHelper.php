@@ -5,12 +5,12 @@ namespace App\Http\Helpers;
 class DataHelper
 {
     public $continent = array(
-        'Asia'              =>  array('lat' => '23.7027273' ,'long' => 62.3750637 ),
-        'North America'     =>  array('lat' => '31.6768272' ,'long' => -146.4707474 ),
-        'South America'     =>  array('lat' => '-15.6551563' ,'long' => -100.7484231 ),
-        'Europe'            =>  array('lat' => '25.771324' ,'long' => -35.6012256),
-        'Africa'            =>  array('lat' => '1.7383867' ,'long' => -16.3094636),
-        'Australia/Oceania' =>  array('lat' => '-8.6599161' ,'long' => 91.1469847)
+        'Asia'              =>  array('lat' => 23.7027273,'long' => 62.3750637 ),
+        'North America'     =>  array('lat' => 31.6768272,'long' => -146.4707474 ),
+        'South America'     =>  array('lat' => -15.6551563,'long' => -100.7484231 ),
+        'Europe'            =>  array('lat' => 25.771324,'long' => -35.6012256),
+        'Africa'            =>  array('lat' => 1.7383867,'long' => -16.3094636),
+        'Australia/Oceania' =>  array('lat' => -8.6599161,'long' => 91.1469847)
     );
 
     public $contries = array(
