@@ -145,8 +145,8 @@ class CacheSorter
             'continent' => $today['continent'] ? $today['continent'] : '',
             'iso2'      => $location['iso2'] ?  $location['iso2'] : null,
             'location'  =>  array(
-                'latitude'  => $location['lat'] ? round($location['lat'],7) : null ,
-                'longitude' => $location['long'] ? round($location['long'],7) : null,
+                'latitude'  => $location['lat'] ? $location['lat']  : null ,
+                'longitude' => $location['long'] ? $location['long']  : null,
             ),
             'timeline'  => array(
                 'today' => array(
@@ -298,8 +298,8 @@ class CacheSorter
         $response = array(
             'continent' => $data['continent'],
             'continentInfo' => array(
-                'latitude'  => $location[$data['continent']]['lat'] ? round($location[$data['continent']]['lat'],7)    : '',
-                'longitude' => $location[$data['continent']]['long'] ? round($location[$data['continent']]['long'],7)    : '',
+                'latitude'  => $location[$data['continent']]['lat'] ? $location[$data['continent']]['lat']    : '',
+                'longitude' => $location[$data['continent']]['long'] ? $location[$data['continent']]['long']    : '',
             ),
             'countries' => $country_name,
             'timeline' => array(
