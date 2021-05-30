@@ -297,7 +297,10 @@ class CacheSorter
 
         $response = array(
             'continent' => $data['continent'],
-            'continentInfo' => $location[$data['continent']],
+            'continentInfo' => array(
+                'latitude'  => $location[$data['continent']]['lat'] ? round($location[$data['continent']]['lat'],7)    : '',
+                'longitude' => $location[$data['continent']]['long'] ? round($location[$data['continent']]['long'],7)    : '',
+            ),
             'countries' => $country_name,
             'timeline' => array(
                 'today' => array(
