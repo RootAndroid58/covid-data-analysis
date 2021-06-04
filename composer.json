@@ -28,7 +28,8 @@
         "spatie/laravel-medialibrary": "^8.7",
         "swayok/alternative-laravel-cache": "^6.1",
         "voku/simple_html_dom": "^4.7",
-        "yajra/laravel-datatables-oracle": "^9.18"
+        "yajra/laravel-datatables-oracle": "^9.18",
+        "zanysoft/laravel-zip": "master"
     },
     "require-dev": {
         "beyondcode/laravel-query-detector": "^1.5",

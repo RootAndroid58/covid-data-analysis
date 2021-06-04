@@ -178,6 +178,7 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         // \AlternativeLaravelCache\Provider\AlternativeCacheStoresServiceProvider::class,
+        ZanySoft\Zip\ZipServiceProvider::class,
 
     ],
 
@@ -233,6 +234,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'HtmlDomParser' => voku\helper\HtmlDomParser::class,
+        'Zip' => ZanySoft\Zip\ZipFacade::class,
 
     ],
 

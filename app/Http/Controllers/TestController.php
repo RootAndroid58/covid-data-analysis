@@ -17,17 +17,68 @@ use voku\helper\HtmlDomParser;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Helpers\ScraperHelper;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use \SpreadsheetReader;
+use ZanySoft\Zip\ZipManager;
+use Zip;
+
 
 class TestController extends Controller
 {
 public function index()
     {
-        phpinfo();
-        // Artisan::call('scraper:start');
-        // dd(Cache::get('worldometer.states'));
+        $data = ScraperHelper::Gov_Austria();
+        dd($data);
+        // phpinfo();
+        // // Artisan::call('scraper:start');
+        // // dd(Cache::get('worldometer.states'));
+        // $update = new ScraperHelper;
+        // $structure = [
+		// 	'date' => 'date',
+		// 	'todayTests' => 'newTestsByPublishDate',
+		// 	'tests' => 'cumTestsByPublishDate',
+		// 	'testCapacity' => 'plannedCapacityByPublishDate',
+		// 	'newCases' => 'newCasesByPublishDate',
+		// 	'cases' => 'cumCasesByPublishDate',
+		// 	'hospitalized' => 'hospitalCases',
+		// 	'usedVentilationBeds' => 'covidOccupiedMVBeds',
+		// 	'newAdmissions' => 'newAdmissions',
+		// 	'admissions' => 'cumAdmissions',
+		// 	// Deaths within 28 days of positive test by date reported, see: https://coronavirus.data.gov.uk/deaths
+		// 	// Daily total
+		// 	'todayDeaths' => 'newDeaths28DaysByPublishDate',
+		// 	// Cumulative total
+		// 	'totalDeaths' => 'cumDeaths28DaysByPublishDate',
+		// 	// ONS data for deaths with COVID-19 on the death certificate by date registered
+		// 	// Weekly total but a little irregular at times, see: https://coronavirus.data.gov.uk/deaths
+		// 	'ONSweeklyDeaths' => 'newOnsDeathsByRegistrationDate',
+		// 	// Cumulative Weekly total
+		// 	'ONStotalDeaths' => 'cumOnsDeathsByRegistrationDate'
+        // ];
+        // // $ch = curl_init();
+        // // $url = "https://api.coronavirus.data.gov.uk/v1/data?filters=areaName=United%20Kingdom;areaType=overview&structure={%22date%22:%22date%22,%22todayTests%22:%22newTestsByPublishDate%22,%22tests%22:%22cumTestsByPublishDate%22,%22testCapacity%22:%22plannedCapacityByPublishDate%22,%22newCases%22:%22newCasesByPublishDate%22,%22cases%22:%22cumCasesByPublishDate%22,%22hospitalized%22:%22hospitalCases%22,%22usedVentilationBeds%22:%22covidOccupiedMVBeds%22,%22newAdmissions%22:%22newAdmissions%22,%22admissions%22:%22cumAdmissions%22,%22todayDeaths%22:%22newDeaths28DaysByPublishDate%22,%22totalDeaths%22:%22cumDeaths28DaysByPublishDate%22,%22ONSweeklyDeaths%22:%22newOnsDeathsByRegistrationDate%22,%22ONStotalDeaths%22:%22cumOnsDeathsByRegistrationDate%22}";
+
+        // // $curl = curl_init($url);
+        // // curl_setopt($curl, CURLOPT_URL, $url);
+        // // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        // // $headers = array(
+        // //    "Accept: application/json",
+        // // );
+        // // curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        // // //for debug only!
+        // // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        // // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+        // // $resp = curl_exec($curl);
+        // // curl_close($curl);
+        // // dd($resp);
+
+        // $client = new Client();
+        // $response = $client->get('https://api.coronavirus.data.gov.uk/v1/data?filters=areaName=United%20Kingdom;areaType=overview&structure={%22date%22:%22date%22,%22todayTests%22:%22newTestsByPublishDate%22,%22tests%22:%22cumTestsByPublishDate%22,%22testCapacity%22:%22plannedCapacityByPublishDate%22,%22newCases%22:%22newCasesByPublishDate%22,%22cases%22:%22cumCasesByPublishDate%22,%22hospitalized%22:%22hospitalCases%22,%22usedVentilationBeds%22:%22covidOccupiedMVBeds%22,%22newAdmissions%22:%22newAdmissions%22,%22admissions%22:%22cumAdmissions%22,%22todayDeaths%22:%22newDeaths28DaysByPublishDate%22,%22totalDeaths%22:%22cumDeaths28DaysByPublishDate%22,%22ONSweeklyDeaths%22:%22newOnsDeathsByRegistrationDate%22,%22ONStotalDeaths%22:%22cumOnsDeathsByRegistrationDate%22}');
+        // dd(json_decode($response->getBody()->getContents()));
     }
 
     public function test2()
