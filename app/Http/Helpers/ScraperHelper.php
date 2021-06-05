@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Cache;
 use ZanySoft\Zip\ZipManager;
 use ZanySoft\Zip\ZipFacade as Zip;
 use GuzzleHttp\Client;
+use Carbon\Carbon;
 
 class ScraperHelper
 {
@@ -759,6 +760,241 @@ class ScraperHelper
 
     static public function Gov_SouthAfrica()
     {
+        $scraper_data = array();
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_south_africa_confirmed',
+            'path' => 'SouthAfrica_confirmed.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'date','YYYYMMDD','EC','FS','GP','KZN','LP','MP','NC','NW','WC','UNKNOWN','total','source'
+            ],
+            'website' => 'https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_confirmed.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_south_africa_deaths',
+            'path' => 'SouthAfrica_deaths.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'date','YYYYMMDD','EC','FS','GP','KZN','LP','MP','NC','NW','WC','UNKNOWN','total','source'
+            ],
+            'website' => 'https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_deaths.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_south_africa_recovered',
+            'path' => 'SouthAfrica_recovered.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'date','YYYYMMDD','EC','FS','GP','KZN','LP','MP','NC','NW','WC','UNKNOWN','total','source',
+            ], // 'Eastern_Cape','Free_State','Gauteng','KwaZulu-Natal','Limpopo','Mpumalanga','North_West','Northern_Cape','Western_Cape'
+            'website' => 'https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_recoveries.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_south_africa_recovered',
+            'path' => 'SouthAfrica_recovered.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'date','YYYYMMDD','cumulative_tests','cumulative_tests_private','cumulative_tests_public','recovered',
+                'hospitalisation','critical_icu','ventilation','deaths','contacts_identified','contacts_traced',
+                'scanned_travellers','passengers_elevated_temperature','covid_suspected_criteria','source'
+            ],
+            'website' => 'https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_timeline_testing.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_south_africa_recovered',
+            'path' => 'SouthAfrica_recovered.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'date','YYYYMMDD','vaccinations_all','vaccinations_phase_2','vaccinations','source'
+            ],
+            'website' => 'https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_timeline_vaccination.csv',
+            'type'  => 'csv',
+        );
+
+        try {
+            $scraper = new ScraperHelper;
+            foreach($scraper_data as $data){
+
+                $resp = $scraper->curlUrl($data['website']);
+                $dom = HtmlDomParser::str_get_html($resp);
+
+                $csvfile = $dom->html();
+
+                Storage::disk('cron_temp')->put($data['path'], $csvfile);
+
+                $array =  $scraper->csvtoarray($data);
+                Cache::tags(['temp','temp.gov','temp.gov.south_africa'])->put($data['cache_key'],$array, now()->addMinutes(10));
+            }
+            // dd($array);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+
+    }
+
+    static public function Gov_SouthKorea()
+    {
+        $scraper_data = array(
+            'cache_key' => 'temp.gov_south_korea',
+            'path' => 'south_korea.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'city', 'todayCases', 'importedCasesToday', 'localCasesToday', 'cases', 'isolated', 'recovered', 'deaths', 'incidence'
+            ],
+            'website' => 'http://ncov.mohw.go.kr/en/bdBoardList.do?brdId=16&brdGubun=162&dataGubun=&ncvContSeq=&contSeq=&board_id=&gubun=',
+            'type'  => 'html',
+        );
+
+        $scraper = new ScraperHelper;
+        $resp = $scraper->curlUrl($scraper_data['website']);
+        $dom = HtmlDomParser::str_get_html($resp);
+
+        $table = $dom->find('table > tbody');
+        $head = '';
+        foreach($scraper_data['fields'] as $header){
+            $head .= '"'. $header . '",';
+        }
+        $data = '';
+        foreach($table->find('tr') as $node){
+            foreach($node->find('th')->text() as $th){
+                $data .= '"'.$th . '",';
+            }
+            foreach($node->find('td')->text() as $td){
+                $data .= '"'.$td . '",';
+            }
+            $data .= "\n";
+        }
+        $csvfile = $head . "\n" . $data;
+
+        Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+
+        $array =  $scraper->csvtoarray($scraper_data);
+        Cache::tags(['temp','temp.gov','temp.gov.south_korea'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+        dd($array);
+
+    }
+
+    static public function Gov_Switzerland()
+    {
+        $scraper_data = array(
+            'cache_key' => 'temp.gov_switzerland',
+            'path' => 'Switzerland.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'date','time','state_code','tested','ncumul_conf','new_hosp',
+                'current_hosp','current_icu','current_vent','released','ncumul_deceased','source',
+                'current_isolated','current_quarantined','current_quarantined_riskareatravel'
+            ],
+            'website' => 'https://raw.githubusercontent.com/openZH/covid_19/master/COVID19_Fallzahlen_CH_total_v2.csv',
+            'type'  => 'csv',
+        );
+        try {
+            $scraper = new ScraperHelper;
+
+            $resp = $scraper->curlUrl($scraper_data['website']);
+            $dom = HtmlDomParser::str_get_html($resp);
+
+            $csvfile = $dom->html();
+
+            Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+
+            $array =  $scraper->csvtoarray($scraper_data);
+            Cache::tags(['temp','temp.gov','temp.gov.switzerland'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+
+            dd($array);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+
+    }
+
+    static public function Gov_UK()
+    {
+        $scraper_data = array(
+            'cache_key' => 'temp.gov_switzerland',
+            'website' => 'https://api.coronavirus.data.gov.uk/v1/data?filters=areaName=United%20Kingdom;areaType=overview&structure={%22date%22:%22date%22,%22todayTests%22:%22newTestsByPublishDate%22,%22tests%22:%22cumTestsByPublishDate%22,%22testCapacity%22:%22plannedCapacityByPublishDate%22,%22newCases%22:%22newCasesByPublishDate%22,%22cases%22:%22cumCasesByPublishDate%22,%22hospitalized%22:%22hospitalCases%22,%22usedVentilationBeds%22:%22covidOccupiedMVBeds%22,%22newAdmissions%22:%22newAdmissions%22,%22admissions%22:%22cumAdmissions%22,%22todayDeaths%22:%22newDeaths28DaysByPublishDate%22,%22totalDeaths%22:%22cumDeaths28DaysByPublishDate%22,%22ONSweeklyDeaths%22:%22newOnsDeathsByRegistrationDate%22,%22ONStotalDeaths%22:%22cumOnsDeathsByRegistrationDate%22}',
+            'type'  => 'json',
+        );
+
+        try {
+            $client = new Client();
+            $response = $client->get($scraper_data['website']);
+            $response = json_decode($response->getBody()->getContents());
+
+            Cache::tags(['temp','temp.gov','temp.gov.switzerland'])->put($scraper_data['cache_key'],$response, now()->addMinutes(10));
+
+            dd($response->data);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    static public function Gov_Vietnam()
+    {
+        $scraper_data = array(
+            'cache_key' => 'temp.gov_vietnam',
+            'path' => 'vietnam.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'Patient', 'Age', 'Location' ,'Status' ,'Nationality'
+            ],
+            'website' => 'https://ncov.moh.gov.vn/',
+            'type'  => 'html',
+        );
+
+        try {
+
+            $scraper = new ScraperHelper;
+            $resp = $scraper->curlUrl($scraper_data['website'],null,true);
+            $dom = HtmlDomParser::str_get_html($resp);
+
+            $deaths = $dom->findOne('#portlet_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v > div > div.portlet-content-container > div > section.container > div:nth-child(2) > div:nth-child(2) > div > div.col-lg-12.d-none.d-lg-block > div > div:nth-child(2) > div.col.text-center.text-uppercase.text-danger-new1 > span')->text();
+            $treated = $dom->findOne('#portlet_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v > div > div.portlet-content-container > div > section.container > div:nth-child(2) > div:nth-child(2) > div > div.col-lg-12.d-none.d-lg-block > div > div:nth-child(2) > div.col.text-center.text-uppercase.text-warning1 > span')->text();
+            $recovered = $dom->findOne('#portlet_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v > div > div.portlet-content-container > div > section.container > div:nth-child(2) > div:nth-child(2) > div > div.col-lg-12.d-none.d-lg-block > div > div:nth-child(2) > div.col.text-center.text-uppercase.text-success > span')->text();
+            $infected = $dom->findOne('#portlet_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v > div > div.portlet-content-container > div > section.container > div:nth-child(2) > div:nth-child(2) > div > div.col-lg-12.d-none.d-lg-block > div > div:nth-child(2) > div.col.text-center.text-uppercase.text-danger-new > span')->text();
+            $table = $dom->findOne('#sailorTable');
+            $data = '';
+            $header = '';
+            foreach($scraper_data['fields'] as $fields){
+                $header .= '"'. $fields . '",';
+            }
+            foreach($table->find('tr') as $node){
+                foreach($node->find('td')->text() as $td){
+                    $data .= '"'. $td . '",';
+                }
+                $data .= "\n";
+            }
+            $csvfile = $header . "\n" . $data;
+
+            $data = array(
+                'updatedAt' => Carbon::now()->timestamp,
+                'deaths' => $deaths,
+                'treated' => $treated,
+                'recovered' => $recovered,
+                'infected' => $infected,
+
+            );
+
+            Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+
+            $array =  $scraper->csvtoarray($scraper_data);
+
+            Cache::tags(['temp','temp.gov','temp.gov.vietnam'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+            Cache::tags(['temp','temp.gov','temp.gov.vietnam'])->put('temp.gov_vietnam.stats',$data, now()->addMinutes(10));
+
+            dd($data);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
 
     }
 
@@ -977,12 +1213,22 @@ class ScraperHelper
         return array('updates'=> $new_updates,'inserts' => $new_data , 'success' => true);
     }
 
-    public function curlUrl($site)
+    public function curlUrl($site,$type = null,$ssl = false)
     {
         $curl = curl_init($site);
         curl_setopt($curl, CURLOPT_URL, $site);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
+        if($type == 'json'){
+            $headers = array(
+                'Accept: application/json',
+            );
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+        }
+        if($ssl){
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        }
         // //for debug only!
         // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);

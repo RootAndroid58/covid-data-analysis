@@ -177,11 +177,13 @@ class GovernmentApiController extends Controller
         /**
          * SouthAfrica
          * https://github.com/dsfsi/covid19za csv files
+         * ===========done==========
          */
 
         /**
          * SouthKorea
          * http://ncov.mohw.go.kr/en/bdBoardList.do?brdId=16&brdGubun=162&dataGubun=&ncvContSeq=&contSeq=&board_id=&gubun=
+         * ===========done==========
          */
         // $update = new ScraperHelper;
         // $resp = $update->curlUrl("http://ncov.mohw.go.kr/en/bdBoardList.do?brdId=16&brdGubun=162&dataGubun=&ncvContSeq=&contSeq=&board_id=&gubun=");
@@ -203,10 +205,12 @@ class GovernmentApiController extends Controller
         /**
          * Switzerland
          * https://raw.githubusercontent.com/openZH/covid_19/master/COVID19_Fallzahlen_CH_total_v2.csv
+         * ===========done==========
          */
 
         /**
          * UK
+         * ===========done==========
          */
 
         // use GuzzleHttp\Client;
@@ -217,6 +221,8 @@ class GovernmentApiController extends Controller
         /**
          * Vietnam
          * https://ncov.moh.gov.vn/ { do soooo much } [ get all paitents and match the data :( ]
+         *
+         * ===========done==========
          */
 
 }
