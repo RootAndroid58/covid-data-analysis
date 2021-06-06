@@ -325,7 +325,6 @@ class ScraperHelper
                 'todayRecovered',
                 'recovered',
             ],
-            'version' => 'V 2.4.0.0',
             'type'  => 'csv',
         );
         $scraper_data[] = array(
@@ -343,7 +342,6 @@ class ScraperHelper
                 'recovered',
                 'dead',
             ],
-            'version' => 'V 2.4.0.0',
             'type'  => 'csv',
         );
         $scraper_data[]    = array(
@@ -358,7 +356,6 @@ class ScraperHelper
                 'dead',
                 'cases7days',
             ],
-            'version' => 'V 2.4.0.0',
             'type'  => 'csv',
         );
         $scraper_data[]    = array(
@@ -376,11 +373,10 @@ class ScraperHelper
                 'StateID',
                 'state',
             ],
-            'version' => 'V 2.4.0.0',
             'type'  => 'csv',
         );
         $scraper_data[]    = array(
-            'cache_key' => 'gov_austria_version',
+            'cache_key' => 'temp.gov_austria_version',
             'path' => 'zips\\getAustria\\Version.csv',
             'hasHeader' => true,
             'fields' => [
@@ -395,11 +391,11 @@ class ScraperHelper
 
             foreach($scraper_data as $data){
                 if($data['type'] == 'zip'){
-                    File::deleteDirectory(storage_path('cron_temp\\'.$data['path']));
-                    Storage::disk('cron_temp')->delete($data['Filename']);
-                    $guzzle = new Client();
-                    $response = $guzzle->get($data['website']);
-                    Storage::disk('cron_temp')->put($data['Filename'], $response->getBody());
+                    // File::deleteDirectory(storage_path('cron_temp\\'.$data['path']));
+                    // Storage::disk('cron_temp')->delete($data['Filename']);
+                    // $guzzle = new Client();
+                    // $response = $guzzle->get($data['website']);
+                    // Storage::disk('cron_temp')->put($data['Filename'], $response->getBody());
                     $path = storage_path('cron_temp\\'.$data['Filename']);
                     $manager = new ZipManager();
                     $manager->addZip( Zip::open($path) );
@@ -419,6 +415,9 @@ class ScraperHelper
         }
         File::deleteDirectory(storage_path('cron_temp\\'.$scraper_data[0]['path']));
         File::delete(storage_path('cron_temp\\'.$scraper_data[0]['Filename']));
+
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_Austria();
 
 
     }
@@ -636,7 +635,34 @@ class ScraperHelper
 
     static public function Gov_Indonesia()
     {
-        # code...
+        $scraper_data = array();
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_indonesia.data',
+            'website' => 'https://data.covid19.go.id/public/api/data.json',
+            'type'  => 'json',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_indonesia.update',
+            'website' => 'https://data.covid19.go.id/public/api/update.json',
+            'type'  => 'json',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_indonesia.prev',
+            'website' => 'https://data.covid19.go.id/public/api/prov.json',
+            'type'  => 'json',
+        );
+
+        $scraper = new ScraperHelper;
+        try {
+            foreach($scraper_data as $data){
+                $resp = $scraper->curlUrl($data['website']);
+                $array = json_decode($resp);
+
+                Cache::tags(['temp','temp.gov','temp.gov.indonesia'])->put($data['cache_key'],$array, now()->addMinutes(10));
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     static public function Gov_Italy()

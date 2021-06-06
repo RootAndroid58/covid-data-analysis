@@ -3,11 +3,33 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\ApiHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 
 class GovernmentApiController extends Controller
 {
     //
+
+    public function gov(Request $request,$country)
+    {
+        $gov = array('Austria');
+        $request->validate([
+            'country' => 'required|in:'.implode(',',$gov),
+        ]);
+
+        switch ($country) {
+            case 'Austria':
+                $response = $this->get_Austria($request);
+                break;
+
+            default:
+                $response = ApiHelper::SuccessorFail(200,['error' => 'Supported Countries'. implode(',',$gov)]);
+                break;
+        }
+        return redirect()->json($response);
+    }
 
         /**
          * Austria Gov data
@@ -30,22 +52,72 @@ class GovernmentApiController extends Controller
         // $zip->extract(storage_path('cron_temp\\zips\\getAustria'));
         // \File::deleteDirectory(storage_path('cron_temp\\zips'));
         // dd($zip,$is_valid);
+        public function get_Austria(Request $request)
+        {
+            $data = ['historical','byAge','byDistrict','hospital','version'];
+            $request->validate([
+                'type'  => 'sometimes|in:'.implode(',',$data).'|nullable',
+            ]);
+
+            $type = $request->input('type');
+
+            switch ($type) {
+                case $data[0]:
+                    $cacheKey = 'prod.gov.austria.historical';
+                    break;
+                case $data[1]:
+                    $cacheKey = 'prod.gov.austria.byage';
+                    break;
+                case $data[2]:
+                    $cacheKey = 'prod.gov.austria.bydistrict';
+                    break;
+                case $data[3]:
+                    $cacheKey = 'prod.gov.austria.hospital';
+                    break;
+                case $data[4]:
+                    $cacheKey = 'prod.gov.austria.version';
+                    break;
+
+                default:
+                    $cacheKey = false;
+                    break;
+            }
+            if($cacheKey){
+                $response = ApiHelper::gov_Austria($cacheKey);
+            }else{
+                $response = array('message' => "Supported parameters ".implode(',',$data));
+            }
+
+            return response()->json($response);
+
+        }
 
         /**
          * Canada https://health-infobase.canada.ca/src/data/covidLive/covid19.csv
          * ===========done==========
          */
+        public function get_Canada(Request $request)
+        {
+
+        }
 
          /**
           * Colombia https://www.datos.gov.co/api/views/gt2j-8ykr/rows.json
           * ===========done==========
           */
+        public function get_Colombia(Request $request)
+        {
+
+        }
 
         /**
          *  Germany https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Fallzahlen.html
          * ===========done==========
          */
+        public function get_Germany(Request $request)
+        {
 
+        }
         // $update = new ScraperHelper;
         // $resp = $update->curlUrl("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Fallzahlen.html");
         // $dom = HtmlDomParser::str_get_html($resp);
@@ -66,6 +138,10 @@ class GovernmentApiController extends Controller
          * India https://www.mohfw.gov.in/data/datanew.json
          * ===========done==========
          */
+        public function get_India(Request $request)
+        {
+
+        }
 
         /**
          * Indonesia
@@ -76,6 +152,11 @@ class GovernmentApiController extends Controller
          *
          * ==== skipped=====
          */
+
+        public function get_Indonesia(Request $request)
+        {
+
+        }
 
         /**
          * Israel https://datadashboardapi.health.gov.il/api/queries/_batch

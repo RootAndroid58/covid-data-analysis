@@ -272,4 +272,6 @@ class DataHelper
         [ 'country' => 'Zambia',                                        'iso2' => 'ZM', 'lat' => '-15',           'long' => '30'                                                                ],
         [ 'country' => 'Zimbabwe',                                      'iso2' => 'ZW', 'lat' => '-20',           'long' => '30'                                                                ]
     );
+
+    public $austria_version = 'V 2.4.0.0';
 }

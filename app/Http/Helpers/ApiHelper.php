@@ -11,29 +11,36 @@ use Illuminate\Support\Facades\Artisan;
 class ApiHelper
 {
 
-    Static public function SuccessorFail($type = null,$array = null,$deprecated = false)
+    Static public function SuccessorFail($type = null,$array = null,$meta = false,$deprecated = false)
     {
-        if($type == 200){
-            $status = array('status'=> "Success", 'status_code' => 200 , 'deprecated' => $deprecated);
-        }elseif($type == 201){
-            $status = array('status'=> "Created", 'status_code' => 201, 'deprecated' => $deprecated);
-        }elseif($type == 500){
-            $status = array('status'=> "System Error", 'status_code' => 500, 'deprecated' => $deprecated);
-        }elseif($type == 401){
-            $status = array('status'=> "Unauthorized", 'status_code' => 401, 'deprecated' => $deprecated);
-        }elseif($type == 403){
-            $status = array('status'=> "Forbidden", 'status_code' => 403, 'deprecated' => $deprecated);
-        }elseif($type == 404){
-            $status = array('status'=> "Not Found", 'status_code' => 404, 'deprecated' => $deprecated);
-        }else{
-            $status = array('status'=> "Bad Request", 'status_code' => 400, 'deprecated' => $deprecated);
+        switch ($type) {
+            case 200:
+                $status = array('status'=> "Success", 'status_code' => 200 , 'deprecated' => $deprecated);
+                break;
+            case 201:
+                $status = array('status'=> "Created", 'status_code' => 201, 'deprecated' => $deprecated);
+                break;
+            case 500:
+                $status = array('status'=> "System Error", 'status_code' => 500, 'deprecated' => $deprecated);
+                break;
+            case 401:
+                $status = array('status'=> "Unauthorized", 'status_code' => 401, 'deprecated' => $deprecated);
+                break;
+            case 403:
+                $status = array('status'=> "Forbidden", 'status_code' => 403, 'deprecated' => $deprecated);
+                break;
+            case 404:
+                $status = array('status'=> "Not Found", 'status_code' => 404, 'deprecated' => $deprecated);
+                break;
+            default:
+                $status = array('status'=> "Bad Request", 'status_code' => 400, 'deprecated' => $deprecated);
+                break;
         }
         if($array != null){
-            if(is_array($array)){
-                return array_merge($status,$array);
-            }elseif(!is_array($array)){
+            if($meta || !is_array($array)){
                 return array_merge($status,array("meta" => $array));
             }
+                return array_merge($status,$array);
         }
         return $status;
     }
@@ -41,14 +48,10 @@ class ApiHelper
     Static public function worldometer($param,$search = null)
     {
         $search_param = ['today','yesterday','yesterday2'];
+        $ApiHelper = new ApiHelper;
         try {
-            $data = Cache::get('worldometer');
-            if($data == null){
-                Artisan::call('covid:worldometers');
-                $data = Cache::get('worldometer');
-            }
+            $data = $ApiHelper->getCache('worldometer','covid:worldometers');
 
-            $ApiHelper = new ApiHelper;
             if($param == 'today' || $param == 'yesterday' || $param == 'yesterday2'){
                 $response = $ApiHelper->worldometer_output($data,$param,$search_param);
             }else{
@@ -61,19 +64,15 @@ class ApiHelper
             $response_key = $ApiHelper->searcharray($response,$search,'country');
             $response = $data[$response_key];
         }
-        return $ApiHelper->SuccessorFail(200,['meta' =>$response]);
+        return $ApiHelper->SuccessorFail(200,$response,true);
     }
     Static public function worldometer_state($param,$search)
     {
         $search_param = ['today','yesterday'];
         try {
-            $data = Cache::get('worldometer.states');
-            if($data == null){
-                Artisan::call('covid:worldometers');
-                $data = Cache::get('worldometer.states');
-            }
-
             $ApiHelper = new ApiHelper;
+            $data = $ApiHelper->getCache('worldometer.states','covid:worldometers');
+
             if($param == 'today' || $param == 'yesterday'){
                 $response = $ApiHelper->worldometer_output($data,$param,$search_param);
             }else{
@@ -86,18 +85,14 @@ class ApiHelper
             $response_key = $ApiHelper->searcharray($response,$search,'state');
             $response = $data[$response_key];
         }
-        return $ApiHelper->SuccessorFail(200,['meta' =>$response]);
+        return $ApiHelper->SuccessorFail(200,$response,true);
     }
     Static public function worldometer_continents($param,$search)
     {
         $search_param = ['today','yesterday','yesterday2'];
         try {
-            $data = Cache::get('worldometer.continents');
-            if($data == null){
-                Artisan::call('covid:worldometers');
-                $data = Cache::get('worldometer.continents');
-            }
             $ApiHelper = new ApiHelper;
+            $data = $ApiHelper->getCache('worldometer.continents','covid:worldometers');
             if($param == 'today' || $param == 'yesterday' || $param == 'yesterday2'){
                 $response = $ApiHelper->worldometer_output($data,$param,$search_param);
             }else{
@@ -114,19 +109,15 @@ class ApiHelper
         } catch (\Throwable $th) {
             throw $th;
         }
-        return $ApiHelper->SuccessorFail(200,['meta' =>$response]);
+        return $ApiHelper->SuccessorFail(200,$response,true);
     }
 
     Static public function worldometer_countries($param,$search)
     {
         $search_param = ['today','yesterday','yesterday2'];
         try {
-            $data = Cache::get('worldometer.countries');
-            if($data == null){
-                Artisan::call('covid:worldometers');
-                $data = Cache::get('worldometer.countries');
-            }
             $ApiHelper = new ApiHelper;
+            $data = $ApiHelper->getCache('worldometer.countries','covid:worldometers');
             if($param == 'today' || $param == 'yesterday' || $param == 'yesterday2'){
                 $response = $ApiHelper->worldometer_output($data,$param,$search_param);
             }else{
@@ -140,51 +131,51 @@ class ApiHelper
         } catch (\Throwable $th) {
             throw $th;
         }
-        return $ApiHelper->SuccessorFail(200,['meta' =>$response]);
+        return $ApiHelper->SuccessorFail(200,$response,true);
     }
 
 
 
     Static public function historical($days)
     {
-        $data = Cache::get('historical_all');
-
-        if($data == null){
-            ScraperHelper::covid_hestorical();
-            $data = Cache::get('historical_all');
-        }
-
         $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache('historical_all','covid:historical');
 
         $response = $ApiHelper->getDays($data,$days);
 
-        return response()->json($ApiHelper->SuccessorFail(200,['meta' =>$response]));
+        return response()->json($ApiHelper->SuccessorFail(200,$response,true));
 
     }
 
     Static public function historicalbyCountry($name, $code ,$days)
     {
-        $data = Cache::get('historical_all');
-        if($data == null){
-            ScraperHelper::covid_hestorical();
-            $data = Cache::get('historical_all');
-        }
-        $find = Country::where('name',$name)->orWhere('code',$code)->first();
-
         $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache('historical_all','covid:historical');
+        $find = Country::where('name',$name)->orWhere('code',$code)->first();
+        $search_key = null;
+        if($find) {
+            $search_key = $ApiHelper->searcharray($data,$find->name,'country');
+        }
 
-        $search_key = $ApiHelper->searcharray($data,$find->name,'country');
 
         if($search_key != null){
 
             $reqired_data = $data[$search_key];
 
-            $response = $ApiHelper->SuccessorFail(200,$ApiHelper->getDays($reqired_data,$days));
+            $response = $ApiHelper->SuccessorFail(200,$ApiHelper->getDays($reqired_data,$days),true);
         }else{
 
             $response = $ApiHelper->SuccessorFail(200,['error'=>'Cannot find the Country']);
         }
 
+        return $response;
+    }
+
+    static public function gov_Austria($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-austria');
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
         return $response;
     }
 
@@ -195,6 +186,9 @@ class ApiHelper
 
 
 
+    /**
+     * Helper for Api functions
+     */
 
     public function searcharray($array,$find,$search_key)
     {
@@ -207,19 +201,6 @@ class ApiHelper
         }
         return null;
     }
-
-    // public function getcontinents($array,$find)
-    // {
-    //     if(isset($find)){
-    //         foreach($array as $key => $val){
-    //             if($key == 'index' && $val == null){
-
-    //             }
-    //         }
-    //     }
-    // }
-
-
 
     public function getDays($array ,$day)
     {
@@ -272,15 +253,6 @@ class ApiHelper
         }
     }
 
-    public function SearchKey($array, $search)
-    {
-        foreach($array as $key => $val){
-            if($search == $val || strcasecmp($search,$val) == 0){
-                return $key;
-            }
-        }
-    }
-
     public function worldometer_output($array,$search,$data)
     {
         $remove = array_values(array_diff($data,[$search]));
@@ -294,6 +266,26 @@ class ApiHelper
 
         }
         return $array;
+    }
+
+    public function SearchKey($array, $search)
+    {
+        foreach($array as $key => $val){
+            if($search == $val || strcasecmp($search,$val) == 0){
+                return $key;
+            }
+        }
+    }
+
+
+    public function getCache($cache,$call)
+    {
+        $data = Cache::get($cache);
+        if($data == null){
+            Artisan::call($call);
+            $data = Cache::get($cache);
+        }
+        return $data;
     }
 
 }

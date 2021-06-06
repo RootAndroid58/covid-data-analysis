@@ -77,6 +77,10 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middlew
     Route::get('/covid-19/historical/', 'JHUCSSEApiController@historical');
     Route::get('/covid-19/historical/{country}', 'JHUCSSEApiController@historicalbyCountry');
 
+    // Gov api
+    Route::get('/gov', 'GovernmentApiController@get_Austria');
+    Route::get('/gov/{country}', 'GovernmentApiController@get_Austria');
+
 
 
 });

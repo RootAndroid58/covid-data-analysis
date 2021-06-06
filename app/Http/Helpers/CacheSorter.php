@@ -338,6 +338,104 @@ class CacheSorter
         return $response;
     }
 
+    public function gov_sorter_Austria_historical($data)
+    {
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $count = count($data);
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'Austria','country');
+        $response = array(
+            'count' => $count,
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'timeline' => $data,
+        );
+        return $response;
+    }
+    public function gov_sorter_Austria_byage($data)
+    {
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $count = count($data);
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'Austria','country');
+        $response = array(
+            'count' => $count,
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'age' => $data,
+        );
+        return $response;
+    }
+    public function gov_sorter_Austria_bydistrict($data)
+    {
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $count = count($data);
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'Austria','country');
+        $response = array(
+            'count' => $count,
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'district' => $data,
+        );
+        return $response;
+    }
+    public function gov_sorter_Austria_hospital($data)
+    {
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $count = count($data);
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'Austria','country');
+        $response = array(
+            'count' => $count,
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'hospital' => $data,
+        );
+        return $response;
+    }
+    public function gov_sorter_Austria_version($data)
+    {
+        $data = $data[0];
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'Austria','country');
+        $response = array(
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'version' => $data['version'],
+            'VersionsDate' => $data['VersionsDate'],
+            'CreationDate' => $data['CreationDate'],
+            'supported_version' => $DataHelper->austria_version,
+        );
+        return $response;
+    }
+
     public function search($array,$find,$search_key)
     {
         if(isset($find)){

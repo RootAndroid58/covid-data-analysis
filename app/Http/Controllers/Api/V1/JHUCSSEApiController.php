@@ -13,9 +13,12 @@ class JHUCSSEApiController extends Controller
     public function historicalbyCountry(Request $request,$country)
     {
         $request->validate([
-            'lastdays' => 'required'
+            'lastdays' => 'sometimes|nullable'
         ]);
         $days = $request->input('lastdays');
+        if($days == null){
+            $days = 'all';
+        }
 
         $response = ApiHelper::historicalbyCountry($country,$country,$days);
 
@@ -24,10 +27,13 @@ class JHUCSSEApiController extends Controller
     public function historical(Request $request)
     {
         $request->validate([
-            'lastdays' => 'required'
+            'lastdays' => 'sometimes|nullable'
         ]);
 
         $days = $request->input('lastdays');
+        if($days == null){
+            $days = 'all';
+        }
 
 
         $response = ApiHelper::historical($days);

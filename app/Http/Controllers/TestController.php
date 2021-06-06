@@ -27,8 +27,8 @@ use Zip;
 
 class TestController extends Controller
 {
-public function index()
-{
+    public function index()
+    {
         phpinfo();
     }
 

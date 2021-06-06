@@ -92,4 +92,47 @@ class cacheUpdater
 
         return $response;
     }
+
+    static public function gov_updater_Austria()
+    {
+        $data = array(
+            ['cache' => 'temp.gov_austria_historical','prod' => 'prod.gov.austria.historical'],
+            ['cache' => 'temp.gov_austria_by_age_grps','prod' => 'prod.gov.austria.byage'],
+            ['cache' => 'temp.gov_austria_by_district','prod' => 'prod.gov.austria.bydistrict'],
+            ['cache' => 'temp.gov_austria_hospital','prod' => 'prod.gov.austria.hospital'],
+            ['cache' => 'temp.gov_austria_version','prod' => 'prod.gov.austria.version'],
+        );
+        $cacheupdater = new cacheUpdater;
+        $historical = $cacheupdater->getCache($data[0],"covid:gov-austria");
+        $byage = $cacheupdater->getCache($data[1],"covid:gov-austria");
+        $bydistrict = $cacheupdater->getCache($data[2],"covid:gov-austria");
+        $hospital = $cacheupdater->getCache($data[3],"covid:gov-austria");
+        $version = $cacheupdater->getCache($data[4],"covid:gov-austria");
+
+        $CacheSorter = new CacheSorter;
+        $data_historical = $CacheSorter->gov_sorter_Austria_historical($historical);
+        $data_byage = $CacheSorter->gov_sorter_Austria_byage($byage);
+        $data_bydistrict = $CacheSorter->gov_sorter_Austria_bydistrict($bydistrict);
+        $data_hospital = $CacheSorter->gov_sorter_Austria_hospital($hospital);
+        $data_version = $CacheSorter->gov_sorter_Austria_version($version);
+
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[0]['prod'],$data_historical, now()->addMinutes(10));
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[1]['prod'],$data_byage, now()->addMinutes(10));
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[2]['prod'],$data_bydistrict, now()->addMinutes(10));
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[3]['prod'],$data_hospital, now()->addMinutes(10));
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[4]['prod'],$data_version, now()->addMinutes(10));
+
+        return true;
+
+    }
+
+    static public function getCache($array,$call)
+    {
+        $data = Cache::get($array['cache']);
+        if($data == null){
+            Artisan::call($call);
+            $data = Cache::get($array['cache']);
+        }
+        return $data;
+    }
 }
