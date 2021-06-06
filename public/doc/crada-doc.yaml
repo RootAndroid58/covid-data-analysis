@@ -5,7 +5,7 @@ info:
     name: CRADA staff team
     url: "https://www.crada.ga/api"
     email: "contact@crada.ga"
-  description: |-
+  description: >-
     <a target="_blank" href="https://god.postman.co/run-collection/13642074-7fad3869-3032-45b7-bc83-e8213302b87e?action=collection%2Ffork&collection-url=entityId%3D13642074-7fad3869-3032-45b7-bc83-e8213302b87e%26entityType%3Dcollection">
          <img alt="Qries" src="https://run.pstmn.io/button.svg" alt="run in Postman"
          width=150" height="70">
@@ -24,9 +24,16 @@ info:
 
     The API uses Token System which is available when you login and goto profile panel
 
-    | Security Scheme Type      | HTTP        |
-    | ------------------------- | ----------- |
-    | HTTP Authorization Scheme | bearer      |
+    <table>
+        <tr>
+            <td>Security Scheme Type</td>
+            <td>HTTP</td>
+        </tr>
+        <tr>
+            <td>HTTP Authorization Scheme</td>
+            <td>bearer</td>
+        </tr>
+    </table>
 
     # Rate limit
 
@@ -97,12 +104,12 @@ paths:
           enum:
           - application/json
       - name: email
-        in: path
+        in: query
         description: Email id of the user
         required: true
         type: string
       - name: password
-        in: path
+        in: query
         description: Super Secret password of the user
         required: true
         type: string
@@ -151,17 +158,17 @@ paths:
           enum:
           - application/json
       - name: name
-        in: path
+        in: query
         description: name of the user
         required: true
         type: string
       - name: email
-        in: path
+        in: query
         description: Email id of the user
         required: true
         type: string
       - name: password
-        in: path
+        in: query
         description: Super Secret password of the user
         required: true
         type: string
@@ -209,28 +216,13 @@ paths:
           type: string
           enum:
           - application/json
-      - name: name
-        in: path
-        description: name of the user
-        required: true
-        type: string
-      - name: email
-        in: path
-        description: Email id of the user
-        required: true
-        type: string
-      - name: password
-        in: path
-        description: Super Secret password of the user
-        required: true
-        type: string
       responses:
         '200':
           description: Ok
           content:
             application/json:
                schema:
-                $ref: '#/components/schemas/register'
+                $ref: '#/components/schemas/logout'
           headers:
             Accept: application/json
 
@@ -271,7 +263,7 @@ paths:
           enum:
           - application/json
       - name: search
-        in: path
+        in: query
         required: false
         style: simple
         Schema:
@@ -802,6 +794,11 @@ paths:
           type: string
           enum:
           - application/json
+      - name: type
+        in: query
+        required: false
+        example: today , yesterday , yesterday2
+        type: string
       responses:
         '200':
           description: ''
@@ -844,6 +841,16 @@ paths:
           type: string
           enum:
           - application/json
+      - name: type
+        in: query
+        required: false
+        example: today , yesterday , yesterday2
+        type: string
+      - name: search
+        in: query
+        required: false
+        example: California, Texas ,etc
+        type: string
       responses:
         '200':
           description: ''
@@ -887,12 +894,12 @@ paths:
           enum:
           - application/json
       - name: type
-        in: path
+        in: query
         required: false
         example: today , yesterday , yesterday2
         type: string
       - name: search
-        in: path
+        in: query
         example: Asia,North America,South America,Europe,Africa,Oceania,Australia
         required: false
         type: string
@@ -939,12 +946,12 @@ paths:
           enum:
           - application/json
       - name: type
-        in: path
+        in: query
         example: today , yesterday , yesterday2
         required: false
         type: string
       - name: search
-        in: path
+        in: query
         description: name of the country or iso2 code of country
         example: India, IN , AE
         required: false
@@ -980,6 +987,8 @@ paths:
     get:
       tags:
       - JHUCSSE
+      description: >-
+        Get COVID-19 time series data for all countries and their provinces
       summary: historical
       operationId: /covid-19/historical
       parameters:
@@ -992,8 +1001,70 @@ paths:
           enum:
           - application/json
       - name: lastdays
+        in: query
+        description: |-
+          Number of days to return. Use 'all' for the full data set
+
+          > Note: not giving this field means you want all the dates.
+        required: false
+        type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/covid_19_historical'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /covid-19/historical/{country}:
+    get:
+      tags:
+      - JHUCSSE
+      summary: historical by Country
+      description: >-
+        Get COVID-19 time series data for a specific country
+      operationId: /covid-19/historical/{country}
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: country
         in: path
-        description: no of days user wants or all
+        description: >-
+          <li> <small>{country}</small> - complete name or iso2 code of the country</li>
+        example: /covid-19/historical/in
+        required: false
+        type: string
+      - name: lastdays
+        in: query
+        description: >-
+          Number of days to return. Use 'all' for the full data set
+
+          > Note: not giving this field means you want all the dates.
         required: false
         type: string
       responses:
@@ -1039,7 +1110,6 @@ paths:
 
 
 
-
 tags:
 - name: General
   description: Some general API endpoints which are for tracking or keeping the API alive
@@ -1054,7 +1124,7 @@ tags:
     In order to update data using API you need to have access to API token which can be found in profile page same goes for adding new data using API.
 - name: New requests
   description: >-
-    Here you will be able to send a request to our server to add a new resource where our bot will check if required indo is available and satsifying.
+    Here you will be able to send a request to our server to add a new resource where our bot will check if required data is available and satsifying.
 
     Here all the API requests needs Authorization Token
 - name: COVID 19
@@ -1062,13 +1132,18 @@ tags:
     Form Here you will see the all the API's which porvide covid data.
 
 
-    They are divided as :
+    > Note: if there is a delay in receiving any request then it may take 30s to 1 min to receive the request.
+
+    > The server is refreshing the data so latest data will be available.
+
+    > > This happens because the data is stored as cache in our server and expires in 10 mins.
+
 - name: Worldometers API
   description: >-
-    Here is the data scrapped from Worldometers website https://www.worldometers.info/coronavirus/
+    Here is the data scrapped from  <a href="https://www.worldometers.info/coronavirus/" target="_blank">Worldometers website</a>
 - name: JHUCSSE
   description: >-
-    Here is data scrapped from Johns Hopkins University Center for Systems Science and Engineering JHUCSSE https://github.com/CSSEGISandData/COVID-19
+    Here is data scrapped from <a href="https://github.com/CSSEGISandData/COVID-19" target="_blank">Johns Hopkins University Center for Systems Science and Engineering JHUCSSE</a>
 - name: NYT
   description: >-
 - name: Apple
@@ -1660,6 +1735,24 @@ components:
           type: string
         data:
           $ref: '#/components/schemas/token'
+    logout:
+      title: Logout
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - Success
+        state_code:
+          type: integer
+          enum:
+          - 200
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        message:
+          type: string
     token:
       title: token
       type: object

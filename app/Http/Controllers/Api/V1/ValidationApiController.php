@@ -65,10 +65,14 @@ class ValidationApiController extends Controller
 
     public function logout()
     {
-        auth()->user()->tokens()->delete();
-
+        if(auth()->user()){
+            auth()->user()->tokens()->delete();
+            return [
+                'message' => 'Tokens Revoked'
+            ];
+        }
         return [
-            'message' => 'Tokens Revoked'
+            'message' => 'Already logged out!'
         ];
     }
 }
