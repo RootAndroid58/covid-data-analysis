@@ -787,6 +787,258 @@ paths:
           headers:
             Accept: application/json
       deprecated: false
+  /covid-19/all:
+    get:
+      tags:
+      - Worldometers API
+      summary: All data
+      operationId: /covid-19/all
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/covid_19_All'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /covid-19/states:
+    get:
+      tags:
+      - Worldometers API
+      summary: US States
+      operationId: /covid-19/states
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/covid_19_States'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /covid-19/continents:
+    get:
+      tags:
+      - Worldometers API
+      summary: Continents
+      operationId: /covid-19/continents
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: type
+        in: path
+        required: false
+        example: today , yesterday , yesterday2
+        type: string
+      - name: search
+        in: path
+        example: Asia,North America,South America,Europe,Africa,Oceania,Australia
+        required: false
+        type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/covid_19_countries'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /covid-19/Countries:
+    get:
+      tags:
+      - Worldometers API
+      summary: Countries
+      operationId: /covid-19/countries
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: type
+        in: path
+        example: today , yesterday , yesterday2
+        required: false
+        type: string
+      - name: search
+        in: path
+        description: name of the country or iso2 code of country
+        example: India, IN , AE
+        required: false
+        type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/covid_19_countries'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /covid-19/historical:
+    get:
+      tags:
+      - JHUCSSE
+      summary: historical
+      operationId: /covid-19/historical
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: lastdays
+        in: path
+        description: no of days user wants or all
+        required: false
+        type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/covid_19_historical'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 tags:
 - name: General
@@ -805,6 +1057,28 @@ tags:
     Here you will be able to send a request to our server to add a new resource where our bot will check if required indo is available and satsifying.
 
     Here all the API requests needs Authorization Token
+- name: COVID 19
+  description: >-
+    Form Here you will see the all the API's which porvide covid data.
+
+
+    They are divided as :
+- name: Worldometers API
+  description: >-
+    Here is the data scrapped from Worldometers website https://www.worldometers.info/coronavirus/
+- name: JHUCSSE
+  description: >-
+    Here is data scrapped from Johns Hopkins University Center for Systems Science and Engineering JHUCSSE https://github.com/CSSEGISandData/COVID-19
+- name: NYT
+  description: >-
+- name: Apple
+  description: >-
+- name: Government
+  description: >-
+- name: Vaccine
+  description: >-
+- name: Therapeutics
+  description: >-
 - name: models
   x-displayName: Models
   description: |-
@@ -831,6 +1105,22 @@ tags:
 
     ## Resources
     <SchemaDefinition schemaRef="#/components/schemas/resource" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 components:
   schemas:
@@ -1384,4 +1674,248 @@ components:
           type: string
           enum:
           - Bearer
+    covid_19_All:
+      description: ''
+      type: object
+      title: covid-19/All
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: array
+          items:
+            properties:
+              index:
+                type: integer
+              country:
+                type: string
+              continent:
+                type: string
+              iso2:
+                type: string
+              location:
+                $ref: '#/components/schemas/location'
+              timeline:
+                type: object
+                properties:
+                  today:
+                    type: object
+                    $ref: '#/components/schemas/covid_19__worldometer_timeline'
+                  yesterday:
+                    type: object
+                    $ref: '#/components/schemas/covid_19__worldometer_timeline'
+                  yesterday2:
+                    type: object
+                    $ref: '#/components/schemas/covid_19__worldometer_timeline'
+    location:
+      type: object
+      properties:
+        latitude:
+          type: string
+        longitude:
+          type: string
+    covid_19__worldometer_timeline:
+      type: object
+      properties:
+        cases:
+          type: string
+        todayCases:
+          type: string
+        deaths:
+          type: string
+        todayDeaths:
+          type: string
+        recovered:
+          type: string
+        todayRecovered:
+          type: string
+        active:
+          type: string
+        critical:
+          type: string
+        casesPerOneMillion:
+          type: string
+        deathsPerOneMillion:
+          type: string
+        tests:
+          type: string
+        testsPerOneMillion:
+          type: string
+        population:
+          type: string
+        oneCasePerPeople:
+          type: string
+        oneDeathPerPeople:
+          type: string
+        oneTestPerPeople:
+          type: string
+    covid_19__worldometer_timeline_state:
+      type: object
+      properties:
+        cases:
+          type: string
+        todayCases:
+          type: string
+        deaths:
+          type: string
+        todayDeaths:
+          type: string
+        recovered:
+          type: string
+        todayRecovered:
+          type: string
+        active:
+          type: string
+        casesPerOneMillion:
+          type: string
+        deathsPerOneMillion:
+          type: string
+        tests:
+          type: string
+        testsPerOneMillion:
+          type: string
+        population:
+          type: string
+    covid_19__worldometer_timeline_countries:
+      type: object
+      properties:
+        cases:
+          type: string
+        todayCases:
+          type: string
+        deaths:
+          type: string
+        todayDeaths:
+          type: string
+        recovered:
+          type: string
+        todayRecovered:
+          type: string
+        active:
+          type: string
+        critical:
+          type: string
+    covid_19_States:
+      description: ''
+      type: object
+      title: covid-19/States
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: array
+          items:
+            properties:
+              index:
+                type: integer
+              state:
+                type: string
+              timeline:
+                type: object
+                properties:
+                  today:
+                    type: object
+                    $ref: '#/components/schemas/covid_19__worldometer_timeline_state'
+                  yesterday:
+                    type: object
+                    $ref: '#/components/schemas/covid_19__worldometer_timeline_state'
+    covid_19_countries:
+      description: ''
+      type: object
+      title: covid-19/States
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: array
+          items:
+            properties:
+              continent:
+                type: string
+              continantInfo:
+                $ref: '#/components/schemas/location'
+              countries:
+                type: array
+                items:
+                  minItems: 39
+                  type: string
+              timeline:
+                type: object
+                properties:
+                  today:
+                    type: object
+                    $ref: '#/components/schemas/covid_19__worldometer_timeline_countries'
+                  yesterday:
+                    type: object
+                    $ref: '#/components/schemas/covid_19__worldometer_timeline_countries'
+                  yesterday2:
+                    type: object
+                    $ref: '#/components/schemas/covid_19__worldometer_timeline_countries'
+
+
+    covid_19_historical:
+      description: ''
+      type: object
+      title: covid-19/historical
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: array
+          items:
+            properties:
+              country:
+                type: string
+              province:
+                type: string
+              location:
+                $ref: '#/components/schemas/location'
+              timeline:
+                type: object
+                properties:
+                  cases:
+                    type: object
+                    $ref: '#/components/schemas/covid_19_historical_cases'
+                  deaths:
+                    type: object
+                    $ref: '#/components/schemas/covid_19_historical_cases'
+                  recovered:
+                    type: object
+                    $ref: '#/components/schemas/covid_19_historical_cases'
+    covid_19_historical_cases:
+      type: object
+      properties:
+        somedate:
+          type: string
+          enum:
+          - value
+        someotherdate:
+          type: string
+          enum:
+          - value
+
 
