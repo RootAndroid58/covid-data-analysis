@@ -71,8 +71,7 @@ class ValidationApiController extends Controller
                 'message' => 'Tokens Revoked'
             ];
         }
-        return [
-            'message' => 'Already logged out!'
-        ];
+
+        return ApiHelper::SuccessorFail(200,['message' => 'Already logged out!']);
     }
 }
