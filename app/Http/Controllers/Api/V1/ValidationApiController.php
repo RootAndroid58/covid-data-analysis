@@ -67,9 +67,7 @@ class ValidationApiController extends Controller
     {
         if(auth()->user()){
             auth()->user()->tokens()->delete();
-            return [
-                'message' => 'Tokens Revoked'
-            ];
+            return ApiHelper::SuccessorFail(200,['message' => 'Tokens Revoked']);
         }
 
         return ApiHelper::SuccessorFail(200,['message' => 'Already logged out!']);
