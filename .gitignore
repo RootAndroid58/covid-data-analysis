@@ -16,3 +16,5 @@ covid-data-analysis.zip
 to do/*
 debug.txt
 route.txt
+.vscode/*
+.vscode/*.json

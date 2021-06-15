@@ -23,7 +23,6 @@ class CacheSorter
             }
         }
         Cache::tags(['prod','prod.worldometers'])->put('worldometer', $sorted_all, now()->addMinutes(30));
-        Cache::tags('temp.worldometers')->flush();
 
         return $sorted_all;
     }
@@ -218,17 +217,17 @@ class CacheSorter
             'state'   => $today['state'],
             'timeline'  => array(
                 'today' => array(
-                    'cases'                 => $today['cases']              ? $today['cases'] : '',
-                    'todayCases'            => $today['todayCases']         ? $today['todayCases'] : '',
-                    'deaths'                => $today['deaths']             ? $today['deaths'] : '',
-                    'todayDeaths'           => $today['todayDeaths']        ? $today['todayDeaths'] : '',
-                    'recovered'             => $today['recovered']          ? $today['recovered'] : '',
-                    'active'                => $today['active']             ? $today['active'] : '',
-                    'casesPerOneMillion'    => $today['casesPerOneMillion'] ? $today['casesPerOneMillion'] : '',
-                    'deathsPerOneMillion'   => $today['deathsPerOneMillion']? $today['deathsPerOneMillion'] : '',
-                    'tests'                 => $today['tests']              ? $today['tests'] : '',
-                    'testsPerOneMillion'    => $today['testsPerOneMillion'] ? $today['testsPerOneMillion'] : '',
-                    'population'            => $today['population']         ? $today['population'] : '',
+                    'cases'                 => $today['cases']                  ? $today['cases'] : '',
+                    'todayCases'            => $today['todayCases']             ? $today['todayCases'] : '',
+                    'deaths'                => $today['deaths']                 ? $today['deaths'] : '',
+                    'todayDeaths'           => $today['todayDeaths']            ? $today['todayDeaths'] : '',
+                    'recovered'             => $today['recovered']              ? $today['recovered'] : '',
+                    'active'                => $today['active']                 ? $today['active'] : '',
+                    'casesPerOneMillion'    => $today['casesPerOneMillion']     ? $today['casesPerOneMillion'] : '',
+                    'deathsPerOneMillion'   => $today['deathsPerOneMillion']    ? $today['deathsPerOneMillion'] : '',
+                    'tests'                 => $today['tests']                  ? $today['tests'] : '',
+                    'testsPerOneMillion'    => $today['testsPerOneMillion']     ? $today['testsPerOneMillion'] : '',
+                    'population'            => $today['population']             ? $today['population'] : '',
                 ),
                 'yesterday' => array(
                     'cases'                 => $yesterday['cases']              ? $yesterday['cases'] : '',
@@ -436,6 +435,297 @@ class CacheSorter
         return $response;
     }
 
+
+    static public function gov_sorter_canada($data)
+    {
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'Canada','country');
+        // array_multisort( array_column($data, "date"), SORT_ASC, $data );
+        $data = collect($data)->groupBy('name')->all();
+
+
+        $response = array(
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'gov' => $data,
+        );
+        return $response;
+    }
+
+    static public function gov_sorter_canada_timeline($data,$type)
+    {
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'Canada','country');
+
+        $response = array(
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            $type => $data,
+        );
+        return $response;
+    }
+
+    static public function gov_sorter_Colombia($data)
+    {
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'Colombia','country');
+
+        $response = array(
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'data' => $data
+        );
+        return $response;
+    }
+
+    static public function gov_sorter_Colombia_bigdata($bigdata)
+    {
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'Colombia','country');
+
+        $ActiveCases = $recovered = $dead = $female = $male = $unknown = $caseID = 0;
+
+        foreach($bigdata as $datas){
+            foreach($datas as $data){
+                if(isset($data['current_condition'])){
+                    if($data['current_condition'] == 'Recuperado'){
+                        $recovered ++;
+                    }
+                    if($data['current_condition'] == 'Fallecido' ||  $data['current_condition'] == 'fallecido'){
+                        $dead ++;
+                    }
+                    if($data['current_condition'] == 'Activo'){
+                        $ActiveCases ++;
+                    }
+                    if($data['current_condition'] == 'N/A'){
+                        $unknown ++;
+                    }
+                }
+                if(isset($data['sex'])){
+                    if($data['sex'] == 'M'){
+                        $male ++;
+                    }
+                    if($data['sex'] == 'F'){
+                        $female ++;
+                    }
+                }
+                if(isset($data['id']) && $data['id'] > $caseID){
+                    $caseID = $data['id'];
+                }
+
+            }
+        }
+        $array = array(
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'active' => $ActiveCases,
+            'recovered' => $recovered,
+            'dead' => $dead,
+            'female' => $female,
+            'male' => $male,
+            'unknown' => $unknown,
+            'total_cases' => $caseID,
+        );
+        return $array;
+
+    }
+
+    static public function gov_sorter_germany($data)
+    {
+        $sort = new CacheSorter;
+        $array = $sort->makeData($data,'Germany');
+
+        return $array;
+    }
+
+    static public function gov_sorter_india($data)
+    {
+        $sort = new CacheSorter;
+        $array = $sort->makeData($data,'India');
+
+        return $array;
+    }
+    static public function gov_sorter_indo($data)
+    {
+        $sort = new CacheSorter;
+        $array = $sort->makeData($data,'Indonesia');
+
+        return $array;
+    }
+    static public function gov_sorter_israel($data)
+    {
+        $datas = ['lastUpdate','infectedPerDate','updatedPatientsOverallStatus','sickPerDateTwoDays','sickPerLocation',
+        'patientsPerDate','deadPatientsPerDate','recoveredPerDay','testResultsPerDate','infectedPerDate_2','patientsPerDate_2',
+        'doublingRate','infectedByAgeAndGenderPublic','isolatedDoctorsAndNurses','testResultsPerDate_2','contagionDataPerCityPublic',
+        'hospitalStatus'];
+
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'Israel','country');
+        $note = 'This error is form Israel government or Isreal data source not form my end!';
+
+        $array = array(
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'data' => array(
+                $datas[0] => isset($data[0]->data) ? $data[0]->data : ['error' => isset($data[0]->error) ? $data[0]->error : null , 'note' => $note],
+                $datas[1] => isset($data[1]->data) ? $data[1]->data : ['error' => isset($data[1]->error) ? $data[1]->error : null , 'note' => $note],
+                $datas[2] => isset($data[2]->data) ? $data[2]->data : ['error' => isset($data[2]->error) ? $data[2]->error : null , 'note' => $note],
+                $datas[3] => isset($data[3]->data) ? $data[3]->data : ['error' => isset($data[3]->error) ? $data[3]->error : null , 'note' => $note],
+                $datas[4] => isset($data[4]->data) ? $data[4]->data : ['error' => isset($data[4]->error) ? $data[4]->error : null , 'note' => $note],
+                $datas[5] => isset($data[5]->data) ? $data[5]->data : ['error' => isset($data[5]->error) ? $data[5]->error : null , 'note' => $note],
+                $datas[6] => isset($data[6]->data) ? $data[6]->data : ['error' => isset($data[6]->error) ? $data[6]->error : null , 'note' => $note],
+                $datas[7] => isset($data[7]->data) ? $data[7]->data : ['error' => isset($data[7]->error) ? $data[7]->error : null , 'note' => $note],
+                $datas[8] => isset($data[8]->data) ? $data[8]->data : ['error' => isset($data[8]->error) ? $data[8]->error : null , 'note' => $note],
+                $datas[9] => isset($data[9]->data) ? $data[9]->data : ['error' => isset($data[9]->error) ? $data[9]->error : null , 'note' => $note],
+                $datas[10] => isset($data[10]->data) ? $data[10]->data : ['error' => isset($data[10]->error) ? $data[10]->error : null , 'note' => $note],
+                $datas[11] => isset($data[11]->data) ? $data[11]->data : ['error' => isset($data[11]->error) ? $data[11]->error : null , 'note' => $note],
+                $datas[12] => isset($data[12]->data) ? $data[12]->data : ['error' => isset($data[12]->error) ? $data[12]->error : null , 'note' => $note],
+                $datas[13] => isset($data[13]->data) ? $data[13]->data : ['error' => isset($data[13]->error) ? $data[13]->error : null , 'note' => $note],
+                $datas[14] => isset($data[14]->data) ? $data[14]->data : ['error' => isset($data[14]->error) ? $data[14]->error : null , 'note' => $note],
+                $datas[15] => isset($data[15]->data) ? $data[15]->data : ['error' => isset($data[15]->error) ? $data[15]->error : null , 'note' => $note],
+                $datas[16] => isset($data[16]->data) ? $data[16]->data : ['error' => isset($data[16]->error) ? $data[16]->error : null , 'note' => $note],
+            ),
+        );
+
+        return $array;
+    }
+    static public function gov_sorter_italy($data)
+    {
+        $sort = new CacheSorter;
+        $array = $sort->makeData($data,'Italy');
+
+        return $array;
+    }
+    static public function gov_sorter_NewZealand($data)
+    {
+        $sort = new CacheSorter;
+        $array = $sort->makeData($data,'New Zealand');
+
+        return $array;
+    }
+    static public function gov_sorter_nigeria($data)
+    {
+        $sort = new CacheSorter;
+        $array = $sort->makeData($data,'Nigeria');
+
+        return $array;
+    }
+    static public function gov_sorter_southafrica($data)
+    {
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'South Africa','country');
+
+        $array = array(
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'data' => $data,
+        );
+        // 'Eastern_Cape','Free_State','Gauteng','KwaZulu-Natal','Limpopo','Mpumalanga','North_West','Northern_Cape','Western_Cape'
+
+        return $array;
+    }
+
+    static public function gov_sorter_southkorea($data)
+    {
+        $sort = new CacheSorter;
+        $array = $sort->makeData($data,'S. Korea');
+
+        return $array;
+    }
+    static public function gov_sorter_switzerland($data)
+    {
+        $sort = new CacheSorter;
+        $complete_data = array();
+        foreach($data as $temp){
+            $complete_data = array_merge($complete_data,$temp);
+        }
+
+        $array = $sort->makeData($complete_data,'Swaziland');
+
+        return $array;
+    }
+    static public function gov_sorter_uk($data)
+    {
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,'UK','country');
+        $new_data = array();
+
+        foreach($data as $temp){
+            $new_data = array_merge($new_data, array(
+                $temp->data
+            ));
+        }
+
+        $array = array(
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'pages' => $new_data,
+        );
+
+        return $array;
+    }
+    static public function gov_sorter_vietnam($data)
+    {
+        $sort = new CacheSorter;
+        $array = $sort->makeData($data,'Vietnam');
+
+        return $array;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function search($array,$find,$search_key)
     {
         if(isset($find)){
@@ -468,5 +758,25 @@ class CacheSorter
             }
         }
         return null;
+    }
+
+    public function makeData($data,$country)
+    {
+        $DataHelper = new DataHelper;
+        $sort = new CacheSorter;
+        $location = $DataHelper->contries;
+        $info_key = $sort->search($location,$country,'country');
+
+        $array = array(
+            'country'  => $location[$info_key]['country'],
+            'iso2'  => $location[$info_key]['iso2'],
+            'location' => array(
+                'lat' => $location[$info_key]['lat'],
+                'long' => $location[$info_key]['long'],
+            ),
+            'data' => $data
+        );
+
+        return $array;
     }
 }

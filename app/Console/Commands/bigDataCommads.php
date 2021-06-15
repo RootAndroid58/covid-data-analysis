@@ -2,24 +2,25 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Helpers\ScraperHelper;
 use Illuminate\Console\Command;
+use Illuminated\Console\WithoutOverlapping;
 
-class HistoricalUpdater extends Command
+class bigDataCommads extends Command
 {
+    use WithoutOverlapping;
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'covid:historical';
+    protected $signature = 'scraper:big-data';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Updates the historical data of covid 19';
+    protected $description = 'This command runs all bigdata commands in sync';
 
     /**
      * Create a new command instance.
@@ -38,7 +39,8 @@ class HistoricalUpdater extends Command
      */
     public function handle()
     {
-        ScraperHelper::covid_historical();
+        $this->info('gov-colombia-bigdata');
+        $this->call('covid:gov-colombia-bigdata');
         return 0;
     }
 }

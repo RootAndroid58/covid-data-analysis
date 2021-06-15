@@ -2,13 +2,13 @@
 @section('content')
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card" style="min-height: 96%">
             <div class="card-header">
                 {{ trans('global.my_profile') }}
             </div>
 
             <div class="card-body">
-                <form method="POST" action="{{ route("profile.password.updateProfile") }}">
+                <form method="POST" id="name_email" action="{{ route("profile.password.updateProfile") }}">
                     @csrf
                     <div class="form-group">
                         <label class="required" for="name">{{ trans('cruds.user.fields.name') }}</label>
@@ -28,12 +28,12 @@
                             </div>
                         @endif
                     </div>
-                    <div class="form-group">
-                        <button class="btn btn-danger" type="submit">
-                            {{ trans('global.save') }}
-                        </button>
-                    </div>
                 </form>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-danger" form="name_email" type="submit">
+                    {{ trans('global.save') }}
+                </button>
             </div>
         </div>
     </div>
@@ -43,7 +43,7 @@
                 {{ trans('global.change_password') }}
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ route("profile.password.update") }}">
+                <form method="POST" id="formPassword" action="{{ route("profile.password.update") }}">
                     @csrf
                     @php
                         $user = auth()->user();
@@ -68,11 +68,45 @@
                         <label class="required" for="password_confirmation">Repeat New {{ trans('cruds.user.fields.password') }}</label>
                         <input class="form-control {{ $errors->has('password_confirmation') ? 'is-invalid' : '' }}" type="password" name="password_confirmation" id="password_confirmation" required>
                     </div>
-                    <div class="form-group">
-                        <button class="btn btn-danger" type="submit">
-                            {{ trans('global.save') }}
-                        </button>
+                </form>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-danger" form="formPassword" type="submit">
+                    {{ trans('global.save') }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+               Token
+            </div>
+
+
+            <div class="card-body">
+                <div class="input-group mb-3" style="width: -webkit-fill-available">
+                    <input type="text" class="form-control" name="token" id="Bearer"  value="{{ $Bearer }}" readonly>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" onclick="copyToClipboard('#Bearer')" type="button">copy</button>
                     </div>
+                </div>
+                <p class="text-danger">Note: once the page reloads you wont be able to copy the token ever again</p>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-success" form="newToken" type="submit">
+                    Generate/ Regenerate Token
+                </button>
+                <button class="btn btn-danger float-right" form="removeToken"  type="submit">
+                    Delete Token
+                </button>
+                <form id="newToken">
+                    @csrf
+                </form>
+                <form method="POST" id="removeToken" action="{{ route("profile.password.removeToken") }}">
+                    @csrf
                 </form>
             </div>
         </div>
@@ -99,54 +133,6 @@
         </div>
     </div>
     @endcan
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-               Token
-            </div>
-
-
-            <div class="card-body">
-
-                @if ($Bearer != null)
-                <div class="input-group mb-3" style="width: -webkit-fill-available">
-                        <input type="text" class="form-control" name="token" id="Bearer"  value="{{ $Bearer }}" readonly>
-                        <div class="input-group-append">
-                          <button class="btn btn-outline-secondary" onclick="copyToClipboard('#Bearer')" type="button">copy</button>
-                        </div>
-                      </div>
-
-                @else
-
-                <form method="POST" action="{{ route("profile.password.createToken") }}">
-                    @csrf
-                    <div class="form-group">
-                        <button class="btn btn-danger" type="submit">
-                            Generate new Token
-                        </button>
-                    </div>
-                </form>
-                @endif
-
-            </div>
-            <div class="card-footer">
-                @if ($Bearer)
-                <button class="btn btn-success" form="newToken" type="submit">
-                    Generate new Token
-                </button>
-                <button class="btn btn-danger float-right" form="removeToken"  type="submit">
-                    Delete Token
-                </button>
-                <form method="POST" id="newToken" action="{{ route("profile.password.createToken") }}">
-                    @csrf
-                </form>
-                <form method="POST" id="removeToken" action="{{ route("profile.password.removeToken") }}">
-                    @csrf
-                </form>
-                @endif
-            </div>
-        </div>
-    </div>
     @if(Route::has('profile.password.toggleTwoFactor'))
         <div class="col-md-6">
             <div class="card">
@@ -169,6 +155,7 @@
         @endif
 
 </div>
+
 @endsection
 
 @section('scripts')
@@ -177,6 +164,19 @@
             $(element).focus().select()
             document.execCommand("copy");
         }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            console.log('ready')
+            $("#newToken").on("submit", function(event){
+                event.preventDefault();
+                console.log('submit');
+                var formValues= $('#newToken').serialize();
 
+                $.post("{{ route("profile.password.createToken") }}", formValues, function(data){
+                    $('#Bearer').val(data);
+                });
+            });
+        });
     </script>
 @endsection

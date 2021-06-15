@@ -5,11 +5,14 @@ info:
     name: CRADA staff team
     url: "https://www.crada.ga/api"
     email: "contact@crada.ga"
-  description: >-
+  description: |-
+
     <a target="_blank" href="https://god.postman.co/run-collection/13642074-7fad3869-3032-45b7-bc83-e8213302b87e?action=collection%2Ffork&collection-url=entityId%3D13642074-7fad3869-3032-45b7-bc83-e8213302b87e%26entityType%3Dcollection">
          <img alt="Qries" src="https://run.pstmn.io/button.svg" alt="run in Postman"
          width=150" height="70">
       </a>
+
+
     # Introduction
 
     CRADA is an initiative for common people to provide them with various
@@ -19,27 +22,7 @@ info:
 
     To make developers job easier we are providing the API for the same.
 
-
-    # Authentication
-
-    The API uses Token System which is available when you login and goto profile panel
-
-    <table>
-        <tr>
-            <td>Security Scheme Type</td>
-            <td>HTTP</td>
-        </tr>
-        <tr>
-            <td>HTTP Authorization Scheme</td>
-            <td>bearer</td>
-        </tr>
-    </table>
-
-    # Rate limit
-
-    The API enforces rate-limits to protect our servers against malicious and/or mistaken use.
-
-    As of now global limit of 60 requests per minute per IP address is in effect.
+    Api Data is updated every 10 mins.
   version: '1.0'
 servers:
 - url: https://www.crada.ga/api/v1
@@ -90,9 +73,12 @@ paths:
   /login:
     post:
       tags:
-      - General
+      - Authentication
       summary: Login
-      description: Using this endpoint you can get the auth token so you can use may other endpoints where you need to Authorization.
+      description: |-
+        Using this endpoint you can get the auth token so you can use may other endpoints where you need to Authorization.
+
+        > Note: For this endpoint the rate limit is 15 requests per min per IP address
       operationId: auth/login
       parameters:
       - name: Accept
@@ -144,9 +130,12 @@ paths:
   /register:
     post:
       tags:
-      - General
+      - Authentication
       summary: Register
-      description: Using this endpoint you can get the auth token by creating an account so you can use may other endpoints where you need to Authorization.
+      description: |-
+        Using this endpoint you can get the auth token by creating an account so you can use may other endpoints where you need to Authorization.
+
+        > Note: For this endpoint the rate limit is 15 requests per min per IP address
       operationId: auth/register
       parameters:
       - name: Accept
@@ -203,9 +192,12 @@ paths:
   /logout:
     post:
       tags:
-      - General
+      - Authentication
       summary: logout
-      description: Using this endpoint you can delete the token so that you can regenerate later when you login again.
+      description: |-
+        Using this endpoint you can delete the token so that you can regenerate later when you login again.
+
+        > Note: For this endpoint the rate limit is 15 requests per min per IP address
       operationId: auth/logout
       parameters:
       - name: Accept
@@ -1042,6 +1034,7 @@ paths:
       summary: historical by Country
       description: >-
         Get COVID-19 time series data for a specific country
+
       operationId: /covid-19/historical/{country}
       parameters:
       - name: Accept
@@ -1094,6 +1087,144 @@ paths:
           headers:
             Accept: application/json
       deprecated: false
+  /gov:
+    get:
+      tags:
+      - Government
+      summary: list
+      description: >-
+        Get COVID-19 time series data for a specific country
+
+      operationId: /gov
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/government'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /gov/{government}:
+    get:
+      tags:
+      - Government
+      summary: Gov reported data
+      description: >-
+        Get COVID-19 government reported data for a specific country
+
+        <table class="table table-bordered table-hover table-condensed">
+          <thead>
+            <tr>
+              <th title="Field #1">government</th>
+              <th title="Field #2">query param</th>
+              <th title="Field #3">values</th>
+              <th title="Field #4"></th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Austria</td>
+            <td>type</td>
+            <td>
+                <ul>
+                <li>historical </li>
+                <li>byAge </li>
+                <li>byDistrict </li>
+                <li>hospital </li>
+                <li>version</li>
+              </ul>
+            </td>
+            <td> required </td>
+          </tr>
+          <tr>
+            <td>Canada</td>
+            <td>type</td>
+            <td>
+              <ul>
+                <li>default</li>
+                <li>active</li>
+                <li>cases</li>
+                <li>deaths</li>
+                <li>recovered</li>
+                <li>testing</li>
+                <li>vaccine_administration</li>
+                <li>vaccine_completion</li>
+                <li>vaccine_distribution</li>
+              </ul>
+            </td>
+            <td> required </td>
+          </tr>
+          </tbody>
+        </table>
+
+
+      operationId: /gov/{government}
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/covid_19_historical'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+
+
 
 
 
@@ -1111,6 +1242,26 @@ paths:
 
 
 tags:
+- name: Authentication
+  description: >-
+   The API uses Token System which is available when you login and goto profile panel
+
+    <table>
+        <tr>
+            <td>Security Scheme Type</td>
+            <td>HTTP</td>
+        </tr>
+        <tr>
+            <td>HTTP Authorization Scheme</td>
+            <td>bearer</td>
+        </tr>
+    </table>
+
+    <h1> Rate limit </h1>
+
+    The API enforces rate-limits to protect our servers against malicious and/or mistaken use.
+
+    As of now global limit of 60 requests per minute per IP address is in effect.
 - name: General
   description: Some general API endpoints which are for tracking or keeping the API alive
 - name: World Info
@@ -1150,6 +1301,7 @@ tags:
   description: >-
 - name: Government
   description: >-
+    COVID-19 individual government reported data
 - name: Vaccine
   description: >-
 - name: Therapeutics
@@ -2012,3 +2164,23 @@ components:
           - value
 
 
+
+    government:
+      description: ''
+      type: object
+      title: government
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: object
+          properties:
+            supported:
+              type: array
+              example: [Austria , Canada,]

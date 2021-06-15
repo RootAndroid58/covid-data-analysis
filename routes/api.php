@@ -19,83 +19,92 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', 'middleware' => ['auth:sanctum']], function () {
-    // Permissions
-    Route::apiResource('permissions', 'PermissionsApiController');
+Route::group(['middleware' => 'json.response'],function () {
 
-    // Roles
-    Route::apiResource('roles', 'RolesApiController');
 
-    // Users
-    Route::apiResource('users', 'UsersApiController');
 
-    // Categories
-    Route::post('categories/media', 'CategoriesApiController@storeMedia')->name('categories.storeMedia');
-    Route::apiResource('categories', 'CategoriesApiController');
+    Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', 'middleware' => ['auth:sanctum']], function () {
+        // Permissions
+        Route::apiResource('permissions', 'PermissionsApiController');
 
-    // Resources
-    Route::apiResource('resources', 'ResourcesApiController');
+        // Roles
+        Route::apiResource('roles', 'RolesApiController');
 
-    // City
-    Route::apiResource('cities', 'CityApiController');
+        // Users
+        Route::apiResource('users', 'UsersApiController');
 
-    // State
-    Route::apiResource('states', 'StateApiController');
+        // Categories
+        Route::post('categories/media', 'CategoriesApiController@storeMedia')->name('categories.storeMedia');
+        Route::apiResource('categories', 'CategoriesApiController');
 
-    Route::get('/states/all',"StateApiController@index");
+        // Resources
+        Route::apiResource('resources', 'ResourcesApiController');
 
-    // Countries
-    Route::apiResource('countries', 'CountriesApiController');
+        // City
+        Route::apiResource('cities', 'CityApiController');
 
-    // New Req
-    Route::apiResource('new-reqs', 'NewReqApiController');
+        // State
+        Route::apiResource('states', 'StateApiController');
+
+        Route::get('/states/all',"StateApiController@index");
+
+        // Countries
+        Route::apiResource('countries', 'CountriesApiController');
+
+        // New Req
+        Route::apiResource('new-reqs', 'NewReqApiController');
+    });
+
+    Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middleware' => ['throttle:60,1']], function () {
+
+        Route::get('/country',"WorldApiController@Country")->name('country');
+        Route::get('/state',"WorldApiController@State")->name('state');
+        Route::get('/city',"WorldApiController@City")->name('city');
+        Route::get('/StateById',"WorldApiController@StateById")->name('StateById');
+        Route::get('/CityById',"WorldApiController@CityById")->name('CityById');
+
+        Route::get('/category',"ResourceApiController@Category")->name('category');
+        Route::get('/sub-category',"ResourceApiController@SubCategory")->name('subcategory');
+
+        Route::get('/resource',"ResourceApiController@Resources")->name('resources');
+
+
+
+        // COVID API ROUTES
+        Route::group(['prefix' => 'covid-19', 'as' => 'covid-19.'], function () {
+
+            Route::get('all/', 'worldometersApiController@getAll')->name('all');
+            Route::get('states/', 'worldometersApiController@getStates')->name('states');
+            Route::get('continents/', 'worldometersApiController@getcontinents')->name('continents');
+            Route::get('countries/', 'worldometersApiController@getcountries')->name('countries');
+
+            Route::get('historical/', 'JHUCSSEApiController@historical')->name('historical');
+            Route::get('historical/{country}', 'JHUCSSEApiController@historicalbyCountry')->name('historical.byCountry');
+        });
+
+        // Gov api
+        Route::group(['as' => 'gov.'], function () {
+
+            Route::get('/gov', 'GovernmentApiController@get_Gov')->name('get');
+            Route::get('/gov/{country}', 'GovernmentApiController@gov')->name('byCountry');
+        });
+
+
+
+
+    });
+    Route::get('/ping',"Api\PingApiController@ping")->name('ping');
+    Route::group(['prefix' => 'auth', 'as' => 'api.', 'namespace' => 'Api\V1','middleware' => 'throttle:15,1'], function () {
+
+        Route::post('/register', 'ValidationApiController@register');
+
+        Route::post('/login', "ValidationApiController@login");
+
+        Route::post('/logout', "ValidationApiController@logout");
+
+    });
+
 });
-
-Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1','middleware' => 'throttle:60,1'], function () {
-
-    Route::get('/country',"WorldApiController@Country")->name('country');
-    Route::get('/state',"WorldApiController@State")->name('state');
-    Route::get('/city',"WorldApiController@City")->name('city');
-    Route::get('/StateById',"WorldApiController@StateById")->name('StateById');
-    Route::get('/CityById',"WorldApiController@CityById")->name('CityById');
-
-    Route::get('/category',"ResourceApiController@Category")->name('category');
-    Route::get('/sub-category',"ResourceApiController@SubCategory")->name('subcategory');
-
-    Route::get('/resource',"ResourceApiController@Resources")->name('resources');
-
-
-
-    // COVID API ROUTES
-
-    Route::get('/covid-19/all', 'worldometersApiController@getAll');
-    Route::get('/covid-19/states/', 'worldometersApiController@getStates');
-    Route::get('/covid-19/continents/', 'worldometersApiController@getcontinents');
-    Route::get('/covid-19/countries/', 'worldometersApiController@getcountries');
-
-    // Route::get('/covid-19/states/{states}', 'worldometersApiController@getStates');
-    Route::get('/covid-19/historical/', 'JHUCSSEApiController@historical');
-    Route::get('/covid-19/historical/{country}', 'JHUCSSEApiController@historicalbyCountry');
-
-    // Gov api
-    Route::get('/gov', 'GovernmentApiController@get_Austria');
-    Route::get('/gov/{country}', 'GovernmentApiController@get_Austria');
-
-
-
-});
-Route::get('/ping',"Api\PingApiController@ping")->name('ping');
-Route::group(['prefix' => 'auth', 'as' => 'api.', 'namespace' => 'Api\V1','middleware' => 'throttle:15,1'], function () {
-
-    Route::post('/register', 'ValidationApiController@register');
-
-    Route::post('/login', "ValidationApiController@login");
-
-    Route::post('/logout', "ValidationApiController@logout");
-
-});
-
-
 // Route::fallback(function($e){
 //     return response()->json(ApiHelper::SuccessorFail(404,array("error" => "route '".$e."' is not a valid check if you are using method")));
 // })->name('api.fallback.404');

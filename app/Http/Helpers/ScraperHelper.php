@@ -246,7 +246,7 @@ class ScraperHelper
         return $scraper_data;
     }
 
-    static public function covid_hestorical()
+    static public function covid_historical()
     {
         $scraper_data = array();
         $scraper_data[] = array(
@@ -423,12 +423,12 @@ class ScraperHelper
     }
     static public function Gov_Canada()
     {
-        $scraper_data = array(
+        $scraper_data[] = array(
             'cache_key' => 'temp.gov_canada',
             'path' => 'Canada.csv',
             'hasHeader' => true,
             'fields'    => [
-                'ID','name','nameFR','date','update','caeseConfirmed','casesProbable','deaths',
+                'ID','name','nameFR','date','update','casesConfirmed','casesProbable','deaths',
                 'total','tested','tests','recover','percentrecover','ratetested','ratetests',
                 'today','percentoday','ratetotal','ratedeaths','deathstoday','percentdeath',
                 'testedtoday','teststoday','recoveredtoday','percentactive','active','rateactive',
@@ -439,43 +439,114 @@ class ScraperHelper
             'website' => 'https://health-infobase.canada.ca/src/data/covidLive/covid19.csv',
             'type'  => 'csv',
         );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_canada_timeline_active',
+            'path' => 'Canada_timeline_active.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'province','date_active','cumulative_cases','cumulative_recovered','cumulative_deaths','active_cases','active_cases_change'
+            ],
+            'website' => 'https://raw.githubusercontent.com/ccodwg/Covid19Canada/master/timeseries_canada/active_timeseries_canada.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_canada_timeline_cases',
+            'path' => 'Canada_timeline_cases.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                "province","date_report","cases","cumulative_cases"
+            ],
+            'website' => 'https://raw.githubusercontent.com/ccodwg/Covid19Canada/master/timeseries_canada/cases_timeseries_canada.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_canada_timeline_deaths',
+            'path' => 'Canada_timeline_deaths.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                "province","date_death_report","deaths","cumulative_deaths"
+            ],
+            'website' => 'https://raw.githubusercontent.com/ccodwg/Covid19Canada/master/timeseries_canada/mortality_timeseries_canada.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_canada_timeline_recovered',
+            'path' => 'Canada_timeline_recovered.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                "province","date_recovered","recovered","cumulative_recovered"
+            ],
+            'website' => 'https://raw.githubusercontent.com/ccodwg/Covid19Canada/master/timeseries_canada/recovered_timeseries_canada.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_canada_timeline_testing',
+            'path' => 'Canada_timeline_testing.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                "province","date_testing","testing","cumulative_testing","testing_info"
+            ],
+            'website' => 'https://raw.githubusercontent.com/ccodwg/Covid19Canada/master/timeseries_canada/testing_timeseries_canada.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_canada_timeline_vaccine_administration',
+            'path' => 'Canada_timeline_vaccine_administration.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                "province","date_vaccine_administered","avaccine","cumulative_avaccine"
+            ],
+            'website' => 'https://raw.githubusercontent.com/ccodwg/Covid19Canada/master/timeseries_canada/vaccine_administration_timeseries_canada.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_canada_timeline_vaccine_completion',
+            'path' => 'Canada_timeline_vaccine_completion.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                "province","date_vaccine_completed","cvaccine","cumulative_cvaccine"
+            ],
+            'website' => 'https://raw.githubusercontent.com/ccodwg/Covid19Canada/master/timeseries_canada/vaccine_completion_timeseries_canada.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_canada_timeline_vaccine_distribution',
+            'path' => 'Canada_timeline_vaccine_distribution.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                "province","date_vaccine_distributed","dvaccine","cumulative_dvaccine"
+            ],
+            'website' => 'https://raw.githubusercontent.com/ccodwg/Covid19Canada/master/timeseries_canada/vaccine_distribution_timeseries_canada.csv',
+            'type'  => 'csv',
+        );
 
+        $scraper = new ScraperHelper;
         try {
-            $scraper = new ScraperHelper;
-            $resp = $scraper->curlUrl($scraper_data['website']);
-            $dom = HtmlDomParser::str_get_html($resp);
+            foreach($scraper_data as $data){
 
-            $csvfile = $dom->html();
+                $resp = $scraper->curlUrl($data['website']);
+                $dom = HtmlDomParser::str_get_html($resp);
 
-            Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+                $csvfile = $dom->html();
 
-            $array =  $scraper->csvtoarray($scraper_data);
-            Cache::tags(['temp','temp.gov','temp.gov.Canada'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
-            dd($array);
+                Storage::disk('cron_temp')->put($data['path'], $csvfile);
+
+                $array =  $scraper->csvtoarray($data);
+                Cache::tags(['temp','temp.gov','temp.gov.Canada'])->put($data['cache_key'],$array, now()->addMinutes(10));
+            }
 
         } catch (\Throwable $th) {
             throw $th;
         }
-
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_canada();
+        $cacheUpdater->gov_updater_canada_timeline();
 
     }
 
     static public function Gov_Colombia()
     {
-        $scraper_data[] = array(
-            'cache_key' => 'temp.gov_colombia_positive_cases',
-            'path' => 'Colombia_positive_cases.csv',
-            'hasHeader' => true,
-            'fields'    => [
-                'date_reported','id','date','department_nom','department','city_municipality_nom','city_municipality',
-                'age','unit_measured','sex','source_type_contagion','location','condition','travel_country_1_cod',
-                'travel_country_1_nom','recovered','start_date_symptoms','death_date','diagnostic_date','recovered_date',
-                'recovery_type','per_etn _','group_name',
-            ],
-            'website' => 'https://www.datos.gov.co/resource/gt2j-8ykr.csv',
-            'website_dataset' => 'https://www.datos.gov.co/w/fnzt-ptjk/dneh-mcp2?cur=HK1Q2y0RRFI&from=root',
-            'type'  => 'csv',
-        );
+
         $scraper_data[] = array(
             'cache_key' => 'temp.gov_colombia_vaccines_allocations',
             'path'      => 'Colombia_vaccines_allocations.csv',
@@ -509,21 +580,6 @@ class ScraperHelper
             'type'  => 'csv',
         );
         // location for other datasets https://www.datos.gov.co/w/fnzt-ptjk/dneh-mcp2?cur=HK1Q2y0RRFI&from=root
-        $scraper_data[] = array(
-            'cache_key' => 'temp.gov_colombia_positive_cases',
-            'path' => 'Colombia_positive_cases.csv',
-            'hasHeader' => true,
-            'fields'    => [
-                'date_reported','id','date','department_name','department','city_municipality_name','city_municipality',
-                'age','unit_measured','sex','source_type_contagion','location','condition','travel_country_code',
-                'travel_country_name','recovered','start_date_symptoms','death_date','diagnostic_date','recovered_date',
-                'recovery_type','per_etn _','group_name',
-            ],
-            'website' => 'https://www.datos.gov.co/resource/gt2j-8ykr.csv',
-            'website_dataset' => 'https://www.datos.gov.co/w/fnzt-ptjk/dneh-mcp2?cur=HK1Q2y0RRFI&from=root',
-            'type'  => 'csv',
-            'to_do' => 'get all data and add sort by or show all data as it is, calculate total cases,deaths,recovered.'
-        );
 
         try {
             $scraper = new ScraperHelper;
@@ -538,56 +594,102 @@ class ScraperHelper
 
                 $array =  $scraper->csvtoarray($data);
                 Cache::tags(['temp','temp.gov','temp.gov.Colombia'])->put($data['cache_key'],$array, now()->addMinutes(10));
+                // dd(count($array));
             }
-            // dd($array);
 
         } catch (\Throwable $th) {
             throw $th;
         }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_colombia();
 
 
+    }
+
+    static public function Gov_Colombia_bigdata()
+    {
+        $scraper_data = array(
+            'cache_key' => 'temp.gov_colombia_bigdata',
+            'path' => 'Colombia_bigdata.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'date_reported','id','date','department_nom','department','city_municipality_nom','city_municipality',
+                'age','unit_measured','sex','source_type_contagion','location','condition','travel_country_1_cod',
+                'travel_country_1_nom','current_condition','start_date_symptoms','death_date','diagnostic_date','recovered_date',
+                'recovery_type','per_etn_','group_name',
+            ],
+            'website' => 'https://www.datos.gov.co/api/views/gt2j-8ykr/rows.csv',
+            'type'  => 'csv',
+        );
+        if($temp = Cache::get($scraper_data['cache_key']) !== null){
+            Cache::tags(['temp','temp.gov','temp.gov.Colombia','temp.bigdata','temp.bigdata.old'])->put($scraper_data['cache_key'].'.old',$temp);
+        }
+
+        try {
+            $scraper = new ScraperHelper;
+
+            $resp = $scraper->curlUrl($scraper_data['website']);
+            $dom = HtmlDomParser::str_get_html($resp);
+
+            $csvfile = $dom->html();
+
+            Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+
+            $array =  $scraper->csvtoarray($scraper_data);
+
+            Cache::tags(['temp','temp.gov','temp.gov.Colombia','temp.bigdata'])->put($scraper_data['cache_key'],array_chunk($array,5000), now()->addHours(6));
+
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_colombia_bigdata();
     }
 
     static public function Gov_Germany()
     {
         $scraper_data = array(
-            'cache_key' => 'temp.gov_germany_positive_cases',
-            'path' => 'Colombia_positive_cases.csv',
+            'cache_key' => 'temp.gov_germany',
+            'path' => 'Germany.csv',
             'hasHeader' => true,
             'fields'    => [
-                'state','newCases','Cases_last_7','incidence_7_days','deaths'
+                'state','newCases','cases_last_7','incidence_7_days','deaths'
             ],
-            'website' => 'https://www.datos.gov.co/resource/gt2j-8ykr.csv',
-            'website_dataset' => 'https://www.datos.gov.co/w/fnzt-ptjk/dneh-mcp2?cur=HK1Q2y0RRFI&from=root',
-            'type'  => 'csv',
+            'website' => 'https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Fallzahlen.html',
+            'type'  => 'html',
         );
 
         $scraper = new ScraperHelper;
-        $resp = $scraper->curlUrl($scraper_data['website']);
-        $dom = HtmlDomParser::str_get_html($resp);
+        try {
+            $resp = $scraper->curlUrl($scraper_data['website']);
+            $dom = HtmlDomParser::str_get_html($resp);
 
-        $table = $dom->find('table > tbody');
-        $data = '';
-        $header_ = '';
-        foreach($scraper_data['fields'] as $header){
-            $header_ .= '"'.$header . '",';
-        }
-
-        foreach($table->find('tr') as $tr){
-            foreach($tr->find('td')->text() as $td){
-                $data .= '"'.$td . '",';
+            $table = $dom->find('table > tbody');
+            $data = '';
+            $header_ = '';
+            foreach($scraper_data['fields'] as $header){
+                $header_ .= '"'.$header . '",';
             }
-            $data .= "\n";
+
+            foreach($table->find('tr') as $tr){
+                foreach($tr->find('td')->text() as $td){
+                    $data .= '"'.$td . '",';
+                }
+                $data .= "\n";
+            }
+            $csvfile = $header_ . "\n" . $data;
+
+            Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+
+            $array =  $scraper->csvtoarray($scraper_data);
+
+            Cache::tags(['temp','temp.gov','temp.gov.germany'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+        } catch (\Throwable $th) {
+            throw $th;
         }
-        $csvfile = $header_ . "\n" . $data;
-
-        Storage::disk('cron_temp')->put($data['path'], $csvfile);
-
-        $array =  $scraper->csvtoarray($data);
-        Cache::tags(['temp','temp.gov','temp.gov.germany'])->put($data['cache_key'],$array, now()->addMinutes(10));
-
-
-        dd($csvfile);
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_germany();
 
     }
     static public function Gov_India()
@@ -601,13 +703,18 @@ class ScraperHelper
             'type'  => 'json',
         );
 
-        $scraper = new ScraperHelper;
-        $resp = $scraper->curlUrl($scraper_data['website']);
-        $data = json_decode($resp);
+        try {
+            $scraper = new ScraperHelper;
+            $resp = $scraper->curlUrl($scraper_data['website']);
+            $data = json_decode($resp);
 
-        Cache::tags(['temp','temp.gov','temp.gov.india'])->put($scraper_data['cache_key'],$data, now()->addMinutes(10));
+            Cache::tags(['temp','temp.gov','temp.gov.india'])->put($scraper_data['cache_key'],$data, now()->addMinutes(10));
+        } catch (\Throwable $th) {
+            throw $th;
+        }
 
-        dd($data);
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_india();
 
     }
 
@@ -623,14 +730,15 @@ class ScraperHelper
                 'Content-Type: application/json',
             ],
         );
-
         $scraper = new ScraperHelper;
         $resp = $scraper->curlPOSTUrl($scraper_data['website'],$scraper_data['headers'],$scraper_data['param']);
 
         $resp = json_decode($resp);
 
         Cache::tags(['temp','temp.gov','temp.gov.israel'])->put($scraper_data['cache_key'],$resp, now()->addMinutes(10));
-        dd($resp);
+
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_israel();
     }
 
     static public function Gov_Indonesia()
@@ -663,6 +771,8 @@ class ScraperHelper
         } catch (\Throwable $th) {
             throw $th;
         }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_indo();
     }
 
     static public function Gov_Italy()
@@ -695,12 +805,13 @@ class ScraperHelper
 
             $array =  $scraper->csvtoarray($scraper_data);
             Cache::tags(['temp','temp.gov','temp.gov.Italy'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
-            dd($array);
+            // dd($array);
 
         } catch (\Throwable $th) {
             throw $th;
         }
-
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_italy();
 
     }
 
@@ -740,8 +851,10 @@ class ScraperHelper
 
         $array =  $scraper->csvtoarray($scraper_data);
         Cache::tags(['temp','temp.gov','temp.gov.newzealand'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
-        dd($array);
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_NewZealand();
     }
+
     static public function Gov_Nigeria()
     {
         $scraper_data = array(
@@ -781,7 +894,9 @@ class ScraperHelper
 
         $array =  $scraper->csvtoarray($scraper_data);
         Cache::tags(['temp','temp.gov','temp.gov.nigeria'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
-        dd($array);
+
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_Nigeria();
     }
 
     static public function Gov_SouthAfrica()
@@ -818,7 +933,7 @@ class ScraperHelper
             'type'  => 'csv',
         );
         $scraper_data[] = array(
-            'cache_key' => 'temp.gov_south_africa_recovered',
+            'cache_key' => 'temp.gov_south_africa_testing',
             'path' => 'SouthAfrica_recovered.csv',
             'hasHeader' => true,
             'fields'    => [
@@ -830,7 +945,7 @@ class ScraperHelper
             'type'  => 'csv',
         );
         $scraper_data[] = array(
-            'cache_key' => 'temp.gov_south_africa_recovered',
+            'cache_key' => 'temp.gov_south_africa_vaccination',
             'path' => 'SouthAfrica_recovered.csv',
             'hasHeader' => true,
             'fields'    => [
@@ -841,6 +956,7 @@ class ScraperHelper
         );
 
         try {
+
             $scraper = new ScraperHelper;
             foreach($scraper_data as $data){
 
@@ -854,7 +970,10 @@ class ScraperHelper
                 $array =  $scraper->csvtoarray($data);
                 Cache::tags(['temp','temp.gov','temp.gov.south_africa'])->put($data['cache_key'],$array, now()->addMinutes(10));
             }
-            // dd($array);
+
+            $cacheUpdater = new cacheUpdater;
+            $cacheUpdater->gov_updater_southafrica();
+
 
         } catch (\Throwable $th) {
             throw $th;
@@ -901,7 +1020,9 @@ class ScraperHelper
 
         $array =  $scraper->csvtoarray($scraper_data);
         Cache::tags(['temp','temp.gov','temp.gov.south_korea'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
-        dd($array);
+        // dd($array);
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_southkorea();
 
     }
 
@@ -930,37 +1051,53 @@ class ScraperHelper
             Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
 
             $array =  $scraper->csvtoarray($scraper_data);
-            Cache::tags(['temp','temp.gov','temp.gov.switzerland'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
 
-            dd($array);
+            $array = array_chunk($array,5000);
+            Cache::tags(['temp','temp.gov','temp.gov.switzerland'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
 
         } catch (\Throwable $th) {
             throw $th;
         }
 
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_switzerland();
 
     }
 
     static public function Gov_UK()
     {
         $scraper_data = array(
-            'cache_key' => 'temp.gov_switzerland',
+            'cache_key' => 'temp.gov_UK',
             'website' => 'https://api.coronavirus.data.gov.uk/v1/data?filters=areaName=United%20Kingdom;areaType=overview&structure={%22date%22:%22date%22,%22todayTests%22:%22newTestsByPublishDate%22,%22tests%22:%22cumTestsByPublishDate%22,%22testCapacity%22:%22plannedCapacityByPublishDate%22,%22newCases%22:%22newCasesByPublishDate%22,%22cases%22:%22cumCasesByPublishDate%22,%22hospitalized%22:%22hospitalCases%22,%22usedVentilationBeds%22:%22covidOccupiedMVBeds%22,%22newAdmissions%22:%22newAdmissions%22,%22admissions%22:%22cumAdmissions%22,%22todayDeaths%22:%22newDeaths28DaysByPublishDate%22,%22totalDeaths%22:%22cumDeaths28DaysByPublishDate%22,%22ONSweeklyDeaths%22:%22newOnsDeathsByRegistrationDate%22,%22ONStotalDeaths%22:%22cumOnsDeathsByRegistrationDate%22}',
             'type'  => 'json',
+            'home' => 'https://api.coronavirus.data.gov.uk',
         );
 
         try {
             $client = new Client();
             $response = $client->get($scraper_data['website']);
             $response = json_decode($response->getBody()->getContents());
+            $dataWithPages = array($response);
 
-            Cache::tags(['temp','temp.gov','temp.gov.switzerland'])->put($scraper_data['cache_key'],$response, now()->addMinutes(10));
+            if($response->pagination->next !== null) $nextPage = true;
+            else $nextPage = false;
+            while ($nextPage) {
+                $response = $client->get($scraper_data['home'].$response->pagination->next);
+                $response = json_decode($response->getBody()->getContents());
+                if($response !== null){
+                    $dataWithPages = array_merge($dataWithPages,$response);
+                }
+                if( !isset($response->pagination) || $response->pagination->next == null) $nextPage = false;
+            }
 
-            dd($response->data);
+            Cache::tags(['temp','temp.gov','temp.gov.UK'])->put($scraper_data['cache_key'],$dataWithPages, now()->addMinutes(10));
 
         } catch (\Throwable $th) {
             throw $th;
         }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_UK();
+
     }
 
     static public function Gov_Vietnam()
@@ -986,41 +1123,23 @@ class ScraperHelper
             $treated = $dom->findOne('#portlet_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v > div > div.portlet-content-container > div > section.container > div:nth-child(2) > div:nth-child(2) > div > div.col-lg-12.d-none.d-lg-block > div > div:nth-child(2) > div.col.text-center.text-uppercase.text-warning1 > span')->text();
             $recovered = $dom->findOne('#portlet_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v > div > div.portlet-content-container > div > section.container > div:nth-child(2) > div:nth-child(2) > div > div.col-lg-12.d-none.d-lg-block > div > div:nth-child(2) > div.col.text-center.text-uppercase.text-success > span')->text();
             $infected = $dom->findOne('#portlet_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v > div > div.portlet-content-container > div > section.container > div:nth-child(2) > div:nth-child(2) > div > div.col-lg-12.d-none.d-lg-block > div > div:nth-child(2) > div.col.text-center.text-uppercase.text-danger-new > span')->text();
-            $table = $dom->findOne('#sailorTable');
-            $data = '';
-            $header = '';
-            foreach($scraper_data['fields'] as $fields){
-                $header .= '"'. $fields . '",';
-            }
-            foreach($table->find('tr') as $node){
-                foreach($node->find('td')->text() as $td){
-                    $data .= '"'. $td . '",';
-                }
-                $data .= "\n";
-            }
-            $csvfile = $header . "\n" . $data;
 
             $data = array(
                 'updatedAt' => Carbon::now()->timestamp,
-                'deaths' => $deaths,
-                'treated' => $treated,
-                'recovered' => $recovered,
-                'infected' => $infected,
+                'deaths' => str_replace('.',',',$deaths),
+                'treated' => str_replace('.',',',$treated),
+                'recovered' => str_replace('.',',',$recovered),
+                'infected' => str_replace('.',',',$infected),
 
             );
 
-            Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
-
-            $array =  $scraper->csvtoarray($scraper_data);
-
-            Cache::tags(['temp','temp.gov','temp.gov.vietnam'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
             Cache::tags(['temp','temp.gov','temp.gov.vietnam'])->put('temp.gov_vietnam.stats',$data, now()->addMinutes(10));
-
-            dd($data);
 
         } catch (\Throwable $th) {
             throw $th;
         }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->gov_updater_vietnam();
 
     }
 
@@ -1106,8 +1225,8 @@ class ScraperHelper
         $path     = storage_path('cron_temp//' . $filename);
         $fields = $data['fields'];
         $fields = array_flip(array_filter($fields));
-
-        $reader = new SpreadsheetReader($path);
+        try {
+            $reader = new SpreadsheetReader($path);
             $insert = [];
 
             foreach ($reader as $key => $row) {
@@ -1130,6 +1249,12 @@ class ScraperHelper
             }
             File::delete($path);
             return $insert;
+
+        } catch (\Throwable $th) {
+            // throw $th;
+        }
+        return array();
+
     }
 
     public function getIDofALL($data)

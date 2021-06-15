@@ -9,6 +9,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Auth;
+use Crypt;
 
 class ChangePasswordController extends Controller
 {
@@ -20,7 +21,7 @@ class ChangePasswordController extends Controller
         $Bearer = null;
 
         if($token != null){
-            $Bearer = $token->id. "|".$token->token;
+            $Bearer = ' ';
         }
 
         return view('auth.passwords.edit',compact('Bearer'));
@@ -92,7 +93,7 @@ class ChangePasswordController extends Controller
 
         $token = auth()->user()->createToken('API Token')->plainTextToken;
 
-        return redirect()->back()->with('message','New Token successfully generated!');
+        return response()->json($token);
     }
     public function removeToken(Request $request)
     {

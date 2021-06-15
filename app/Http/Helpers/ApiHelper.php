@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Country;
 use Illuminate\Support\Facades\Artisan;
+use Mockery\Undefined;
 
 class ApiHelper
 {
@@ -180,7 +181,117 @@ class ApiHelper
     }
 
 
+    static public function gov_Canada($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-canada');
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
 
+    static public function gov_colombia($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        if($cacheKey == 'prod.gov.colombia.bigdata'){
+            $data = $ApiHelper->getCache($cacheKey,'covid:gov-colombia-bigdata');
+        }else{
+            $data = $ApiHelper->getCache($cacheKey,'covid:gov-colombia');
+        }
+        if($data == null) $response = $ApiHelper->SuccessorFail(400, array('warning' => 'The bot is in the process of updating big data plz try again in 10 to 20 min'),true);
+        else $response = $ApiHelper->SuccessorFail(200, $data,true);
+
+        return $response;
+    }
+
+    static public function gov_germany($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-germany');
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
+    static public function gov_india($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-india');
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
+    static public function gov_Indonesia($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-indo');
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
+    static public function gov_Israel($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-israel');
+
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
+    static public function gov_Italy($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-italy');
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
+    static public function gov_NewZealand($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-nz');
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
+    static public function gov_Nigeria($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-nigeria');
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
+    static public function gov_southafrica($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-southafrica');
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
+    static public function gov_southkorea($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-southkorea');
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
+    static public function gov_switzerland($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-switzerland');
+
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
+    static public function gov_uk($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-uk');
+
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
+
+    static public function gov_vietnam($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'covid:gov-vietnam');
+
+        $response = $ApiHelper->SuccessorFail(200, $data,true);
+        return $response;
+    }
 
 
 

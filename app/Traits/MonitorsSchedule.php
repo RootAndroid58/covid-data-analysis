@@ -28,7 +28,7 @@ trait MonitorsSchedule
 
             $filename = str_slug($command) . "-$date.log";
 
-            $path = storage_path("logs/$filename");
+            $path = storage_path("logs//$filename");
 
             $event->sendOutputTo($path)->after(function () use ($command, $path) {
 

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Illuminated\Console\MutexRuntimeException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -20,7 +21,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        Illuminated\Console\MutexRuntimeException::class,
     ];
 
     /**
@@ -59,12 +60,11 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception ){
         // emails.exception is the template of your email
              // it will have access to the $error that we are passing below
-
              if ($this->shouldReport($exception)) {
-                 if(env('APP_ENV_LOCAL',false)){
-                     Log::alert("There as an error sending Email to user");
+                if(env('APP_ENV_LOCAL',false)){
+                    Log::alert("There as an error sending Email to user");
                     $this->sendEmail($exception); // sends an email
-                 }
+                }
            }
         if ($request->expectsJson()) {
             if ($exception instanceof NotFoundHttpException) {
@@ -76,10 +76,16 @@ class Handler extends ExceptionHandler
             if ($exception instanceof MethodNotAllowedHttpException) {
                 return response()->json(ApiHelper::SuccessorFail(400,array("error" => $exception->getMessage())));
             }
+            if ($exception instanceof MutexRuntimeException) {
+                return response()->json(ApiHelper::SuccessorFail(400,array("error" => $exception->getMessage(),'message' => 'Our bot is in the process of updating the data it may take some time!')));
+            }
             if($exception instanceof \Error){
                 response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception->getMessage())));
             }
             if($exception instanceof \Throwable){
+                response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception->getMessage())));
+            }
+            if($exception instanceof \Exception){
                 response()->json(ApiHelper::SuccessorFail(500,array("error" => $exception->getMessage())));
             }
         }
@@ -91,7 +97,7 @@ class Handler extends ExceptionHandler
 
     public function sendEmail(Throwable $exception)
     {
-       try {
+        try {
             $e = FlattenException::createFromThrowable($exception);
             $handler = new HtmlErrorRenderer(true); // boolean, true raises debug flag...
             $css = $handler->getStylesheet();

@@ -32,6 +32,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('scraper:start')->everyTenMinutes()->withoutOverlapping();
         $schedule->command('scraper:covid')->everyTenMinutes()->withoutOverlapping();
+        $schedule->command('scraper:government')->everyTenMinutes()->withoutOverlapping();
+        $schedule->command('scraper:big-data')->hourly()->withoutOverlapping();
         $schedule->command('truncate:audit')->daily();
 
         $this->monitor($schedule);

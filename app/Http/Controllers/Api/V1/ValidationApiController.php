@@ -48,14 +48,9 @@ class ValidationApiController extends Controller
         if (!Auth::attempt($attr)) {
             return response()->json(ApiHelper::SuccessorFail(403,['error' =>'Credentials not match']));
         }
-        $token = auth()->user()->tokens()->where('name','API Token')->first();
-        $Bearer = null;
+        auth()->user()->tokens()->where('name','API Token')->delete();
 
-        if($token != null){
-            $Bearer = $token->id. "|".$token->token;
-        }else{
-            $Bearer = auth()->user()->createToken('API Token')->plainTextToken;
-        }
+        $Bearer = auth()->user()->createToken('API Token')->plainTextToken;
 
         return $this->success([
             'token' => $Bearer,
