@@ -17,4 +17,4 @@ to do/*
 debug.txt
 route.txt
 .vscode/*
-.vscode/*.json
+.vscode/settings.json

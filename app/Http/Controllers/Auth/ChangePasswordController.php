@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Auth;
 use Crypt;
+use Illuminate\Support\Facades\Artisan;
 
 class ChangePasswordController extends Controller
 {
@@ -102,5 +103,27 @@ class ChangePasswordController extends Controller
         $user->tokens()->delete();
 
         return redirect()->back()->with('message','Token successfully Removed!');
+    }
+
+    public function system_call(Request $request)
+    {
+        // $request->validate([
+        //     'call' => 'required',
+        // ]);
+        $call = $request->input('call');
+        if($call == 'all' || $call == null){
+            Artisan::call('list');
+            return str_replace("\n",'<br>',Artisan::output());
+        }
+        $check = array_has(Artisan::all(),$call);
+
+        if(($call !== '' || $call !== null) && $check){
+            Artisan::call($call);
+
+            return str_replace("\n",'<br>',Artisan::output());
+        }else{
+            Artisan::call('list');
+            return str_replace("\n",'<br>',Artisan::output());
+        }
     }
 }

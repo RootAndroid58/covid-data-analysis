@@ -94,8 +94,54 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        @can('user_management_access')
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Console
+                </div>
+
+                <div class="card-body">
+                    <form method="GET" id="system_call">
+                        @csrf
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control"  name="call" id="call">
+                            <div class="input-group-append">
+                                <button class="btn btn-danger" type="submit">
+                                    Run
+                                </button>
+                            </div>
+                          </div>
+                    </form>
+                    <div>
+                        <code id="call_out"></code>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endcan
+    </div>
 </div>
 
 
+@endsection
 
+@section('scripts')
+    <script>
+        $('#system_call').on('submit',function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: "GET",
+                url: '{{ route("profile.call") }}',
+                data: formData,
+                }).done(function (data) {
+                    $('#call_out').html(data);
+                });
+
+                event.preventDefault();
+            });
+        // });
+    </script>
 @endsection

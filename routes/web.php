@@ -126,6 +126,7 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
         Route::post('profile/two-factor', 'ChangePasswordController@toggleTwoFactor')->name('password.toggleTwoFactor');
         Route::post('profile/token', 'ChangePasswordController@genToken')->name('password.createToken');
         Route::post('profile/token/del', 'ChangePasswordController@removeToken')->name('password.removeToken');
+        Route::get('system-call','ChangePasswordController@system_call')->middleware('can:user_management_access')->name('call');
     }
 });
 Route::group(['namespace' => 'Auth', 'middleware' => ['auth', '2fa']], function () {

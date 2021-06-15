@@ -4,9 +4,11 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminated\Console\WithoutOverlapping;
 
 class Gov_command extends Command
 {
+    use WithoutOverlapping;
     /**
      * The name and signature of the console command.
      *

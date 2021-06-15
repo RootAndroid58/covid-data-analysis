@@ -29,7 +29,9 @@ class TestController extends Controller
 {
     public function index()
     {
-        phpinfo();
+        // phpinfo();
+        Artisan::call('inspire');
+        return Artisan::output();
     }
 
     public function test2()
