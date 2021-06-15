@@ -1133,7 +1133,7 @@ class ScraperHelper
 
             );
 
-            Cache::tags(['temp','temp.gov','temp.gov.vietnam'])->put('temp.gov_vietnam.stats',$data, now()->addMinutes(10));
+            Cache::tags(['temp','temp.gov','temp.gov.vietnam'])->put($scraper_data['cache_key'],$data, now()->addMinutes(10));
 
         } catch (\Throwable $th) {
             throw $th;
