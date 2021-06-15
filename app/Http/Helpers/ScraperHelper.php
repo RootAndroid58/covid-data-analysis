@@ -398,7 +398,8 @@ class ScraperHelper
                     Storage::disk('cron_temp')->delete($data['Filename']);
                     $guzzle = new Client();
                     $response = $guzzle->get($data['website']);
-                    Storage::disk('cron_temp')->put($data['Filename'], $response->getBody());
+                    $zipRaw = $response->getBody();
+                    Storage::disk('cron_temp')->put($data['Filename'], $zipRaw);
                     $path = storage_path('cron_temp//'.$data['Filename']);
                     $manager = new ZipManager();
                     $manager->addZip( Zip::open($path) );
