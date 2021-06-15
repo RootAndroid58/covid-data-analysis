@@ -307,6 +307,9 @@ class ScraperHelper
             'Filename'  => 'getAustria.zip',
             'success'   => false,
         );
+        // change zip to csv's
+        // https://www.data.gv.at/covid-19/
+        // 'https://covid19-dashboard.ages.at/data/CovidFaelle_GKZ.csv'
         $scraper_data[] = array(
             'cache_key' => 'temp.gov_austria_historical',
             'path' => 'zips\\getAustria\\CovidFaelle_Timeline_GKZ.csv',
@@ -391,7 +394,7 @@ class ScraperHelper
 
             foreach($scraper_data as $data){
                 if($data['type'] == 'zip'){
-                    File::deleteDirectory(storage_path('cron_temp//'.$data['path']));
+                    File::cleanDirectory(storage_path('cron_temp//zips//getAustria'));
                     Storage::disk('cron_temp')->delete($data['Filename']);
                     $guzzle = new Client();
                     $response = $guzzle->get($data['website']);
