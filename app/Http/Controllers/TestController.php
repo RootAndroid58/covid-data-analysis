@@ -34,54 +34,9 @@ class TestController extends Controller
         return Artisan::output();
     }
 
-    public function test2()
+    public function test2(Request $request)
     {
-        $response = Cache::get('worldometer.countries');
-        dd($response);
-        $DataHelper = new DataHelper;
-        $locations = $DataHelper->contries;
-
-        // dd($countries[0]);
-        $data = $filter_data = Cache::get('worldometer');
-        if($data == null){
-            Artisan::call('covid:worldometers');
-            $data = $filter_data = Cache::get('worldometer');
-        }
-        $sort = new CacheSorter;
-        $continents_keys = array();
-        $continents = array();
-        $find = array(
-            'North America',
-            'Asia',
-            'South America',
-            'Europe',
-            'Africa',
-            'Oceania',
-            'World'
-        );
-        foreach($find as $val){
-            $continents_keys[] = $sort->search($data,$val,'country');
-        }
-
-        foreach($continents_keys as $key){
-            unset($filter_data[$key]);
-        }
-        for ($i=0; $i < count($continents_keys); $i++) {
-            $continents[$i] = $data[$continents_keys[$i]];
-        }
-        $filter_data = array_values($filter_data);
-        // dd($filter_data);
-
-        // $response = array();
-        // foreach($continents as $continent){
-        //     $response[] = $this->worldometer_continent($continent,$filter_data);
-        // }
-        Cache::tags(['prod','prod.worldometer','worldometer.countries'])->put('worldometer.countries',$filter_data, now()->addMinutes(30));
-
-        return $filter_data;
-
-
-
+        return Artisan::call('covid:gov-austria');
     }
 
     public function worldometer_continent($data,$filter_data)
