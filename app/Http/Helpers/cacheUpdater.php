@@ -430,7 +430,7 @@ class cacheUpdater
     static public function gov_updater_vietnam()
     {
         $data = array(
-            ['cache' => 'temp.gov_vietnam.stats','prod' => 'prod.gov.vietnam.stats'],
+            ['cache' => 'temp.gov_vietnam','prod' => 'prod.gov.vietnam.stats'],
         );
         $cacheupdater = new cacheUpdater;
         $temp_stats = $cacheupdater->getCache($data[0]['cache'],'covid:gov-vietnam');
