@@ -138,10 +138,11 @@
                 data: formData,
                 }).done(function (data) {
                     $('#call_out').html(data);
-                });
-
-                event.preventDefault();
+                }).fail(function($xhr) {
+                var data = $xhr.responseJSON;
+                console.log(data);
+                $('#call_out').html(JSON.stringify(data, undefined, 2));
             });
-        // });
+        });
     </script>
 @endsection
