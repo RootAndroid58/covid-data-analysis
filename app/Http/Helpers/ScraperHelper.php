@@ -391,11 +391,11 @@ class ScraperHelper
 
             foreach($scraper_data as $data){
                 if($data['type'] == 'zip'){
-                    // File::deleteDirectory(storage_path('cron_temp\\'.$data['path']));
-                    // Storage::disk('cron_temp')->delete($data['Filename']);
-                    // $guzzle = new Client();
-                    // $response = $guzzle->get($data['website']);
-                    // Storage::disk('cron_temp')->put($data['Filename'], $response->getBody());
+                    File::deleteDirectory(storage_path('cron_temp\\'.$data['path']));
+                    Storage::disk('cron_temp')->delete($data['Filename']);
+                    $guzzle = new Client();
+                    $response = $guzzle->get($data['website']);
+                    Storage::disk('cron_temp')->put($data['Filename'], $response->getBody());
                     $path = storage_path('cron_temp\\'.$data['Filename']);
                     $manager = new ZipManager();
                     $manager->addZip( Zip::open($path) );
