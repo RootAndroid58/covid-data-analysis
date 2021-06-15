@@ -574,7 +574,7 @@ class GovernmentApiController extends Controller
         public function get_Vietnam(Request $request)
         {
 
-            $cacheKey = 'prod.gov.Vietnam.stats';
+            $cacheKey = 'prod.gov.vietnam.stats';
 
             $response = ApiHelper::gov_vietnam($cacheKey);
 
