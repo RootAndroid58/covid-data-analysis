@@ -312,7 +312,7 @@ class ScraperHelper
         // 'https://covid19-dashboard.ages.at/data/CovidFaelle_GKZ.csv'
         $scraper_data[] = array(
             'cache_key' => 'temp.gov_austria_historical',
-            'path' => 'zips\\getAustria\\CovidFaelle_Timeline_GKZ.csv',
+            'path' => 'zips//getAustria//CovidFaelle_Timeline_GKZ.csv',
             'hasHeader' => true,
             'fields'    => [
                 'Time',
@@ -332,7 +332,7 @@ class ScraperHelper
         );
         $scraper_data[] = array(
             'cache_key' => 'temp.gov_austria_by_age_grps',
-            'path' => 'zips\\getAustria\\CovidFaelle_Altersgruppe.csv',
+            'path' => 'zips//getAustria//CovidFaelle_Altersgruppe.csv',
             'hasHeader' => true,
             'fields' => [
                 'Age groupID',
@@ -349,7 +349,7 @@ class ScraperHelper
         );
         $scraper_data[]    = array(
             'cache_key' => 'temp.gov_austria_by_district',
-            'path' => 'zips\\getAustria\\CovidFaelle_GKZ.csv',
+            'path' => 'zips//getAustria//CovidFaelle_GKZ.csv',
             'hasHeader' => true,
             'fields' => [
                 'District',
@@ -363,7 +363,7 @@ class ScraperHelper
         );
         $scraper_data[]    = array(
             'cache_key' => 'temp.gov_austria_hospital',
-            'path' => 'zips\\getAustria\\CovidFallzahlen.csv',
+            'path' => 'zips//getAustria//CovidFallzahlen.csv',
             'hasHeader' => true,
             'fields' => [
                 'date',
@@ -380,7 +380,7 @@ class ScraperHelper
         );
         $scraper_data[]    = array(
             'cache_key' => 'temp.gov_austria_version',
-            'path' => 'zips\\getAustria\\Version.csv',
+            'path' => 'zips//getAustria//Version.csv',
             'hasHeader' => true,
             'fields' => [
                 'version','VersionsDate','CreationDate',
