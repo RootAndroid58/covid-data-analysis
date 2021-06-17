@@ -13,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $cli_memory_limit = config('app.cli_memory_limit');
+        if (php_sapi_name() === 'cli' && !empty($cli_memory_limit)) {
+            ini_set('memory_limit', $cli_memory_limit);
+        }
     }
 
     /**
