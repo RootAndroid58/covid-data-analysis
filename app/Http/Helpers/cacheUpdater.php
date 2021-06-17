@@ -96,31 +96,54 @@ class cacheUpdater
     static public function gov_updater_Austria()
     {
         $data = array(
+            ['cache' => 'temp.gov_austria_default','prod' => 'prod.gov.austria.default'],
             ['cache' => 'temp.gov_austria_historical','prod' => 'prod.gov.austria.historical'],
+            ['cache' => 'temp.gov_austria_historical_cases_ems','prod' => 'prod.gov.austria.historical_cases_ems'],
+            ['cache' => 'temp.gov_austria_vaccination','prod' => 'prod.gov.austria.vaccination'],
             ['cache' => 'temp.gov_austria_by_age_grps','prod' => 'prod.gov.austria.byage'],
             ['cache' => 'temp.gov_austria_by_district','prod' => 'prod.gov.austria.bydistrict'],
+            ['cache' => 'temp.gov_austria_timeline_bbg','prod' => 'prod.gov.austria.timeline_bbg'],
+            ['cache' => 'temp.gov_austria_timeline','prod' => 'prod.gov.austria.timeline'],
             ['cache' => 'temp.gov_austria_hospital','prod' => 'prod.gov.austria.hospital'],
-            ['cache' => 'temp.gov_austria_version','prod' => 'prod.gov.austria.version'],
+            ['cache' => 'temp.gov_austria_timeline_faelle_bundeslaender','prod' => 'prod.gov.austria.timeline_cases_federal_states'],
+            ['cache' => null,'prod' => 'prod.gov.austria.hospital_beds'],
         );
         $cacheupdater = new cacheUpdater;
-        $historical = $cacheupdater->getCache($data[0]['cache'],"covid:gov-austria");
-        $byage = $cacheupdater->getCache($data[1]['cache'],"covid:gov-austria");
-        $bydistrict = $cacheupdater->getCache($data[2]['cache'],"covid:gov-austria");
-        $hospital = $cacheupdater->getCache($data[3]['cache'],"covid:gov-austria");
-        $version = $cacheupdater->getCache($data[4]['cache'],"covid:gov-austria");
+        $default = $cacheupdater->getCache($data[0]['cache'],"covid:gov-austria");
+        $historical = $cacheupdater->getCache($data[1]['cache'],"covid:gov-austria");
+        $historical_cases_ems = $cacheupdater->getCache($data[2]['cache'],"covid:gov-austria");
+        $vaccination = $cacheupdater->getCache($data[3]['cache'],"covid:gov-austria");
+        $byage = $cacheupdater->getCache($data[4]['cache'],"covid:gov-austria");
+        $bydistrict = $cacheupdater->getCache($data[5]['cache'],"covid:gov-austria");
+        $timeline_bbg = $cacheupdater->getCache($data[6]['cache'],"covid:gov-austria");
+        $timeline = $cacheupdater->getCache($data[7]['cache'],"covid:gov-austria");
+        $hospital = $cacheupdater->getCache($data[8]['cache'],"covid:gov-austria");
+        $timeline_faelle_bundeslaender = $cacheupdater->getCache($data[9]['cache'],"covid:gov-austria");
 
         $CacheSorter = new CacheSorter;
-        $data_historical = $CacheSorter->gov_sorter_Austria_historical($historical);
-        $data_byage = $CacheSorter->gov_sorter_Austria_byage($byage);
-        $data_bydistrict = $CacheSorter->gov_sorter_Austria_bydistrict($bydistrict);
-        $data_hospital = $CacheSorter->gov_sorter_Austria_hospital($hospital);
-        $data_version = $CacheSorter->gov_sorter_Austria_version($version);
+        $data_default = $CacheSorter->gov_sorter_Austria($default);
+        $data_historical = $CacheSorter->gov_sorter_Austria($historical,'timeline');
+        $data_historical_cases_ems = $CacheSorter->gov_sorter_Austria($historical_cases_ems,'timeline');
+        $data_vaccination = $CacheSorter->gov_sorter_Austria($vaccination);
+        $data_byage = $CacheSorter->gov_sorter_Austria($byage,'age');
+        $data_bydistrict = $CacheSorter->gov_sorter_Austria($bydistrict,'district');
+        $data_timeline_bbg = $CacheSorter->gov_sorter_Austria($timeline_bbg);
+        $data_timeline = $CacheSorter->gov_sorter_Austria($timeline);
+        $data_hospital = $CacheSorter->gov_sorter_Austria($hospital,'hospital');
+        $data_timeline_faelle_bundeslaender = $CacheSorter->gov_sorter_Austria($timeline_faelle_bundeslaender);
+        $hospital_beds = $CacheSorter->gov_sorter_Austria_hospital($default);
 
-        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[0]['prod'],$data_historical, now()->addHour());
-        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[1]['prod'],$data_byage, now()->addHour());
-        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[2]['prod'],$data_bydistrict, now()->addHour());
-        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[3]['prod'],$data_hospital, now()->addHour());
-        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[4]['prod'],$data_version, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[0]['prod'],$data_default, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[1]['prod'],$data_historical, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[2]['prod'],$data_historical_cases_ems, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[3]['prod'],$data_vaccination, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[4]['prod'],$data_byage, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[5]['prod'],$data_bydistrict, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[6]['prod'],$data_timeline_bbg, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[7]['prod'],$data_timeline, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[8]['prod'],$data_hospital, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[9]['prod'],$data_timeline_faelle_bundeslaender, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[10]['prod'],$hospital_beds, now()->addHour());
 
         return true;
 

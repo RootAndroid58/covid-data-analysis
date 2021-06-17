@@ -90,7 +90,9 @@ class GovernmentApiController extends Controller
 
         public function get_Austria(Request $request)
         {
-            $data = ['historical','byAge','byDistrict','hospital','version'];
+            $data = ['default','historical','historical_cases_ems','vaccination','byAge',
+            'byDistrict','timeline','timeline_bbg','timeline_cases_federal_states','hospital','hospital_beds'];
+
             $request->validate([
                 'type'  => 'sometimes|in:'.implode(',',$data).'|nullable',
             ]);
@@ -99,19 +101,37 @@ class GovernmentApiController extends Controller
 
             switch ($type) {
                 case $data[0]:
-                    $cacheKey = 'prod.gov.austria.historical';
+                    $cacheKey = 'prod.gov.austria.default';
                     break;
                 case $data[1]:
-                    $cacheKey = 'prod.gov.austria.byage';
+                    $cacheKey = 'prod.gov.austria.historical';
                     break;
                 case $data[2]:
-                    $cacheKey = 'prod.gov.austria.bydistrict';
+                    $cacheKey = 'prod.gov.austria.historical_cases_ems';
                     break;
                 case $data[3]:
-                    $cacheKey = 'prod.gov.austria.hospital';
+                    $cacheKey = 'prod.gov.austria.vaccination';
                     break;
                 case $data[4]:
-                    $cacheKey = 'prod.gov.austria.version';
+                    $cacheKey = 'prod.gov.austria.byage';
+                    break;
+                case $data[5]:
+                    $cacheKey = 'prod.gov.austria.bydistrict';
+                    break;
+                case $data[6]:
+                    $cacheKey = 'prod.gov.austria.timeline';
+                    break;
+                case $data[7]:
+                    $cacheKey = 'prod.gov.austria.timeline_bbg';
+                    break;
+                case $data[8]:
+                    $cacheKey = 'prod.gov.austria.timeline_cases_federal_states';
+                    break;
+                case $data[9]:
+                    $cacheKey = 'prod.gov.austria.hospital';
+                    break;
+                case $data[10]:
+                    $cacheKey = 'prod.gov.austria.hospital_beds';
                     break;
 
                 default:
@@ -119,7 +139,7 @@ class GovernmentApiController extends Controller
                     break;
             }
             if($cacheKey){
-                $response = ApiHelper::gov_southafrica($cacheKey);
+                $response = ApiHelper::gov_Austria($cacheKey);
             }else{
                 $response = ApiHelper::SuccessorFail(400,array('message' => "missing parameter 'type' or invalid values supported values: ".implode(',',$data)));
             }

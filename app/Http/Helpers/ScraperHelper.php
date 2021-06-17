@@ -300,125 +300,183 @@ class ScraperHelper
     static public function Gov_Austria()
     {
         $scraper_data = array();
+
         $scraper_data[] = array(
-            'path' => 'zips\\getAustria',
-            'website' => 'https://covid19-dashboard.ages.at/data/data.zip',
-            'type'  => 'zip',
-            'Filename'  => 'getAustria.zip',
-            'success'   => false,
+            'cache_key' => 'temp.gov_austria_default',
+            'website' => 'https://covid19-dashboard.ages.at/data/JsonData.json',
+            'type'  => 'json',
         );
-        // change zip to csv's
-        // https://www.data.gv.at/covid-19/
-        // 'https://covid19-dashboard.ages.at/data/CovidFaelle_GKZ.csv'
         $scraper_data[] = array(
             'cache_key' => 'temp.gov_austria_historical',
-            'path' => 'zips//getAustria//CovidFaelle_Timeline_GKZ.csv',
+            'path' => 'CovidFaelle_Timeline_GKZ.csv',
+            'website' => 'https://covid19-dashboard.ages.at/data/CovidFaelle_Timeline_GKZ.csv',
             'hasHeader' => true,
             'fields'    => [
-                'Time',
-                'District',
-                'GKZ',
-                'population',
-                'cases',
-                'totalCases',
-                'cases7days',
-                '7daysIncidenceCases',
-                'todayDeaths',
-                'deaths',
-                'todayRecovered',
-                'recovered',
+                'Time','District','GKZ','population','cases','totalCases','cases7days','7daysIncidenceCases',
+                'todayDeaths','deaths','todayRecovered','recovered',
             ],
             'type'  => 'csv',
         );
         $scraper_data[] = array(
+            'cache_key' => 'temp.gov_austria_historical_cases_ems',
+            'path' => 'timeline-faelle-ems.csv',
+            'website' => 'https://info.gesundheitsministerium.gv.at/data/timeline-faelle-ems.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'date', 'stateID', 'name', 'confirmed_cases_ems'
+            ],
+            'type'  => 'csv',
+        );
+
+        $scraper_data[] = array(
+            'cache_key' => 'temp.gov_austria_vaccination',
+            'path' => 'timeline-eimpfpass.csv',
+            'website' => 'https://info.gesundheitsministerium.gv.at/data/timeline-eimpfpass.csv',
+            'hasHeader' => true,
+            'fields'    => [
+                'date', 'stateID', 'population', 'name', 'registered_vaccinations',
+                'registered_vaccinationsPro100', 'partially_vaccinated', 'partially_vaccinatedPro100',
+                'fully_immunized','fully_immunized_Pro100',
+                'Group_<25_M_1','Group_<25_W_1','Group_<25_D_1','Group_25-34_M_1',
+                'Group_25-34_W_1','Group_25-34_D_1','Group_35-44_M_1','Group_35-44_W_1',
+                'Group_35-44_D_1','Group_45-54_M_1','Group_45-54_W_1','Group_45-54_D_1',
+                'Group_55-64_M_1','Group_55-64_W_1','Group_55-64_D_1','Group_65-74_M_1',
+                'Group_65-74_W_1','Group_65-74_D_1','Group_75-84_M_1','Group_75-84_W_1',
+                'Group_75-84_D_1','Group_>84_M_1','Group_>84_W_1','Group_>84_D_1',
+                'Group_<25_M_2','Group_<25_W_2','Group_<25_D_2','Group_25-34_M_2',
+                'Group_25-34_W_2','Group_25-34_D_2','Group_35-44_M_2','Group_35-44_W_2',
+                'Group_35-44_D_2','Group_45-54_M_2','Group_45-54_W_2','Group_45-54_D_2',
+                'Group_55-64_M_2','Group_55-64_W_2','Group_55-64_D_2','Group_65-74_M_2',
+                'Group_65-74_W_2','Group_65-74_D_2','Group_75-84_M_2','Group_75-84_W_2',
+                'Group_75-84_D_2','Group_> 84_M_2','Group_> 84_W_2','Group_> 84_D_2',
+                'Group_not_assignable','Registered_vaccinationsBioNTechPfizer_1','Registered_vaccinationsModerna_1','Registered_vaccinationsAstraZeneca_1',
+                'Registered_vaccinationsBioNTechPfizer_2','Registered_vaccinationsModerna_2','Registered_vaccinationsAstraZeneca_2','Registered_vaccinationsJa'
+            ],
+            'type'  => 'csv',
+        );
+
+
+        $scraper_data[] = array(
             'cache_key' => 'temp.gov_austria_by_age_grps',
-            'path' => 'zips//getAustria//CovidFaelle_Altersgruppe.csv',
+            'path' => 'CovidFaelle_AltersGroup.csv',
+            'website' => 'https://covid19-dashboard.ages.at/data/CovidFaelle_AltersGroup.csv',
             'hasHeader' => true,
             'fields' => [
-                'Age groupID',
-                'Age group',
-                'Federal state',
-                'StateID',
-                'population',
-                'Gender',
-                'cases',
-                'recovered',
-                'dead',
+                'age_group_ID','age_group','federal_state','StateID','population','gender','cases','recovered','dead',
+            ],
+            'type'  => 'csv',
+        );
+
+        $scraper_data[]    = array(
+            'cache_key' => 'temp.gov_austria_by_district',
+            'path' => 'CovidFaelle_GKZ.csv',
+            'website' => 'https://covid19-dashboard.ages.at/data/CovidFaelle_GKZ.csv',
+            'hasHeader' => true,
+            'fields' => [
+                'District','GKZ','population','cases','dead','cases7days',
+            ],
+            'type'  => 'csv',
+        );
+
+        $scraper_data[]    = array(
+            'cache_key' => 'temp.gov_austria_timeline_bbg',
+            'path' => 'timeline-bbg.csv',
+            'website' => 'https://info.gesundheitsministerium.gv.at/data/timeline-bbg.csv',
+            'hasHeader' => true,
+            'fields' => [
+                'date', 'stateID', 'population', 'name', 'deliveries', 'deliveriesPro100', 'orders', 'ordersPro100'
             ],
             'type'  => 'csv',
         );
         $scraper_data[]    = array(
-            'cache_key' => 'temp.gov_austria_by_district',
-            'path' => 'zips//getAustria//CovidFaelle_GKZ.csv',
+            'cache_key' => 'temp.gov_austria_timeline',
+            'path' => 'CovidFaelle_Timeline.csv',
+            'website' => 'https://covid19-dashboard.ages.at/data/CovidFaelle_Timeline.csv',
             'hasHeader' => true,
             'fields' => [
-                'District',
-                'GKZ',
-                'population',
-                'cases',
-                'dead',
-                'cases7days',
+                'Time','District','StateID','population','cases','totalCases','cases7days','7daysIncidenceCases',
+                'todayDeaths','deaths','todayRecovered','recovered',
             ],
             'type'  => 'csv',
         );
         $scraper_data[]    = array(
             'cache_key' => 'temp.gov_austria_hospital',
-            'path' => 'zips//getAustria//CovidFallzahlen.csv',
+            'path' => 'Hospitalisierung.csv',
+            'website' => 'https://covid19-dashboard.ages.at/data/Hospitalisierung.csv',
             'hasHeader' => true,
             'fields' => [
-                'date',
-                'totalTests',
-                'date_',
-                'FZHosp',
-                'FZICU',
-                'FZHospFree',
-                'FZICUFree',
-                'StateID',
-                'state',
+                'date','stateID','state','normal_beds_bel','intensive_care_beds_KapGes','intensive_care_beds_Bel_Covid19',
+                'intensive_care_beds_belNot_Covid19','intensive_care_bedsfree','testTotal',
             ],
             'type'  => 'csv',
         );
         $scraper_data[]    = array(
-            'cache_key' => 'temp.gov_austria_version',
-            'path' => 'zips//getAustria//Version.csv',
+            'cache_key' => 'temp.gov_austria_timeline_faelle_bundeslaender',
+            'path' => 'timeline-faelle-bundeslaender.csv',
+            'website' => 'https://info.gesundheitsministerium.gv.at/data/timeline-faelle-bundeslaender.csv',
             'hasHeader' => true,
             'fields' => [
-                'version','VersionsDate','CreationDate',
+                'date','StateID','Surname','Confirmed_cases_Federal_States','Deaths','Recovery','Hospitalization',
+                'Intensive_care_unit','Testing','TestingPCR','Antigen_testing'
             ],
-            'version' => 'V 2.4.0.0',
             'type'  => 'csv',
         );
+        // $scraper_data[]    = array(
+        //     'cache_key' => 'temp.gov_austria_hospital',
+        //     'path' => 'zips//getAustria//CovidFallzahlen.csv',
+        //     'hasHeader' => true,
+        //     'fields' => [
+        //         'date',
+        //         'totalTests',
+        //         'date_',
+        //         'FZHosp',
+        //         'FZICU',
+        //         'FZHospFree',
+        //         'FZICUFree',
+        //         'StateID',
+        //         'state',
+        //     ],
+        //     'type'  => 'csv',
+        // );
 
         try {
 
 
+            $scraper = new ScraperHelper;
             foreach($scraper_data as $data){
-                if($data['type'] == 'zip'){
-                    File::cleanDirectory(storage_path('cron_temp//zips//getAustria'));
-                    Storage::disk('cron_temp')->delete($data['Filename']);
-                    $guzzle = new Client();
-                    $response = $guzzle->get($data['website']);
-                    $zipRaw = $response->getBody();
-                    Storage::disk('cron_temp')->put($data['Filename'], $zipRaw);
-                    $path = storage_path('cron_temp//'.$data['Filename']);
-                    $manager = new ZipManager();
-                    $manager->addZip( Zip::open($path) );
-                    $zip = Zip::open(storage_path('cron_temp//'.$data['Filename']));
-                    $zip->extract(storage_path('cron_temp//'.$data['path']));
-                    $scraper_data[0]['success'] = true;
+                // if($data['type'] == 'zip'){
+                //     File::cleanDirectory(storage_path('cron_temp//zips//getAustria'));
+                //     Storage::disk('cron_temp')->delete($data['Filename']);
+                //     $guzzle = new Client();
+                //     $response = $guzzle->get($data['website']);
+                //     $zipRaw = $response->getBody();
+                //     Storage::disk('cron_temp')->put($data['Filename'], $zipRaw);
+                //     $path = storage_path('cron_temp//'.$data['Filename']);
+                //     $manager = new ZipManager();
+                //     $manager->addZip( Zip::open($path) );
+                //     $zip = Zip::open(storage_path('cron_temp//'.$data['Filename']));
+                //     $zip->extract(storage_path('cron_temp//'.$data['path']));
+                //     $scraper_data[0]['success'] = true;
+                // }
+                if($data['type'] == 'json'){
+                    $resp = $scraper->curlUrl($data['website']);
+                    $array = json_decode($resp);
                 }
-                if($scraper_data[0]['success'] && $data['type'] == 'csv'){
-                    $scraper = new ScraperHelper;
+                if($data['type'] == 'csv'){
+                    $resp = $scraper->curlUrl($data['website']);
+                    $dom = HtmlDomParser::str_get_html($resp);
+
+                    $csvfile = $dom->html();
+
+                    Storage::disk('cron_temp')->put($data['path'], $csvfile);
+
                     $array =  $scraper->csvtoarray($data);
-                    Cache::tags(['temp','temp.gov','temp.gov.Austria'])->put($data['cache_key'],$array, now()->addMinutes(10));
                 }
-                // dd($data);
+                Cache::tags(['temp','temp.gov','temp.gov.Austria'])->put($data['cache_key'],$array, now()->addMinutes(10));
             }
         } catch (\Throwable $th) {
             throw $th;
         }
-        File::deleteDirectory(storage_path('cron_temp\\'.$scraper_data[0]['path']));
-        File::delete(storage_path('cron_temp\\'.$scraper_data[0]['Filename']));
 
         $cacheUpdater = new cacheUpdater;
         $cacheUpdater->gov_updater_Austria();
