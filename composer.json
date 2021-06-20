@@ -24,6 +24,7 @@
         "laravel/ui": "^3.2",
         "laraveldaily/laravel-charts": "^0.1.24",
         "livewire/livewire": "^2.4",
+        "maher/laravel-counters": "@dev",
         "nuovo/spreadsheet-reader": "^0.5.11",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "rennokki/laravel-eloquent-query-cache": "^2.6",

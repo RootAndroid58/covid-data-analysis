@@ -80,6 +80,12 @@ Route::group(['middleware' => 'json.response'],function () {
 
             Route::get('historical/', 'JHUCSSEApiController@historical')->name('historical');
             Route::get('historical/{country}', 'JHUCSSEApiController@historicalbyCountry')->name('historical.byCountry');
+
+            //mobility API
+             Route::group(['as' => 'mobility.'], function () {
+                 Route::get('/apple', 'AppleApiController@appleCountries')->name('get');
+                 Route::get('/apple/{country}', 'AppleApiController@appleMobility')->name('get');
+             });
         });
 
         // Gov api
@@ -88,6 +94,8 @@ Route::group(['middleware' => 'json.response'],function () {
             Route::get('/gov', 'GovernmentApiController@get_Gov')->name('get');
             Route::get('/gov/{country}', 'GovernmentApiController@gov')->name('byCountry');
         });
+
+
 
 
 

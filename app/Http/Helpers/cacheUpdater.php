@@ -466,6 +466,49 @@ class cacheUpdater
         return true;
     }
 
+    static public function Mobility_apple()
+    {
+        $data = array(
+            ['cache' => 'temp.apple_mobility','prod' => 'prod.mobility.apple'],
+            ['cache' => 'temp.apple_mobility_us','prod' => 'prod.mobility.apple_us'],
+            ['cache' => null,'prod' => 'prod.mobility.apple.country'],
+            ['cache' => null,'prod' => 'prod.mobility.apple_us.states'],
+        );
+
+        $cacheupdater = new cacheUpdater;
+        $raw_apple = $cacheupdater->getCache($data[0]['cache'],'scraper:apple');
+        $raw_apple_us = $cacheupdater->getCache($data[1]['cache'],'scraper:apple');
+
+        $CacheSorter = new CacheSorter;
+        $apple = $CacheSorter->mobility($raw_apple);
+        $apple_us = $CacheSorter->mobility($raw_apple_us);
+        $country_apple = $cacheupdater->chunkSearch($apple['pages'],'country');
+        // $country_apple_us = $cacheupdater->chunkSearch($apple['pages'],'country');
+
+        Cache::tags(['prod','prod.mobility','prod.mobility.apple'])->put($data[0]['prod'],$apple, now()->addDays(1));
+        Cache::tags(['prod','prod.mobility','prod.mobility.apple'])->put($data[1]['prod'],$apple_us, now()->addDays(1));
+        Cache::tags(['prod','prod.mobility','prod.mobility.apple'])->put($data[2]['prod'],$country_apple, now()->addDays(1));
+
+        return true;
+    }
+
+    static public function Mobility_apple_trends()
+    {
+        $data = array(
+            ['cache' => 'temp.apple_mobility_trends','prod' => 'prod.mobility.appletrends'],
+        );
+
+        $cacheupdater = new cacheUpdater;
+        $raw_appletrends = $cacheupdater->getCache($data[2]['cache'],'scraper:apple');
+
+        $CacheSorter = new CacheSorter;
+        $appletrends = $CacheSorter->mobility($raw_appletrends);
+
+        Cache::tags(['prod','prod.gov','prod.gov.vietnam'])->put($data[0]['prod'],$appletrends, now()->addDays(1));
+
+        return true;
+    }
+
 
 
 
@@ -487,5 +530,14 @@ class cacheUpdater
             $data = Cache::get($key);
         }
         return $data;
+    }
+    static public function chunkSearch($chunk,$find)
+    {
+        $search = collect($chunk)->map(function ($array) use ($find){
+            return collect($array)->unique($find)->all();
+        })->toArray();
+        $search = array_merge(...$search);
+        $search = collect($search)->unique($find)->pluck($find)->toArray();
+        return $search;
     }
 }

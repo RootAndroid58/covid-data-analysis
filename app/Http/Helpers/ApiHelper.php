@@ -293,6 +293,46 @@ class ApiHelper
         return $response;
     }
 
+    static public function apple_mobility($cacheKey,$country,$region)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'scraper:apple');
+
+        for ($i=0; $i < count($data['pages']); $i++) {
+            $filtered_country[] = $ApiHelper->searchMulti($data['pages'][$i],'country',$country);
+        }
+        $filtered_country = array_merge(...$filtered_country);
+
+        if($region !== null){
+            $filtered = $ApiHelper->searchMulti($filtered_country,'sub-region',$region);
+        }else{
+            $filtered = $filtered_country;
+        }
+
+        $newData = array_chunk($filtered,5000);
+
+        $finilize = array(
+            'total' => count($filtered),
+            'per_page' => 5000,
+            'total_pages' => count($newData),
+            'pages' => $newData,
+        );
+
+        return $ApiHelper->SuccessorFail(200,$finilize,true);
+
+    }
+
+    static public function apple_mobility_country($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'scraper:apple');
+
+        return $ApiHelper->SuccessorFail(200,$data,true);
+    }
+
+
+
+
 
 
 
@@ -397,6 +437,17 @@ class ApiHelper
             $data = Cache::get($cache);
         }
         return $data;
+    }
+
+    public function searchMulti($array,$find,$value)
+    {
+        $search = array();
+        foreach($array as $key => $val){
+            if(strcasecmp($val[$find],$value) == 0){
+                $search[] = $array[$key];
+            }
+        }
+        return $search;
     }
 
 }

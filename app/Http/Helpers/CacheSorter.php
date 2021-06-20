@@ -650,6 +650,15 @@ class CacheSorter
         return $array;
     }
 
+    static public function mobility($data)
+    {
+        $array = array(
+            'pages' => $data
+        );
+
+        return $array;
+    }
+
 
 
 

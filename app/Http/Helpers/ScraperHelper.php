@@ -271,9 +271,8 @@ class ScraperHelper
         foreach($scraper_data as $data){
             $update = new ScraperHelper;
             $resp = $update->curlUrl($data['website']);
-            $dom = HtmlDomParser::str_get_html($resp);
 
-            $csvfile = $dom->html();
+            $csvfile = $resp;
 
             Storage::disk('cron_temp')->put($data['path'], $csvfile);
 
@@ -464,9 +463,8 @@ class ScraperHelper
                 }
                 if($data['type'] == 'csv'){
                     $resp = $scraper->curlUrl($data['website']);
-                    $dom = HtmlDomParser::str_get_html($resp);
 
-                    $csvfile = $dom->html();
+                    $csvfile = $resp;
 
                     Storage::disk('cron_temp')->put($data['path'], $csvfile);
 
@@ -587,9 +585,8 @@ class ScraperHelper
             foreach($scraper_data as $data){
 
                 $resp = $scraper->curlUrl($data['website']);
-                $dom = HtmlDomParser::str_get_html($resp);
 
-                $csvfile = $dom->html();
+                $csvfile = $resp;
 
                 Storage::disk('cron_temp')->put($data['path'], $csvfile);
 
@@ -691,9 +688,8 @@ class ScraperHelper
             $scraper = new ScraperHelper;
 
             $resp = $scraper->curlUrl($scraper_data['website']);
-            $dom = HtmlDomParser::str_get_html($resp);
 
-            $csvfile = $dom->html();
+            $csvfile = $resp;
 
             Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
 
@@ -859,9 +855,8 @@ class ScraperHelper
             $scraper = new ScraperHelper;
 
             $resp = $scraper->curlUrl($scraper_data['website']);
-            $dom = HtmlDomParser::str_get_html($resp);
 
-            $csvfile = $dom->html();
+            $csvfile = $resp;
 
             Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
 
@@ -1023,9 +1018,8 @@ class ScraperHelper
             foreach($scraper_data as $data){
 
                 $resp = $scraper->curlUrl($data['website']);
-                $dom = HtmlDomParser::str_get_html($resp);
 
-                $csvfile = $dom->html();
+                $csvfile = $resp;
 
                 Storage::disk('cron_temp')->put($data['path'], $csvfile);
 
@@ -1106,9 +1100,8 @@ class ScraperHelper
             $scraper = new ScraperHelper;
 
             $resp = $scraper->curlUrl($scraper_data['website']);
-            $dom = HtmlDomParser::str_get_html($resp);
 
-            $csvfile = $dom->html();
+            $csvfile = $resp;
 
             Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
 
@@ -1205,6 +1198,112 @@ class ScraperHelper
 
     }
 
+    static public function apple_mobility()
+    {
+        $scraper_data[] = array(
+            'cache_key' => 'temp.apple_mobility',
+            'path' => 'apple_mobility.csv',
+            'hasHeader' => true,
+            'website' => 'https://raw.githubusercontent.com/ActiveConclusion/COVID19_mobility/master/apple_reports/apple_mobility_report.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.apple_mobility_us',
+            'path' => 'apple_mobility_us.csv',
+            'hasHeader' => true,
+            'website' => 'https://raw.githubusercontent.com/ActiveConclusion/COVID19_mobility/master/apple_reports/apple_mobility_report_US.csv',
+            'type'  => 'csv',
+        );
+
+        try {
+            $scraper = new ScraperHelper;
+            foreach($scraper_data as $data){
+
+                $resp = $scraper->curlUrl($data['website']);
+
+                $csvfile = $resp;
+
+                Storage::disk('cron_temp')->put($data['path'], $csvfile);
+
+                $array =  $scraper->csvtoarray($data,true);
+                $array = array_chunk($array,5000);
+
+                Cache::tags(['temp','temp.mobility','temp.mobility.apple'])->put($data['cache_key'],$array, now()->addDays(2));
+            }
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->Mobility_apple();
+    }
+    static public function apple_mobility_trends()
+    {
+        $scraper_data = array(
+            'cache_key' => 'temp.apple_mobility_trends',
+            'path' => 'apple_mobility_trends.csv',
+            'hasHeader' => true,
+            'website' => 'https://raw.githubusercontent.com/ActiveConclusion/COVID19_mobility/master/apple_reports/applemobilitytrends.csv',
+            'type'  => 'csv',
+        );
+
+        try {
+            $scraper = new ScraperHelper;
+
+            $resp = $scraper->curlUrl($scraper_data['website']);
+
+            $csvfile = $resp;
+
+            Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+
+            $array =  $scraper->csvtoarray($scraper_data,true);
+            $array = array_chunk($array,5000);
+
+            Cache::tags(['temp','temp.mobility','temp.mobility.apple'])->put($scraper_data['cache_key'],$array, now()->addDays(2));
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->Mobility_apple_trends();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * ===========================================
@@ -1279,20 +1378,26 @@ class ScraperHelper
         }
     }
 
-    static public function csvtoarray($data)
+    static public function csvtoarray($data,$useDefaultHeader = false)
     {
-        $hasHeader = $data['hasHeader'];
+        $hasHeader = isset($data['hasHeader']) ? $data['hasHeader'] : true;
         $filename = $data['path'];
-        // $path     = Storage::disk('cron_temp')->path($filename);;
+
         $path     = storage_path('cron_temp//' . $filename);
-        $fields = $data['fields'];
-        $fields = array_flip(array_filter($fields));
+        if(isset($data['fields'])){
+            $fields = $data['fields'];
+            $fields = array_flip(array_filter($fields));
+        }else $useDefaultHeader = true;
         try {
             $reader = new SpreadsheetReader($path);
             $insert = [];
 
             foreach ($reader as $key => $row) {
                 if ($hasHeader && $key == 0) {
+                    if($useDefaultHeader){
+                        $fields = $row;
+                        $fields = array_flip(array_filter($fields));
+                    }
                     continue;
                 }
 
@@ -1309,7 +1414,7 @@ class ScraperHelper
                     $insert[] = $tmp;
                 }
             }
-            File::delete($path);
+            // File::delete($path);
             return $insert;
 
         } catch (\Throwable $th) {
@@ -1341,7 +1446,7 @@ class ScraperHelper
                     'category_id' => 0,
                 ]);
             }else{
-                $category =$sub_category->category;
+                $category = $sub_category->category;
             }
         }else{
             $sub_category = null;
