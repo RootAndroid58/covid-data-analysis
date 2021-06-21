@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700;900&amp;display=swap" rel="stylesheet">
     <title>CRADA</title>
-    <livewire:styles />
+    @livewireStyles
+
     <link rel="stylesheet" href="{{ asset('css/frontend.css') }}">
     <link rel="stylesheet" href="css/icomoon-style.css">
     {{-- <link rel="stylesheet" href="css/css-bootstrap.min.css">
