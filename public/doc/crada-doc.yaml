@@ -22,7 +22,9 @@ info:
 
     To make developers job easier we are providing the API for the same.
 
-    Api Data is updated every 10 mins.
+    Api Data is updated every 10 mins and some every 1 hour.
+
+    Jump to <a href="#tag/COVID-19">Covid-19 Related API</a>
   version: '1.0'
 servers:
 - url: https://www.crada.ga/api/v1
@@ -1093,7 +1095,7 @@ paths:
       - Government
       summary: list
       description: >-
-        Get COVID-19 time series data for a specific country
+        Get a list of supported countries for government specific data
 
       operationId: /gov
       parameters:
@@ -1140,19 +1142,19 @@ paths:
       description: >-
         Get COVID-19 government reported data for a specific country
 
-        <table class="table table-bordered table-hover table-condensed">
+        <table class="table table-bordered table-condensed">
           <thead>
             <tr>
               <th title="Field #1">government</th>
               <th title="Field #2">query param</th>
               <th title="Field #3">values</th>
-              <th title="Field #4"></th>
+              <th title="Field #4">-</th>
             </tr>
           </thead>
           <tbody>
           <tr>
             <td>Austria</td>
-            <td>type</td>
+            <td rowspan="5">type</td>
             <td>
                 <ul>
                 <li>historical </li>
@@ -1162,11 +1164,10 @@ paths:
                 <li>version</li>
               </ul>
             </td>
-            <td> required </td>
+            <td rowspan="3"> required </td>
           </tr>
           <tr>
             <td>Canada</td>
-            <td>type</td>
             <td>
               <ul>
                 <li>default</li>
@@ -1180,7 +1181,86 @@ paths:
                 <li>vaccine_distribution</li>
               </ul>
             </td>
+          </tr>
+          <tr>
+            <td>Colombia</td>
+            <td>
+              <ul>
+                <li>vaccines_allocations</li>
+                <li>pcr_tests</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Germany</td>
+            <td rowspan="2">
+              <ul>
+                <li>default</li>
+              </ul>
+            </td>
+            <td rowspan="2"> Optional </td>
+          </tr>
+          <tr>
+            <td>India</td>
+          </tr>
+          <tr>
+            <td>Indonesia</td>
+            <td rowspan="9">type</td>
+            <td>
+              <ul>
+                <li>data</li>
+                <li>update</li>
+                <li>prev</li>
+              </ul>
+            </td>
             <td> required </td>
+          </tr>
+          <tr>
+            <td>Israel</td>
+            <td rowspan="4">
+              <ul>
+                <li>default</li>
+              </ul>
+            </td>
+            <td rowspan="4"> Optional </td>
+          </tr>
+          <tr>
+            <td>Italy</td>
+          </tr>
+          <tr>
+            <td>NewZealand</td>
+          </tr>
+          <tr>
+            <td>Nigeria</td>
+          </tr>
+          <tr>
+            <td>SouthAfrica</td>
+            <td>
+              <ul>
+                <li>confirmed</li>
+                <li>deaths</li>
+                <li>recovered</li>
+                <li>testing</li>
+                <li>vaccination</li>
+                <li>fields_full_forms</li>
+              </ul>
+            </td>
+            <td> required </td>
+          </tr>
+          <tr>
+            <td>Switzerland</td>
+            <td rowspan="3">
+              <ul>
+                <li>default</li>
+              </ul>
+            </td>
+            <td rowspan="3"> Optional </td>
+          </tr>
+          <tr>
+            <td>UK</td>
+          </tr>
+          <tr>
+            <td>Vietnam</td>
           </tr>
           </tbody>
         </table>
@@ -1287,7 +1367,7 @@ tags:
 
     > The server is refreshing the data so latest data will be available.
 
-    > > This happens because the data is stored as cache in our server and expires in 10 mins.
+    > > This happens because the data is stored as cache in our server and some expires in 1 hour.
 
 - name: Worldometers API
   description: >-
@@ -1299,6 +1379,7 @@ tags:
   description: >-
 - name: Apple
   description: >-
+    COVID-19 related mobility data and trends data from <a href="https://covid19.apple.com/mobility" target="_blank"> Apple </a>
 - name: Government
   description: >-
     COVID-19 individual government reported data

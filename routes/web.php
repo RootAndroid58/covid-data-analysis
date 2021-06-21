@@ -143,7 +143,7 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->m
 Route::group(['prefix'=>'api'] ,function () {
     Route::get('/', function () {
         return view('doc.api');
-    });
+    })->name('apidoc');
 });
 
 
