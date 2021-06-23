@@ -17,6 +17,10 @@ class UpdateResourceRequest extends FormRequest
     public function rules()
     {
         return [
+            'country_id' => [
+                'required',
+                'integer',
+            ],
             'city_id' => [
                 'required',
                 'integer',
@@ -27,7 +31,7 @@ class UpdateResourceRequest extends FormRequest
             ],
             'phone_no' => [
                 'string',
-                'sometimes',
+                'required',
             ],
             'email' => [
                 'string',
@@ -39,7 +43,13 @@ class UpdateResourceRequest extends FormRequest
             ],
             'url' => [
                 'string',
-                'required_without:phone_no|nullable',
+                'nullable',
+            ],
+            'subcats.*' => [
+                'integer',
+            ],
+            'subcats' => [
+                'array',
             ],
         ];
     }
