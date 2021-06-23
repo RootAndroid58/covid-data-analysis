@@ -38,7 +38,7 @@ class StoreResourceRequest extends FormRequest
                 'nullable',
             ],
             'url' => [
-                'sometimes|nullable',
+                'nullable',
                 // 'required_if:phone_no',
                 'string'
             ],
