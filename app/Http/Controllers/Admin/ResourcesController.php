@@ -126,6 +126,8 @@ class ResourcesController extends Controller
 
         $resource->categories()->sync($request->input('categories', []));
 
+        $resource->subcats()->sync($request->input('subcats', []));
+
         return redirect()->route('admin.resources.index');
     }
 

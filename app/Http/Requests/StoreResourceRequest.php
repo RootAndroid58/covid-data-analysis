@@ -17,6 +17,10 @@ class StoreResourceRequest extends FormRequest
     public function rules()
     {
         return [
+            'country_id' => [
+                'required',
+                'integer',
+            ],
             'city_id' => [
                 'required',
                 'integer',
@@ -27,7 +31,7 @@ class StoreResourceRequest extends FormRequest
             ],
             'phone_no' => [
                 'string',
-                'sometimes|nullable',
+                'required',
             ],
             'email' => [
                 'string',
@@ -38,9 +42,14 @@ class StoreResourceRequest extends FormRequest
                 'nullable',
             ],
             'url' => [
-                'nullable',
-                // 'required_if:phone_no',
-                'string'
+                'string',
+                'required_without:phone_no|nullable',
+            ],
+            'subcats.*' => [
+                'integer',
+            ],
+            'subcats' => [
+                'array',
             ],
         ];
     }
