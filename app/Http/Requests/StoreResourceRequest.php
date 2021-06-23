@@ -43,7 +43,7 @@ class StoreResourceRequest extends FormRequest
             ],
             'url' => [
                 'string',
-                'required_without:phone_no|nullable',
+                'nullable',
             ],
             'subcats.*' => [
                 'integer',
