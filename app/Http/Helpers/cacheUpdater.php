@@ -499,7 +499,7 @@ class cacheUpdater
         );
 
         $cacheupdater = new cacheUpdater;
-        $raw_appletrends = $cacheupdater->getCache($data[2]['cache'],'scraper:apple');
+        $raw_appletrends = $cacheupdater->getCache($data[0]['cache'],'scraper:apple');
 
         $CacheSorter = new CacheSorter;
         $appletrends = $CacheSorter->mobility($raw_appletrends);
@@ -537,6 +537,7 @@ class cacheUpdater
             return collect($array)->unique($find)->all();
         })->toArray();
         $search = array_merge(...$search);
+
         $search = collect($search)->unique($find)->pluck($find)->toArray();
         return $search;
     }

@@ -297,13 +297,38 @@ class ApiHelper
     {
         $ApiHelper = new ApiHelper;
         $data = $ApiHelper->getCache($cacheKey,'scraper:apple');
+        $countries = $ApiHelper->apple_mobility_country('prod.mobility.apple.country');
 
         for ($i=0; $i < count($data['pages']); $i++) {
             $filtered_country[] = $ApiHelper->searchMulti($data['pages'][$i],'country',$country);
         }
         $filtered_country = array_merge(...$filtered_country);
 
+        if(count($filtered_country) == 0){
+            $array = array(
+                'error' => 'invalid country',
+                'message' => 'country: The value is case sensitive',
+                'countries' => $countries['meta']
+            );
+            return $ApiHelper->SuccessorFail(400,$array,true);
+        }
+
         if($region !== null){
+            $cacheUpdater = new cacheUpdater;
+            $supported_regions = $cacheUpdater->chunkSearch(array_chunk($filtered_country,5000),'sub-region');
+            $regions_ = false;
+            foreach($supported_regions as $search_regions){
+                if(strcasecmp($search_regions,$region) == 0){
+                    $regions_ = true;
+                    break;
+                }
+            }
+            if(!$regions_){
+                $array = array('error' => 'invalid regions',
+                'message' => 'regions: The value is case sensitive',
+                'regions' => $supported_regions);
+                return $ApiHelper->SuccessorFail(400,$array,true);
+            }
             $filtered = $ApiHelper->searchMulti($filtered_country,'sub-region',$region);
         }else{
             $filtered = $filtered_country;

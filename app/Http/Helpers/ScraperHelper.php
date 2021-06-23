@@ -1268,6 +1268,32 @@ class ScraperHelper
         $cacheUpdater->Mobility_apple_trends();
     }
 
+    static public function TherapeuticsApi()
+    {
+        $scraper_data = array(
+            'cache_key' => 'temp.therapeutics',
+            'path' => 'therapeutics.csv',
+            'hasHeader' => true,
+            'date'  => 'Ymd',
+            'website' => 'https://www.raps.org/RAPS/media/news-images/data/{{date}}-tx-tracker-Craven.csv',
+            'type'  => 'csv',
+        );
+
+        try {
+            $date = now();
+            $format = date_format($date,$scraper_data['date']);
+            $getData = true;
+            $scraper = new ScraperHelper;
+
+            while ($getData) {
+                $resp = $scraper->curlUrl($scraper_data['website']);
+                dd($resp);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+
 
 
 
@@ -1536,22 +1562,36 @@ class ScraperHelper
         $curl = curl_init($site);
         curl_setopt($curl, CURLOPT_URL, $site);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        if($type == 'json'){
-            $headers = array(
-                'Accept: application/json',
-            );
-            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+        switch ($type) {
+            case 'json':
+                $headers = array(
+                    'Accept: application/json',
+                );
+                curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+                break;
+            case 'raps':
+                curl_setopt($curl, CURLOPT_HEADER, 1);
+                break;
+
+            default:
+                # code...
+                break;
         }
+
         if($ssl){
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         }
-        // //for debug only!
-        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
         $resp = curl_exec($curl);
+        if($type == 'raps'){
+            $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+            $header = substr($resp, 0, $header_size);
+            // dd($resp);
+            $body = substr($resp, $header_size);
+        }
+        // dd($resp);
         curl_close($curl);
         return $resp;
     }

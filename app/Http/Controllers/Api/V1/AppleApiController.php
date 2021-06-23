@@ -9,20 +9,12 @@ use Illuminate\Http\Request;
 class AppleApiController extends Controller
 {
     // https://github.com/ActiveConclusion/COVID19_mobility
-    public function appleMobility(Request $request)
+    public function appleMobility(Request $request,$country,$region = null)
     {
-        $request->validate([
-            'country' => 'required',
-            'region' => 'sometimes|nullable',
-        ]);
 
-        $country = $request->input('country');
-        $region = $request->input('region');
         $cacheKey = 'prod.mobility.apple';
 
         $response = ApiHelper::apple_mobility($cacheKey,$country,$region);
-        dd($response);
-
 
         return response()->json($response);
     }

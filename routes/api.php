@@ -84,7 +84,7 @@ Route::group(['middleware' => 'json.response'],function () {
             //mobility API
              Route::group(['as' => 'mobility.'], function () {
                  Route::get('/apple', 'AppleApiController@appleCountries')->name('get');
-                 Route::get('/apple/{country}', 'AppleApiController@appleMobility')->name('get');
+                 Route::get('/apple/{country}/{region?}', 'AppleApiController@appleMobility')->name('data');
              });
         });
 
