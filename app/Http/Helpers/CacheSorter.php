@@ -659,6 +659,23 @@ class CacheSorter
         return $array;
     }
 
+    static public function therapeutics($data)
+    {
+        $array = [];
+        foreach($data[0] as $data_){
+            $array[] = array(
+                'medication_class' => $data_['Medication class'],
+                'generic_name' => $data_['Trade name (generic name)'],
+                'details' => $data_['Study Design & Details'],
+                'Developer/Researcher' => $data_['Developer/Researcher'],
+                'Sponsor' => $data_['Sponsor'],
+                'trial_phase' => $data_['Trial Phase'],
+                'last_update' => $data_['Last update'],
+            );
+        }
+        return $array;
+    }
+
 
 
 

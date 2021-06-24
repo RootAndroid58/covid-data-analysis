@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="css/font-flaticon.css">
     <link rel="stylesheet" href="css/css-aos.css">
     <link rel="stylesheet" href="css/css-style.css">
+    @livewireStyles
     @yield('style')
 </head>
 
@@ -572,6 +573,7 @@
         })
     </script>
     @yield('scripts')
+    @livewireScripts
 </body>
 
 </html>

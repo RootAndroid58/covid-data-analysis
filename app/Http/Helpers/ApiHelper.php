@@ -354,6 +354,13 @@ class ApiHelper
 
         return $ApiHelper->SuccessorFail(200,$data,true);
     }
+    static public function TherapeuticsApi($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'scraper:raps');
+
+        return $ApiHelper->SuccessorFail(200,$data,true);
+    }
 
 
 

@@ -40,7 +40,7 @@ class MobilityStarter extends Command
     public function handle()
     {
         $this->info('scraper:apple');
-        // $this->call('scraper:apple');
+        $this->call('scraper:apple');
         return 0;
     }
 }

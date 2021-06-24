@@ -40,7 +40,8 @@ class Mobility_Apple extends Command
     {
         $this->info('starting Apple Mobility report');
         $data = ScraperHelper::apple_mobility();
-        $data = ScraperHelper::apple_mobility_trends();
+        $this->info('starting Apple Mobility trends');
+        $data1 = ScraperHelper::apple_mobility_trends();
         return 0;
     }
 }

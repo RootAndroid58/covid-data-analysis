@@ -509,6 +509,21 @@ class cacheUpdater
         return true;
     }
 
+    static public function therapeutics()
+    {
+        $data = array(
+            ['cache' => 'temp.therapeutics','prod' => 'prod.therapeutics'],
+        );
+
+        $cacheupdater = new cacheUpdater;
+        $raw_therapeutics = $cacheupdater->getCache($data[0]['cache'],'scraper:raps');
+
+        $CacheSorter = new CacheSorter;
+        $therapeutics = $CacheSorter->therapeutics($raw_therapeutics);
+
+        Cache::tags(['prod','prod.raps'])->put($data[0]['prod'],$therapeutics, now()->addDays(1));
+    }
+
 
 
 

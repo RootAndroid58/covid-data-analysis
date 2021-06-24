@@ -1276,7 +1276,7 @@ class ScraperHelper
             'hasHeader' => true,
             'date'  => 'Ymd',
             'website' => 'https://www.raps.org/RAPS/media/news-images/data/{{date}}-tx-tracker-Craven.csv',
-            'type'  => 'csv',
+            'type'  => 'raps',
         );
 
         try {
@@ -1286,12 +1286,41 @@ class ScraperHelper
             $scraper = new ScraperHelper;
 
             while ($getData) {
-                $resp = $scraper->curlUrl($scraper_data['website']);
-                dd($resp);
+                $url = str_replace("{{date}}",$format,$scraper_data['website']);
+                $resp = $scraper->curlUrl($url,$scraper_data['type']);
+                if($resp == false){
+                    $format --;
+                }else{
+                    Storage::disk('cron_temp')->put($scraper_data['path'], $resp);
+
+                    $array =  $scraper->csvtoarray($scraper_data,true);
+                    $array = array_chunk($array,5000);
+
+                    Cache::tags(['temp','temp.mobility','temp.mobility.apple'])->put($scraper_data['cache_key'],$array, now()->addDays(2));
+
+                    $getData = false;
+                }
             }
         } catch (\Throwable $th) {
-            //throw $th;
+            throw $th;
         }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->therapeutics();
+
+    }
+
+    static public function VaccineCoverageData()
+    {
+        //https://covid.ourworldindata.org/data/vaccinations/vaccinations.csv
+    }
+    static public function NYT()
+    {
+        //https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties-recent.csv
+        //https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv
+        //https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv
+        //https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv
+
+        // include 4 csv from link https://github.com/nytimes/covid-19-data/tree/master/rolling-averages
     }
 
 
@@ -1575,7 +1604,7 @@ class ScraperHelper
                 break;
 
             default:
-                # code...
+
                 break;
         }
 
@@ -1588,8 +1617,20 @@ class ScraperHelper
         if($type == 'raps'){
             $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
             $header = substr($resp, 0, $header_size);
-            // dd($resp);
+            $output = explode("\n", rtrim($header));
+            $header_ = [];
+            foreach($output as $head){
+                $middle = explode(":",$head,2);
+                if ( !isset($middle[1]) ) { $middle[1] = null; }
+
+                $header_[trim($middle[0])] = trim($middle[1]);
+            }
+            if(preg_match("/html/i", $header_['content-type'])) {
+                return false;
+            }
+
             $body = substr($resp, $header_size);
+            return $body;
         }
         // dd($resp);
         curl_close($curl);
