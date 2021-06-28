@@ -38,8 +38,14 @@ class scraper_covid extends Command
      */
     public function handle()
     {
-        $this->info('scraping covid:worldometers');
-        Artisan::call('covid:worldometers');
+        $start = microtime(true);
+        $this->info("starting covid:worldometers scraper\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        $this->call('covid:worldometers');
+        $this->info("completed covid:worldometers scraper\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
+        $this->info("starting covid:historical scraper\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        $this->call('covid:historical');
+        $this->info("completed covid:historical scraper\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
+
         return 0;
     }
 }

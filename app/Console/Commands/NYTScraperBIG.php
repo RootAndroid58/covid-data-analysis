@@ -2,25 +2,24 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Helpers\ScraperHelper;
 use Illuminate\Console\Command;
-use Illuminated\Console\WithoutOverlapping;
 
-class MobilityStarter extends Command
+class NYTScraperBIG extends Command
 {
-    use WithoutOverlapping;
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'scraper:mobility';
+    protected $signature = 'scraper:nyt-big';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Starts Scraping All mobility Commands';
+    protected $description = 'New York Times covid Data Scraper';
 
     /**
      * Create a new command instance.
@@ -39,8 +38,9 @@ class MobilityStarter extends Command
      */
     public function handle()
     {
-        $this->info('scraper:apple');
-        $this->call('scraper:apple');
+        $this->info('Starting NYT default scraper'.memory_get_peak_usage(). "\t" . memory_get_usage());
+        ScraperHelper::NYT_BIG();
+        $this->info('completed NYT default scraper'.memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }

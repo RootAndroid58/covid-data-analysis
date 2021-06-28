@@ -38,7 +38,10 @@ class Gov_UK extends Command
      */
     public function handle()
     {
-        $data = ScraperHelper::Gov_UK();
+        $start = microtime(true);
+        $this->info("starting Gov_UK scraper\t\t\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        ScraperHelper::Gov_UK();
+        $this->info("completed Gov_UK scraper\t\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }

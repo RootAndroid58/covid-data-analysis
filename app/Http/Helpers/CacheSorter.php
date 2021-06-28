@@ -2,10 +2,6 @@
 
 namespace App\Http\Helpers;
 
-use App\Http\Helpers\ApiHelper;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Cache;
-use Symfony\Component\VarDumper\Cloner\Data;
 
 class CacheSorter
 {
@@ -20,9 +16,9 @@ class CacheSorter
                 $yesterday2_key = $sort->search($yesterday2,$today[$i]['country'],'country');
 
                 $sorted_all[] = $sort->worldometer_sort($today[$i],$yesterday[$yesterday_key],$yesterday2[$yesterday2_key]);
+                unset($yesterday2_key,$yesterday_key);
             }
         }
-        Cache::tags(['prod','prod.worldometers'])->put('worldometer', $sorted_all, now()->addMinutes(30));
 
         return $sorted_all;
     }
@@ -51,13 +47,14 @@ class CacheSorter
         for ($i=0; $i < count($continents_keys); $i++) {
             $continents[$i] = $data[$continents_keys[$i]];
         }
-        unset($filter_data[$world_key]);
+        unset($filter_data[$world_key],$data,$world_key,$continents_keys);
         $filter_data = array_values($filter_data);
 
         $response = array();
         foreach($continents as $continent){
             $response[] = $sort->worldometer_continent_sort($continent,$filter_data);
         }
+        unset($continent,$filter_data);
 
         return $response;
     }
@@ -66,7 +63,7 @@ class CacheSorter
         $sort = new CacheSorter;
         $continents_keys = array();
         $world_key = $sort->search($data,'World','country');
-        $continents = array();
+
         $find = array(
             'North America',
             'Asia',
@@ -82,10 +79,7 @@ class CacheSorter
         foreach($continents_keys as $key){
             unset($filter_data[$key]);
         }
-        for ($i=0; $i < count($continents_keys); $i++) {
-            $continents[$i] = $data[$continents_keys[$i]];
-        }
-        unset($filter_data[$world_key]);
+        unset($filter_data[$world_key],$continents_keys,$data);
         $filter_data = array_values($filter_data);
 
         return $filter_data;
@@ -101,29 +95,26 @@ class CacheSorter
                 $yesterday_key = $sort->search($yesterday,$today[$i]['state'],'state');
 
                 $sorted_all[] = $sort->worldometer_state_sort($today[$i],$yesterday[$yesterday_key]);
+                unset($yesterday_key);
             }
         }
-
-        Cache::tags(['prod','prod.worldometers'])->put('worldometer.states', $sorted_all, now()->addMinutes(30));
-        Cache::tags('temp.worldometers.states')->flush();
 
         return $sorted_all;
     }
 
-    static public function historical($array,$array1,$array2 ,$search_key)
+    static public function historical($cases,$deaths,$recovered ,$search_key)
     {
         $sort = new CacheSorter;
         $data = array();
-        for ($i=0; $i < max(count($array),count($array1),count($array2)); $i++) {
+        for ($i=0; $i < max(count($cases),count($deaths),count($recovered)); $i++) {
 
-            $app = $array[$i];
-            $search_key_app1 = $sort->search($array1,$app['Country/Region'],'Country/Region');
-            $search_key_app2 = $sort->search($array2,$app['Country/Region'],'Country/Region');
+            $app = $cases[$i];
+            $search_key_app1 = $sort->search($deaths,$app['Country/Region'],'Country/Region');
+            $search_key_app2 = $sort->search($recovered,$app['Country/Region'],'Country/Region');
 
-            $data[] = $sort->hostorical_sort($array[$i],$array1[$search_key_app1],$array2[$search_key_app2],$search_key);
+            $data[] = $sort->hostorical_sort($cases[$i],$deaths[$search_key_app1],$recovered[$search_key_app2],$search_key);
         }
-        Cache::tags('prod','prod.historical')->put('historical_all',$data);
-        Cache::tags('temp.historical')->flush();
+
         return $data;
     }
 
@@ -652,11 +643,9 @@ class CacheSorter
 
     static public function mobility($data)
     {
-        $array = array(
+        return array(
             'pages' => $data
         );
-
-        return $array;
     }
 
     static public function therapeutics($data)
@@ -674,6 +663,17 @@ class CacheSorter
             );
         }
         return $array;
+    }
+
+    static public function nyt_big($data)
+    {
+        $all_count = count(array_merge(...$data));
+        return array(
+            'total' => $all_count,
+            'per_page' => 500000,
+            'total_pages' => count($data),
+            'pages' => $data,
+        );
     }
 
 
@@ -715,6 +715,17 @@ class CacheSorter
         if(isset($find)){
             foreach ($array as $key => $val) {
                 if ($val === $find[$search] || strcasecmp($val,$find[$search]) == 0) {
+                    return $key;
+                }
+            }
+        }
+        return null;
+    }
+    public function search_by_find($array,$find,$search)
+    {
+        if(isset($find)){
+            foreach ($array as $key => $val) {
+                if ($val[$find] === $search || strcasecmp($val[$find],$search) == 0) {
                     return $key;
                 }
             }

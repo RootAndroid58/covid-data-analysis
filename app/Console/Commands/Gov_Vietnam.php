@@ -38,7 +38,10 @@ class Gov_Vietnam extends Command
      */
     public function handle()
     {
-        $data = ScraperHelper::Gov_Vietnam();
+        $start = microtime(true);
+        $this->info("starting Gov_Vietnam scraper\t\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        ScraperHelper::Gov_Vietnam();
+        $this->info("completed Gov_Vietnam scraper\t\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }

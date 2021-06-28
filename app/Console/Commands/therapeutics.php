@@ -38,7 +38,10 @@ class therapeutics extends Command
      */
     public function handle()
     {
-        $data = ScraperHelper::TherapeuticsApi();
+        $start = microtime(true);
+        $this->info("starting TherapeuticsApi scraper\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        ScraperHelper::TherapeuticsApi();
+        $this->info("completed TherapeuticsApi scraper\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }

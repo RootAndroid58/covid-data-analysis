@@ -75,18 +75,35 @@ Route::group(['middleware' => 'json.response'],function () {
 
             Route::get('all/', 'worldometersApiController@getAll')->name('all');
             Route::get('states/', 'worldometersApiController@getStates')->name('states');
-            Route::get('continents/', 'worldometersApiController@getcontinents')->name('continents');
-            Route::get('countries/', 'worldometersApiController@getcountries')->name('countries');
+            // Route::get('continents/', 'worldometersApiController@getcontinents')->name('continents');
+            // Route::get('countries/', 'worldometersApiController@getcountries')->name('countries');
 
             Route::get('historical/', 'JHUCSSEApiController@historical')->name('historical');
             Route::get('historical/{country}', 'JHUCSSEApiController@historicalbyCountry')->name('historical.byCountry');
 
             //mobility API
-            Route::group(['as' => 'mobility.'], function () {
-                Route::get('/apple', 'AppleApiController@appleCountries')->name('get');
-                Route::get('/apple/{country}/{region?}', 'AppleApiController@appleMobility')->name('data');
+            Route::group(['prefix' => 'apple','as' => 'mobility.'], function () {
+                Route::get('country', 'AppleApiController@appleCountries')->name('get');
+                Route::get('country/{country}/{region?}', 'AppleApiController@appleMobility')->name('data');
+                Route::get('us','AppleApiController@MobilityUS_states')->name('us');
+                Route::get('us/{state}/{county?}','AppleApiController@MobilityUS')->name('us');
+                Route::get("trends", 'AppleApiController@trends_regions')->name('trends');
+                Route::get("trends/{region}", 'AppleApiController@trends')->name('trends.region');
             });
+
             Route::get('/therapeutics', 'TherapeuticsApiController@index')->name('therapeutics');
+
+            Route::group(['prefix' => 'vaccine','as' => 'vaccine'], function(){
+                Route::get('','VaccineApiController@vaccine_country')->name('country');
+                Route::get('/{vaccine}','VaccineApiController@vaccine')->name('country');
+            });
+            Route::group(['prefix' => 'nyt','as' => 'nyt'], function(){
+
+                Route::get('search/{type?}','NYTApiController@search')->name('default');
+                Route::get('default','NYTApiController@nyt_default')->name('default');
+                Route::get('avarage','NYTApiController@nyt_average')->name('avarage');
+            });
+
 
         });
 

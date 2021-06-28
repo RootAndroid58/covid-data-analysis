@@ -40,51 +40,24 @@ class Gov_command extends Command
      */
     public function handle()
     {
-        $this->info('covid:gov-austria');
+        $start = microtime(true);
+        $this->info("starting scraper:government scraper\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
         $this->call('covid:gov-austria');
-
-        $this->info('covid:gov-canada');
         $this->call('covid:gov-canada');
-
-        $this->info('covid:gov-colombia');
         $this->call('covid:gov-colombia');
-
-        $this->info('covid:gov-germany');
         $this->call('covid:gov-germany');
-
-        $this->info('covid:gov-india');
         $this->call('covid:gov-india');
-
-        $this->info('covid:gov-indo');
         $this->call('covid:gov-indo');
-
-        $this->info('covid:gov-israel');
         $this->call('covid:gov-israel');
-
-        $this->info('covid:gov-italy');
         $this->call('covid:gov-italy');
-
-        $this->info('covid:gov-nz');
         $this->call('covid:gov-nz');
-
-        $this->info('covid:gov-nigeria');
         $this->call('covid:gov-nigeria');
-
-        $this->info('covid:gov-southafrica');
         $this->call('covid:gov-southafrica');
-
-        $this->info('covid:gov-southkorea');
         $this->call('covid:gov-southkorea');
-
-        $this->info('covid:gov-switzerland');
         $this->call('covid:gov-switzerland');
-
-        $this->info('covid:gov-uk');
         $this->call('covid:gov-uk');
-
-        $this->info('covid:gov-vietnam');
         $this->call('covid:gov-vietnam');
-
+        $this->info("completed scraper:government scraper\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }

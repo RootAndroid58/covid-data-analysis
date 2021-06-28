@@ -297,7 +297,6 @@ class ApiHelper
     {
         $ApiHelper = new ApiHelper;
         $data = $ApiHelper->getCache($cacheKey,'scraper:apple');
-        $countries = $ApiHelper->apple_mobility_country('prod.mobility.apple.country');
 
         for ($i=0; $i < count($data['pages']); $i++) {
             $filtered_country[] = $ApiHelper->searchMulti($data['pages'][$i],'country',$country);
@@ -305,6 +304,7 @@ class ApiHelper
         $filtered_country = array_merge(...$filtered_country);
 
         if(count($filtered_country) == 0){
+            $countries = $ApiHelper->apple_mobility_country('prod.mobility.apple.country');
             $array = array(
                 'error' => 'invalid country',
                 'message' => 'country: The value is case sensitive',
@@ -346,6 +346,58 @@ class ApiHelper
         return $ApiHelper->SuccessorFail(200,$finilize,true);
 
     }
+    static public function apple_mobility_us($cacheKey,$state,$region)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'scraper:apple');
+        for ($i=0; $i < count($data['pages']); $i++) {
+            $filtered_states[] = $ApiHelper->searchMulti($data['pages'][$i],'state',$state);
+        }
+        $filtered_states = array_merge(...$filtered_states);
+
+        if(count($filtered_states) == 0){
+            $state_data = $ApiHelper->apple_mobility_country('prod.mobility.apple_us.states');
+            $array = array(
+                'error' => 'invalid state',
+                'message' => 'state: The value is case sensitive',
+                'states' => $state_data['meta']
+            );
+            return $ApiHelper->SuccessorFail(400,$array,true);
+        }
+
+        if($region !== null){
+            $cacheUpdater = new cacheUpdater;
+            $supported_regions = $cacheUpdater->chunkSearch(array_chunk($filtered_states,5000),'county_and_city');
+            $regions_ = false;
+            foreach($supported_regions as $search_regions){
+                if(strcasecmp($search_regions,$region) == 0){
+                    $regions_ = true;
+                    break;
+                }
+            }
+            if(!$regions_){
+                $array = array('error' => 'invalid regions',
+                'message' => 'regions: The value is case sensitive',
+                'regions' => $supported_regions);
+                return $ApiHelper->SuccessorFail(400,$array,true);
+            }
+            $filtered = $ApiHelper->searchMulti($filtered_states,'county_and_city',$region);
+        }else{
+            $filtered = $filtered_states;
+        }
+
+        $newData = array_chunk($filtered,5000);
+
+        $finilize = array(
+            'total' => count($filtered),
+            'per_page' => 5000,
+            'total_pages' => count($newData),
+            'pages' => $newData,
+        );
+
+        return $ApiHelper->SuccessorFail(200,$finilize,true);
+
+    }
 
     static public function apple_mobility_country($cacheKey)
     {
@@ -354,6 +406,36 @@ class ApiHelper
 
         return $ApiHelper->SuccessorFail(200,$data,true);
     }
+
+    static public function apple_trends($cacheKey,$region)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'scraper:apple');
+
+        for ($i=0; $i < count($data['pages']); $i++) {
+            $filtered[] = $ApiHelper->searchMulti($data['pages'][$i],'region',$region);
+        }
+        $filtered = array_merge(...$filtered);
+
+        $newData = array_chunk($filtered,5000);
+
+        $finilize = array(
+            'total' => count($filtered),
+            'per_page' => 5000,
+            'total_pages' => count($newData),
+            'pages' => $newData,
+        );
+
+        return $ApiHelper->SuccessorFail(200,$finilize,true);
+    }
+    static public function apple_trends_region($cacheKey)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'scraper:apple');
+
+        return $ApiHelper->SuccessorFail(200,$data,true);
+    }
+
     static public function TherapeuticsApi($cacheKey)
     {
         $ApiHelper = new ApiHelper;
@@ -361,6 +443,123 @@ class ApiHelper
 
         return $ApiHelper->SuccessorFail(200,$data,true);
     }
+
+
+    static public function vaccineAPI($cacheKey,$country)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,'scraper:vaccine');
+
+        for ($i=0; $i < count($data['pages']); $i++) {
+            $filtered[] = $ApiHelper->searchMulti($data['pages'][$i],'location',$country);
+        }
+        $filtered = array_merge(...$filtered);
+
+        $newData = array_chunk($filtered,5000);
+
+        $finilize = array(
+            'total' => count($filtered),
+            'per_page' => 5000,
+            'total_pages' => count($newData),
+            'pages' => $newData,
+        );
+        unset($filtered,$data);
+
+        return $ApiHelper->SuccessorFail(200,$finilize,true);
+    }
+
+    static public function NYT_complete($cacheKey,$call,$field,$search,$county)
+    {
+        $ApiHelper = new ApiHelper;
+        $data = $ApiHelper->getCache($cacheKey,$call);
+
+        // dd($data['pages'][0]);
+        if($search !== null){
+            for ($i=0; $i < count($data['pages']); $i++) {
+                $filtered[] = $ApiHelper->searchMulti($data['pages'][$i],$field,$search);
+            }
+            $filtered = array_merge(...$filtered);
+
+            if(count($filtered) == 0){
+                $state = $ApiHelper->getCache($cacheKey.".states",$call);
+                $array = array(
+                    'error' => 'cannot find any state',
+                    'supported' => $state
+                );
+                return $ApiHelper->SuccessorFail(400,$array);
+
+            }
+
+            $newData = array_chunk($filtered,5000);
+            unset($data);
+            if($cacheKey != 'prod.NYT.avarage.us' && $cacheKey != 'prod.NYT.us' && $county !== null){
+                unset($filtered);
+                for ($i=0; $i < count($newData); $i++) {
+                    $filtered[] = $ApiHelper->searchMulti($newData[$i],'county',$county);
+                }
+                $filtered = array_merge(...$filtered);
+                $newData = array_chunk($filtered,5000);
+            }
+            $count = count($filtered);
+            unset($filtered);
+
+            $finilize = array(
+                'total' => $count,
+                'per_page' => 5000,
+                'total_pages' => count($newData),
+                'pages' => $newData,
+            );
+
+
+        }else{
+            $newData = array_merge(...$data['pages']);
+            $count = count($data['pages']);
+            unset($data);
+            $finilize = array(
+                'total' => count($newData),
+                'per_page' => 5000,
+                'total_pages' => $count,
+                'pages' => array_chunk($newData,5000),
+            );
+        }
+
+
+        return $ApiHelper->SuccessorFail(200,$finilize,true);
+    }
+
+    static public function NYT_search($cacheKey,$call,$state = null)
+    {
+        $ApiHelper = new ApiHelper;
+        if($cacheKey == 'prod.NYT.avarage.us' || $cacheKey == 'prod.NYT.us'){
+            return $ApiHelper->SuccessorFail(200,array('message' => 'There is no need for search for this type'));
+        }
+        // dd($cacheKey);
+        $data = $ApiHelper->getCache($cacheKey.".states",$call);
+
+        if($state !== null){
+            $data_complete = $ApiHelper->getCache($cacheKey,$call);
+
+            for ($i=0; $i < count($data_complete['pages']); $i++) {
+                $filtered[] = $ApiHelper->searchMulti($data_complete['pages'][$i],'state',$state);
+            }
+            $filtered = array_merge(...$filtered);
+
+            $data = collect($filtered)->unique('county')->pluck('county')->toArray();
+
+            $data = array('county' => $data);
+
+        }else{
+            $data = array('states' => $data);
+        }
+
+        $data = $ApiHelper->SuccessorFail(200,$data,true);
+
+        return $data;
+    }
+
+
+
+
 
 
 
@@ -461,7 +660,7 @@ class ApiHelper
     }
 
 
-    public function getCache($cache,$call)
+    static public function getCache($cache,$call)
     {
         $data = Cache::get($cache);
         if($data == null){

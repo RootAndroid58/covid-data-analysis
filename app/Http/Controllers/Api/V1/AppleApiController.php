@@ -30,4 +30,41 @@ class AppleApiController extends Controller
 
     }
 
+    public function MobilityUS_states(Request $request)
+    {
+        $cacheKey = 'prod.mobility.apple_us.states';
+
+        $response = ApiHelper::apple_mobility_country($cacheKey);
+
+        return response()->json($response);
+    }
+    public function MobilityUS(Request $request,$state,$county = null)
+    {
+        $cacheKey = 'prod.mobility.apple_us';
+
+        $response = ApiHelper::apple_mobility_us($cacheKey,$state,$county);
+
+        return response()->json($response);
+    }
+
+    public function trends_regions(Request $request)
+    {
+
+
+        $cacheKey = 'prod.mobility.appletrends.regions';
+
+        $response = ApiHelper::apple_trends_region($cacheKey);
+
+        return response()->json($response);
+    }
+
+    public function trends(Request $request,$region)
+    {
+        $cacheKey = 'prod.mobility.appletrends';
+
+        $response = ApiHelper::apple_trends($cacheKey,$region);
+
+        return response()->json($response);
+    }
+
 }

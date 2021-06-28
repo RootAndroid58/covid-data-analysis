@@ -38,7 +38,10 @@ class Gov_SouthAfrica extends Command
      */
     public function handle()
     {
-        $data = ScraperHelper::Gov_SouthAfrica();
+        $start = microtime(true);
+        $this->info("starting Gov_SouthAfrica scraper\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        ScraperHelper::Gov_SouthAfrica();
+        $this->info("completed Gov_SouthAfrica scraper\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }

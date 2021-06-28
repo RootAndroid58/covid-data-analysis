@@ -38,7 +38,10 @@ class Gov_Italy extends Command
      */
     public function handle()
     {
-        $data = ScraperHelper::Gov_Italy();
+        $start = microtime(true);
+        $this->info("starting Gov_Italy scraper\t\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        ScraperHelper::Gov_Italy();
+        $this->info("completed Gov_Italy scraper\t\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }

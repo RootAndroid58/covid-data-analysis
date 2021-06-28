@@ -38,10 +38,13 @@ class Mobility_Apple extends Command
      */
     public function handle()
     {
-        $this->info('starting Apple Mobility report');
-        $data = ScraperHelper::apple_mobility();
-        $this->info('starting Apple Mobility trends');
-        $data1 = ScraperHelper::apple_mobility_trends();
+        $start = microtime(true);
+        $this->info("starting Apple Mobility report \t" .round( microtime(true) - $start ,8)."s\t\t". memory_get_peak_usage()."\t".memory_get_usage() );
+        ScraperHelper::apple_mobility();
+        $this->info("completed Apple Mobility report\t".round( microtime(true) - $start ,8)."s\t". memory_get_peak_usage()."\t".memory_get_usage() );
+        $this->info("starting Apple Mobility trends \t".round( microtime(true) - $start ,8)."s\t". memory_get_peak_usage()."\t".memory_get_usage() );
+        ScraperHelper::apple_mobility_trends();
+        $this->info("completed Apple Mobility trends\t".round( microtime(true) - $start ,8). "s\t". memory_get_peak_usage()."\t".memory_get_usage() );
         return 0;
     }
 }

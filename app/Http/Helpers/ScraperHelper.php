@@ -12,7 +12,6 @@ use App\Models\Resource;
 use App\Models\SubCategory;
 use \SpreadsheetReader;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use ZanySoft\Zip\ZipManager;
@@ -35,31 +34,33 @@ class ScraperHelper
         $fields = array(
             'Service','Name','Contact','Comments'
         );
-        $data = array();
-        $data["country"] = "IN";
-        $data["country_key"] = "code";
-        $data["state"] = "MH";
-        $data["state_key"] = "state_code";
-        $data["city"] = "Nagpur";
-        $data["city_key"] = "name";
-        $data['path'] = "/INMHNagpur.csv";
-        $data['fields'] = array();
-        $data['fields'][0] = 'categary';
-        $data['fields'][1] = 'name';
-        $data['fields'][2] = 'phone_no';
-        $data['fields'][3] = 'details';
-        $data['hasHeader'] = true;
-        $data['model'] = 'Resource';
-        $data['modelRelationship'] = array();
-        $data['modelRelationship'][0] = "Category";
-        $data['website'] = "http://covidhelpnagpur.in/";
+        $data = array(
+            'country' => 'IN',
+            'country_key' => 'code',
+            'state' => 'MH',
+            'state_key' => 'state_code',
+            'city' => 'Nagpur',
+            'city_key' => 'name',
+            'path' => 'INMHNagpur.csv',
+            'fields' => array(
+                'categary','name','phone_no','details'
+            ),
+            'hasHeader' => true,
+            'model' => 'Resource',
+            'modelRelationship' => array('Category'),
+            'website' => 'http://covidhelpnagpur.in/',
+        );
 
-        $update = new ScraperHelper;
-        $resp = $update->curlUrl("http://covidhelpnagpur.in/");
+        $scraper = new ScraperHelper;
+        try {
 
-        $dom = HtmlDomParser::str_get_html($resp);
+            $resp = $scraper->curlUrl("http://covidhelpnagpur.in/");
+
+            $dom = HtmlDomParser::str_get_html($resp);
+            unset($resp);
 
             $element = $dom->find('#pool > tr');
+            unset($dom);
 
             $header = '';
             foreach ($fields as $value) {
@@ -73,107 +74,88 @@ class ScraperHelper
                 $body .=  "\n";
             }
             $csvfile = $header  . $body;
-            try {
-                Storage::disk('cron_temp')->put('INMHNagpur.csv', $csvfile);
+            unset($header,$body);
 
-                $data['status'] = $update->UpdateViaCSV('Resource',$data);
+            Storage::disk('cron_temp')->put('INMHNagpur.csv', $csvfile);
+            unset($csvfile);
+
+            $scraper->UpdateViaCSV('Resource',$data);
 
            } catch (\Exception $e) {
 
                throw $e;
            }
-        return $data;
+        return 0;
     }
 
     static public function COVID_worldometers()
     {
         $fields = array('index', 'country', 'cases', 'todayCases', 'deaths', 'todayDeaths', 'recovered', 'todayRecovered', 'active',
         'critical', 'casesPerOneMillion', 'deathsPerOneMillion', 'tests', 'testsPerOneMillion', 'population', 'continent', 'oneCasePerPeople', 'oneDeathPerPeople', 'oneTestPerPeople');
-            $scraper_data = array();
-            $scraper_data[] = array(
-                'cache_key' => 'temp.worldometers.today',
-                'path' => 'worldometers_today.csv',
-                'hasHeader' => true,
-                'website' => "https://www.worldometers.info/coronavirus/",
-                'fields' => $fields,
-            );
-            $scraper_data[] = array(
-                'cache_key' => 'temp.worldometers.yesterday',
-                'path' => 'worldometers_yesterday.csv',
-                'hasHeader' => true,
-                'website' => "https://www.worldometers.info/coronavirus/",
-                'fields' => $fields,
-            );
-            $scraper_data[]    = array(
-                'cache_key' => 'temp.worldometers.yesterday2',
-                'path' => 'worldometers_yesterday2.csv',
-                'hasHeader' => true,
-                'website' => "https://www.worldometers.info/coronavirus/",
-                'fields' => $fields,
-            );
-        $update = new ScraperHelper;
-        $resp = $update->curlUrl("https://www.worldometers.info/coronavirus/");
-        $dom = HtmlDomParser::str_get_html($resp);
-        // $usStates = HtmlDomParser::file_get_html("https://www.worldometers.info/coronavirus/country/us/");
-        // $header_element = $dom->find('#main_table_countries_today > thead > tr');
-        $header = '';
-        foreach($fields as $node){
-            $header .= '"'.str_replace(["\n",",",'&nbsp;'],['',"/","al "],$node). '",';
-        }
-
-        $data_element_today = $dom->findMulti('#main_table_countries_today > tbody:nth-child(2) > tr');
-        $csvFile_today = $header . "\n";
-        foreach($data_element_today as $node){
-            $data = '';
-            foreach($node->find('td')->text() as $td){
-                $data .= '"'.$td . '",';
-            }
-            $data .= "\n";
-            $csvFile_today .= $data;
-        }
-
-        $data_element_yesterday = $dom->findMulti('#main_table_countries_yesterday > tbody:nth-child(2) > tr');
-        $csvFile_yestarday = $header . "\n";
-        foreach($data_element_yesterday as $node){
-            $data = '';
-            foreach($node->find('td')->text() as $td){
-                $data .= '"' . $td . '",';
-            }
-            $data .= "\n";
-            $csvFile_yestarday .= $data;
-        }
-
-        $data_element_yesterday2 = $dom->findMulti('#main_table_countries_yesterday2 > tbody:nth-child(2) > tr');
-        $csvFile_yestarday2 = $header . "\n";
-        foreach($data_element_yesterday2 as $node){
-            $data = '';
-            foreach($node->find('td')->text() as $td){
-                $data .= '"' . $td . '",';
-            }
-            $data .= "\n";
-            $csvFile_yestarday2 .= $data;
-        }
+        $scraper_data = array();
+        $scraper_data[] = array(
+            'cache_key' => 'temp.worldometers.today',
+            'path' => 'worldometers_today.csv',
+            'hasHeader' => true,
+            'website' => "https://www.worldometers.info/coronavirus/",
+            'fields' => $fields,
+            'type' => 'html',
+            'find' => '#main_table_countries_today > tbody:nth-child(2) > tr',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.worldometers.yesterday',
+            'path' => 'worldometers_yesterday.csv',
+            'hasHeader' => true,
+            'website' => "https://www.worldometers.info/coronavirus/",
+            'fields' => $fields,
+            'type' => 'html',
+            'find' => '#main_table_countries_yesterday > tbody:nth-child(2) > tr',
+        );
+        $scraper_data[]    = array(
+            'cache_key' => 'temp.worldometers.yesterday2',
+            'path' => 'worldometers_yesterday2.csv',
+            'hasHeader' => true,
+            'website' => "https://www.worldometers.info/coronavirus/",
+            'fields' => $fields,
+            'type' => 'html',
+            'find' => '#main_table_countries_yesterday2 > tbody:nth-child(2) > tr',
+        );
+        $scraper = new ScraperHelper;
         try {
-            Storage::disk('cron_temp')->put('worldometers_today.csv', $csvFile_today);
-            Storage::disk('cron_temp')->put('worldometers_yesterday.csv', $csvFile_yestarday);
-            Storage::disk('cron_temp')->put('worldometers_yesterday2.csv', $csvFile_yestarday2);
-            $scraper = new ScraperHelper;
-            foreach($scraper_data as $item){
-                $arrays = $scraper->csvtoarray($item);
-                Cache::forget($item['cache_key']);
-                $success = Cache::tags(['temp','temp.worldometers'])->put($item['cache_key'], $arrays, now()->addMinutes(10));
-                $values[] = $success ? true : false;
+            $resp = $scraper->curlUrl("https://www.worldometers.info/coronavirus/");
+            $dom = HtmlDomParser::str_get_html($resp);
+            unset($resp);
+
+            $header = '';
+            foreach($fields as $node){
+                $header .= '"'. $node. '",';
             }
-            $scraper_data['success'] = $values;
+            foreach ($scraper_data as $data) {
+                $data_element = $dom->findMulti($data['find']);
+                $all_data = '';
+                foreach($data_element as $node){
+                    foreach($node->find('td')->text() as $td){
+                        $all_data .= '"'.$td . '",';
+                    }
+                    $all_data .= "\n";
+                }
+                $csvFile = $header . "\n" . $all_data;
+                Storage::disk('cron_temp')->put($data['path'], $csvFile);
+                unset($csvFile,$all_data);
+
+                $array = $scraper->csvtoarray($data);
+                Cache::tags(['temp','temp.worldometers'])->put($data['cache_key'], $array, now()->addMinutes(10));
+                unset($array);
+
+            }
+            unset($header);
         } catch (\Throwable $e) {
             throw $e;
         }
         $sort = new cacheUpdater;
         $sort->worldometer();
-        $sort->COVID_worldometers_continent();
-        $sort->COVID_worldometers_countries();
 
-        return $scraper_data;
+        return 0;
     }
 
     static public function COVID_worldometers_usa()
@@ -188,6 +170,8 @@ class ScraperHelper
             'hasHeader' => true,
             'website' => "https://www.worldometers.info/coronavirus/country/us/",
             'fields' => $fields,
+            'type' => 'html',
+            'find' => '#usa_table_countries_today > tbody:nth-child(2) > tr',
         );
         $scraper_data[] = array(
             'cache_key' => 'temp.worldometers.states.yesterday',
@@ -195,55 +179,43 @@ class ScraperHelper
             'hasHeader' => true,
             'website' => "https://www.worldometers.info/coronavirus/country/us/",
             'fields' => $fields,
+            'type' => 'html',
+            'find' => '#usa_table_countries_yesterday > tbody:nth-child(2) > tr',
         );
-        $update = new ScraperHelper;
-        $resp = $update->curlUrl("https://www.worldometers.info/coronavirus/country/us/");
-        $dom = HtmlDomParser::str_get_html($resp);
-        $header = '';
-        foreach($fields as $node){
-            $header .= '"'.str_replace(["\n",",",'&nbsp;'],['',"/","al "],$node). '",';
-        }
-
-        $data_element_today = $dom->findMulti('#usa_table_countries_today > tbody:nth-child(2) > tr');
-
-        $csvFile_today = $header . "\n";
-        foreach($data_element_today as $node){
-            $data = '';
-            foreach($node->find('td')->text() as $td){
-                $data .= '"'.$td . '",';
-            }
-            $data .= "\n";
-            $csvFile_today .= $data;
-        }
-
-        $data_element_yesterday = $dom->findMulti('#usa_table_countries_yesterday > tbody:nth-child(2) > tr');
-        $csvFile_yestarday = $header . "\n";
-        foreach($data_element_yesterday as $node){
-            $data = '';
-            foreach($node->find('td')->text() as $td){
-                $data .= '"' . $td . '",';
-            }
-            $data .= "\n";
-            $csvFile_yestarday .= $data;
-        }
-
+        $scraper = new ScraperHelper;
         try {
-            Storage::disk('cron_temp')->put('worldometers_states_today.csv', $csvFile_today);
-            Storage::disk('cron_temp')->put('worldometers_states_yesterday.csv', $csvFile_yestarday);
-            $scraper = new ScraperHelper;
-            foreach($scraper_data as $item){
-                $arrays = $scraper->csvtoarray($item);
-                Cache::forget($item['cache_key']);
-                $success = Cache::tags(['temp','temp.worldometers.states'])->put($item['cache_key'], $arrays, now()->addMinutes(10));
-                $values[] = $success ? true : false;
+            $resp = $scraper->curlUrl("https://www.worldometers.info/coronavirus/country/us/");
+            $dom = HtmlDomParser::str_get_html($resp);
+            unset($resp);
+            $header = '';
+            foreach($fields as $node){
+                $header .= '"'. $node. '",';
             }
-            $scraper_data['success'] = $values;
+
+            foreach ($scraper_data as $data) {
+                $data_element = $dom->findMulti($data['find']);
+                $all_data = '';
+                foreach($data_element as $node){
+                    foreach($node->find('td')->text() as $td){
+                        $all_data .= '"'.$td . '",';
+                    }
+                    $all_data .= "\n";
+                }
+                $csvFile = $header . "\n" . $all_data;
+                Storage::disk('cron_temp')->put($data['path'], $csvFile);
+                unset($csvFile,$all_data);
+
+                $array = $scraper->csvtoarray($data);
+                Cache::tags(['temp','temp.worldometers'])->put($data['cache_key'], $array, now()->addMinutes(10));
+                unset($array);
+
+            }
         } catch (\Throwable $e) {
             throw $e;
         }
         $cacheUpdater = new cacheUpdater;
         $cacheUpdater->COVID_worldometers_usa();
-        return $scraper_data;
+        return 0;
     }
 
     static public function covid_historical()
@@ -269,26 +241,16 @@ class ScraperHelper
         );
 
         foreach($scraper_data as $data){
-            $update = new ScraperHelper;
-            $resp = $update->curlUrl($data['website']);
-
-            $csvfile = $resp;
+            $scraper = new ScraperHelper;
+            $csvfile = $scraper->curlUrl($data['website']);
 
             Storage::disk('cron_temp')->put($data['path'], $csvfile);
+            unset($csvfile);
 
+            $response = $scraper->csvtoarray($data,true);
 
-            $path = storage_path('cron_temp//'.$data['path']);
-            $header = new SpreadsheetReader($path);
-
-            foreach($header as $key => $row){
-                if($key == 0){
-                    $fields = $row;
-                }else break;
-            }
-            $scraper = new ScraperHelper;
-
-            $response = $scraper->csvtoarray(array('hasHeader'=> true , 'path'=> $data['path'], 'fields' => $fields));
             Cache::tags(['temp','temp.hestorical'])->put($data['cache_key'],$response, now()->addMinutes(10));
+            unset($response);
         }
         $sorted_data = cacheUpdater::historical();
 
@@ -420,51 +382,19 @@ class ScraperHelper
             ],
             'type'  => 'csv',
         );
-        // $scraper_data[]    = array(
-        //     'cache_key' => 'temp.gov_austria_hospital',
-        //     'path' => 'zips//getAustria//CovidFallzahlen.csv',
-        //     'hasHeader' => true,
-        //     'fields' => [
-        //         'date',
-        //         'totalTests',
-        //         'date_',
-        //         'FZHosp',
-        //         'FZICU',
-        //         'FZHospFree',
-        //         'FZICUFree',
-        //         'StateID',
-        //         'state',
-        //     ],
-        //     'type'  => 'csv',
-        // );
 
         try {
 
 
             $scraper = new ScraperHelper;
             foreach($scraper_data as $data){
-                // if($data['type'] == 'zip'){
-                //     File::cleanDirectory(storage_path('cron_temp//zips//getAustria'));
-                //     Storage::disk('cron_temp')->delete($data['Filename']);
-                //     $guzzle = new Client();
-                //     $response = $guzzle->get($data['website']);
-                //     $zipRaw = $response->getBody();
-                //     Storage::disk('cron_temp')->put($data['Filename'], $zipRaw);
-                //     $path = storage_path('cron_temp//'.$data['Filename']);
-                //     $manager = new ZipManager();
-                //     $manager->addZip( Zip::open($path) );
-                //     $zip = Zip::open(storage_path('cron_temp//'.$data['Filename']));
-                //     $zip->extract(storage_path('cron_temp//'.$data['path']));
-                //     $scraper_data[0]['success'] = true;
-                // }
+
                 if($data['type'] == 'json'){
                     $resp = $scraper->curlUrl($data['website']);
                     $array = json_decode($resp);
                 }
                 if($data['type'] == 'csv'){
-                    $resp = $scraper->curlUrl($data['website']);
-
-                    $csvfile = $resp;
+                    $csvfile = $scraper->curlUrl($data['website']);
 
                     Storage::disk('cron_temp')->put($data['path'], $csvfile);
 
@@ -475,6 +405,7 @@ class ScraperHelper
         } catch (\Throwable $th) {
             throw $th;
         }
+
 
         $cacheUpdater = new cacheUpdater;
         $cacheUpdater->gov_updater_Austria();
@@ -584,14 +515,14 @@ class ScraperHelper
         try {
             foreach($scraper_data as $data){
 
-                $resp = $scraper->curlUrl($data['website']);
-
-                $csvfile = $resp;
+                $csvfile = $scraper->curlUrl($data['website']);
 
                 Storage::disk('cron_temp')->put($data['path'], $csvfile);
+                unset($csvfile);
 
                 $array =  $scraper->csvtoarray($data);
                 Cache::tags(['temp','temp.gov','temp.gov.Canada'])->put($data['cache_key'],$array, now()->addMinutes(10));
+                unset($array);
             }
 
         } catch (\Throwable $th) {
@@ -644,16 +575,15 @@ class ScraperHelper
             $scraper = new ScraperHelper;
             foreach($scraper_data as $data){
 
-                $resp = $scraper->curlUrl($data['website']);
-                $dom = HtmlDomParser::str_get_html($resp);
-
-                $csvfile = $dom->html();
+                $csvfile = $scraper->curlUrl($data['website']);
 
                 Storage::disk('cron_temp')->put($data['path'], $csvfile);
+                unset($csvfile);
 
                 $array =  $scraper->csvtoarray($data);
                 Cache::tags(['temp','temp.gov','temp.gov.Colombia'])->put($data['cache_key'],$array, now()->addMinutes(10));
-                // dd(count($array));
+                unset($array);
+
             }
 
         } catch (\Throwable $th) {
@@ -687,15 +617,15 @@ class ScraperHelper
         try {
             $scraper = new ScraperHelper;
 
-            $resp = $scraper->curlUrl($scraper_data['website']);
-
-            $csvfile = $resp;
+            $csvfile = $scraper->curlUrl($scraper_data['website']);
 
             Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+            unset($csvfile);
 
             $array =  $scraper->csvtoarray($scraper_data);
 
             Cache::tags(['temp','temp.gov','temp.gov.Colombia','temp.bigdata'])->put($scraper_data['cache_key'],array_chunk($array,5000), now()->addHours(6));
+            unset($array);
 
 
         } catch (\Throwable $th) {
@@ -722,6 +652,7 @@ class ScraperHelper
         try {
             $resp = $scraper->curlUrl($scraper_data['website']);
             $dom = HtmlDomParser::str_get_html($resp);
+            unset($resp);
 
             $table = $dom->find('table > tbody');
             $data = '';
@@ -739,10 +670,12 @@ class ScraperHelper
             $csvfile = $header_ . "\n" . $data;
 
             Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+            unset($csvfile,$table,$data,$header_);
 
             $array =  $scraper->csvtoarray($scraper_data);
 
             Cache::tags(['temp','temp.gov','temp.gov.germany'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+            unset($array);
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -765,8 +698,10 @@ class ScraperHelper
             $scraper = new ScraperHelper;
             $resp = $scraper->curlUrl($scraper_data['website']);
             $data = json_decode($resp);
+            unset($resp);
 
             Cache::tags(['temp','temp.gov','temp.gov.india'])->put($scraper_data['cache_key'],$data, now()->addMinutes(10));
+            unset($data);
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -794,6 +729,7 @@ class ScraperHelper
         $resp = json_decode($resp);
 
         Cache::tags(['temp','temp.gov','temp.gov.israel'])->put($scraper_data['cache_key'],$resp, now()->addMinutes(10));
+        unset($resp);
 
         $cacheUpdater = new cacheUpdater;
         $cacheUpdater->gov_updater_israel();
@@ -823,8 +759,10 @@ class ScraperHelper
             foreach($scraper_data as $data){
                 $resp = $scraper->curlUrl($data['website']);
                 $array = json_decode($resp);
+                unset($resp);
 
                 Cache::tags(['temp','temp.gov','temp.gov.indonesia'])->put($data['cache_key'],$array, now()->addMinutes(10));
+                unset($array);
             }
         } catch (\Throwable $th) {
             throw $th;
@@ -854,15 +792,14 @@ class ScraperHelper
         try {
             $scraper = new ScraperHelper;
 
-            $resp = $scraper->curlUrl($scraper_data['website']);
-
-            $csvfile = $resp;
+            $csvfile = $scraper->curlUrl($scraper_data['website']);
 
             Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+            unset($csvfile);
 
             $array =  $scraper->csvtoarray($scraper_data);
             Cache::tags(['temp','temp.gov','temp.gov.Italy'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
-            // dd($array);
+            unset($array);
 
         } catch (\Throwable $th) {
             throw $th;
@@ -888,6 +825,7 @@ class ScraperHelper
         $scraper = new ScraperHelper;
         $resp = $scraper->curlUrl($scraper_data['website']);
         $dom = HtmlDomParser::str_get_html($resp);
+        unset($resp);
 
         $table = $dom->findMulti('table'); // [6]
         $header = '';
@@ -903,11 +841,14 @@ class ScraperHelper
             $data .= "\n";
         }
         $csvfile = $header . "\n" . $data;
+        unset($table,$data,$header);
 
         Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+        unset($csvfile);
 
         $array =  $scraper->csvtoarray($scraper_data);
         Cache::tags(['temp','temp.gov','temp.gov.newzealand'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+        unset($array);
         $cacheUpdater = new cacheUpdater;
         $cacheUpdater->gov_updater_NewZealand();
     }
@@ -935,6 +876,7 @@ class ScraperHelper
         $scraper = new ScraperHelper;
         $resp = $scraper->curlUrl($scraper_data['website']);
         $dom = HtmlDomParser::str_get_html($resp);
+        unset($resp);
 
         $table = $dom->find('#custom1 > tbody');
         $data = '';
@@ -944,13 +886,16 @@ class ScraperHelper
             }
             $data .= "\n";
         }
+        unset($table);
 
         $csvfile = $header . "\n" . $data;
 
         Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+        unset($csvfile,$header,$data);
 
         $array =  $scraper->csvtoarray($scraper_data);
         Cache::tags(['temp','temp.gov','temp.gov.nigeria'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+        unset($array);
 
         $cacheUpdater = new cacheUpdater;
         $cacheUpdater->gov_updater_Nigeria();
@@ -1017,14 +962,14 @@ class ScraperHelper
             $scraper = new ScraperHelper;
             foreach($scraper_data as $data){
 
-                $resp = $scraper->curlUrl($data['website']);
-
-                $csvfile = $resp;
+                $csvfile = $scraper->curlUrl($data['website']);
 
                 Storage::disk('cron_temp')->put($data['path'], $csvfile);
+                unset($csvfile);
 
                 $array =  $scraper->csvtoarray($data);
                 Cache::tags(['temp','temp.gov','temp.gov.south_africa'])->put($data['cache_key'],$array, now()->addMinutes(10));
+                unset($array);
             }
 
             $cacheUpdater = new cacheUpdater;
@@ -1054,6 +999,7 @@ class ScraperHelper
         $scraper = new ScraperHelper;
         $resp = $scraper->curlUrl($scraper_data['website']);
         $dom = HtmlDomParser::str_get_html($resp);
+        unset($resp);
 
         $table = $dom->find('table > tbody');
         $head = '';
@@ -1071,12 +1017,15 @@ class ScraperHelper
             $data .= "\n";
         }
         $csvfile = $head . "\n" . $data;
+        unset($head,$data,$table);
 
         Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+        unset($csvfile);
 
         $array =  $scraper->csvtoarray($scraper_data);
         Cache::tags(['temp','temp.gov','temp.gov.south_korea'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
-        // dd($array);
+        unset($array);
+
         $cacheUpdater = new cacheUpdater;
         $cacheUpdater->gov_updater_southkorea();
 
@@ -1099,16 +1048,16 @@ class ScraperHelper
         try {
             $scraper = new ScraperHelper;
 
-            $resp = $scraper->curlUrl($scraper_data['website']);
-
-            $csvfile = $resp;
+            $csvfile = $scraper->curlUrl($scraper_data['website']);
 
             Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+            unset($csvfile);
 
             $array =  $scraper->csvtoarray($scraper_data);
 
             $array = array_chunk($array,5000);
             Cache::tags(['temp','temp.gov','temp.gov.switzerland'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+            unset($array);
 
         } catch (\Throwable $th) {
             throw $th;
@@ -1144,8 +1093,10 @@ class ScraperHelper
                 }
                 if( !isset($response->pagination) || $response->pagination->next == null) $nextPage = false;
             }
+            unset($response,$client);
 
             Cache::tags(['temp','temp.gov','temp.gov.UK'])->put($scraper_data['cache_key'],$dataWithPages, now()->addMinutes(10));
+            unset($dataWithPages);
 
         } catch (\Throwable $th) {
             throw $th;
@@ -1173,12 +1124,13 @@ class ScraperHelper
             $scraper = new ScraperHelper;
             $resp = $scraper->curlUrl($scraper_data['website'],null,true);
             $dom = HtmlDomParser::str_get_html($resp);
+            unset($resp);
 
             $deaths = $dom->findOne('#portlet_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v > div > div.portlet-content-container > div > section.container > div:nth-child(2) > div:nth-child(2) > div > div.col-lg-12.d-none.d-lg-block > div > div:nth-child(2) > div.col.text-center.text-uppercase.text-danger-new1 > span')->text();
             $treated = $dom->findOne('#portlet_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v > div > div.portlet-content-container > div > section.container > div:nth-child(2) > div:nth-child(2) > div > div.col-lg-12.d-none.d-lg-block > div > div:nth-child(2) > div.col.text-center.text-uppercase.text-warning1 > span')->text();
             $recovered = $dom->findOne('#portlet_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v > div > div.portlet-content-container > div > section.container > div:nth-child(2) > div:nth-child(2) > div > div.col-lg-12.d-none.d-lg-block > div > div:nth-child(2) > div.col.text-center.text-uppercase.text-success > span')->text();
             $infected = $dom->findOne('#portlet_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v > div > div.portlet-content-container > div > section.container > div:nth-child(2) > div:nth-child(2) > div > div.col-lg-12.d-none.d-lg-block > div > div:nth-child(2) > div.col.text-center.text-uppercase.text-danger-new > span')->text();
-
+            unset($dom);
             $data = array(
                 'updatedAt' => Carbon::now()->timestamp,
                 'deaths' => str_replace('.',',',$deaths),
@@ -1187,8 +1139,10 @@ class ScraperHelper
                 'infected' => str_replace('.',',',$infected),
 
             );
+            unset($deaths,$treated,$recovered,$infected);
 
             Cache::tags(['temp','temp.gov','temp.gov.vietnam'])->put($scraper_data['cache_key'],$data, now()->addMinutes(10));
+            unset($data);
 
         } catch (\Throwable $th) {
             throw $th;
@@ -1219,16 +1173,16 @@ class ScraperHelper
             $scraper = new ScraperHelper;
             foreach($scraper_data as $data){
 
-                $resp = $scraper->curlUrl($data['website']);
-
-                $csvfile = $resp;
+                $csvfile = $scraper->curlUrl($data['website']);
 
                 Storage::disk('cron_temp')->put($data['path'], $csvfile);
+                unset($csvfile);
 
                 $array =  $scraper->csvtoarray($data,true);
                 $array = array_chunk($array,5000);
 
                 Cache::tags(['temp','temp.mobility','temp.mobility.apple'])->put($data['cache_key'],$array, now()->addDays(2));
+                unset($array);
             }
 
         } catch (\Throwable $th) {
@@ -1236,6 +1190,7 @@ class ScraperHelper
         }
         $cacheUpdater = new cacheUpdater;
         $cacheUpdater->Mobility_apple();
+        return 0;
     }
     static public function apple_mobility_trends()
     {
@@ -1250,22 +1205,23 @@ class ScraperHelper
         try {
             $scraper = new ScraperHelper;
 
-            $resp = $scraper->curlUrl($scraper_data['website']);
-
-            $csvfile = $resp;
+            $csvfile = $scraper->curlUrl($scraper_data['website']);
 
             Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+            unset($csvfile);
 
             $array =  $scraper->csvtoarray($scraper_data,true);
             $array = array_chunk($array,5000);
 
             Cache::tags(['temp','temp.mobility','temp.mobility.apple'])->put($scraper_data['cache_key'],$array, now()->addDays(2));
+            unset($array);
 
         } catch (\Throwable $th) {
             throw $th;
         }
         $cacheUpdater = new cacheUpdater;
         $cacheUpdater->Mobility_apple_trends();
+        return 0;
     }
 
     static public function TherapeuticsApi()
@@ -1292,12 +1248,13 @@ class ScraperHelper
                     $format --;
                 }else{
                     Storage::disk('cron_temp')->put($scraper_data['path'], $resp);
+                    unset($resp);
 
                     $array =  $scraper->csvtoarray($scraper_data,true);
                     $array = array_chunk($array,5000);
 
                     Cache::tags(['temp','temp.mobility','temp.mobility.apple'])->put($scraper_data['cache_key'],$array, now()->addDays(2));
-
+                    unset($array);
                     $getData = false;
                 }
             }
@@ -1311,16 +1268,238 @@ class ScraperHelper
 
     static public function VaccineCoverageData()
     {
-        //https://covid.ourworldindata.org/data/vaccinations/vaccinations.csv
+        $scraper_data = array(
+            'cache_key' => 'temp.VaccineCoverage',
+            'path' => 'VaccineCoverage.csv',
+            'hasHeader' => true,
+            'website' => 'https://covid.ourworldindata.org/data/vaccinations/vaccinations.csv',
+            'type'  => 'csv',
+        );
+
+        try {
+                $scraper = new ScraperHelper;
+
+                $csvfile = $scraper->curlUrl($scraper_data['website']);
+
+                Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+                unset($csvfile);
+
+                $array =  $scraper->csvtoarray($scraper_data,true);
+                $array = array_chunk($array,5000);
+
+                Cache::tags(['temp','temp.vaccine'])->put($scraper_data['cache_key'],$array, now()->addDays(2));
+                unset($array);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->VaccineCoverage();
+
     }
     static public function NYT()
     {
-        //https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties-recent.csv
-        //https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv
-        //https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv
-        //https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv
+        $scraper_data[] = array(
+            'cache_key' => 'temp.NYT.us-counties-recent',
+            'path' => 'us-counties-recent_NYT.csv',
+            'hasHeader' => true,
+            'website' => 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties-recent.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.NYT.us-counties',
+            'path' => 'us-counties_NYT.csv',
+            'hasHeader' => true,
+            'website' => 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.NYT.us-states',
+            'path' => 'us-states_NYT.csv',
+            'hasHeader' => true,
+            'website' => 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.NYT.us',
+            'path' => 'us_NYT.csv',
+            'hasHeader' => true,
+            'website' => 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv',
+            'type'  => 'csv',
+        );
 
-        // include 4 csv from link https://github.com/nytimes/covid-19-data/tree/master/rolling-averages
+        try {
+            $scraper = new ScraperHelper;
+            foreach($scraper_data as $data){
+
+                $csvfile = $scraper->curlUrl($data['website']);
+
+                Storage::disk('cron_temp')->put($data['path'], $csvfile);
+                unset($csvfile);
+
+                $array =  $scraper->csvtoarray($data,true);
+                $array = array_chunk($array,5000);
+
+                Cache::tags(['temp','temp.NYT'])->put($data['cache_key'],$array, now()->addDays(2));
+                unset($array);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->NYT();
+        return 0;
+    }
+
+    static public function NYT_1()
+    {
+        $scraper_data[] = array(
+            'cache_key' => 'temp.NYT.rolling-averages.us-counties-recent',
+            'path' => 'us-counties-recent_averages_NYT.csv',
+            'hasHeader' => true,
+            'website' => 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/rolling-averages/us-counties-recent.csv',
+            'type'  => 'csv',
+        );
+
+        $scraper_data[] = array(
+            'cache_key' => 'temp.NYT.rolling-averages.us-states',
+            'path' => 'us-states_averages_NYT.csv',
+            'hasHeader' => true,
+            'website' => 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/rolling-averages/us-states.csv',
+            'type'  => 'csv',
+        );
+        $scraper_data[] = array(
+            'cache_key' => 'temp.NYT.rolling-averages.us',
+            'path' => 'us_averages_NYT.csv',
+            'hasHeader' => true,
+            'website' => 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv',
+            'type'  => 'csv',
+        );
+        try {
+            $scraper = new ScraperHelper;
+            foreach($scraper_data as $data){
+
+                $csvfile = $scraper->curlUrl($data['website']);
+
+                Storage::disk('cron_temp')->put($data['path'], $csvfile);
+                unset($csvfile);
+
+                $array =  $scraper->csvtoarray($data,true);
+                $array = array_chunk($array,5000);
+
+                Cache::tags(['temp','temp.NYT','temp.NYT.avarages'])->put($data['cache_key'],$array, now()->addDays(2));
+                unset($array);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->NYT_1();
+        return 0;
+    }
+    static public function NYT_BIG()
+    {
+        $scraper_data = array(
+            'cache_key' => 'temp.NYT.rolling-averages.us-counties',
+            'path' => 'us-counties_averages_NYT.csv',
+            'hasHeader' => true,
+            'website' => 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/rolling-averages/us-counties.csv',
+            'type'  => 'csv',
+        );
+        try {
+            $scraper = new ScraperHelper;
+            $csvfile = $scraper->curlUrl($scraper_data['website']);
+
+            Storage::disk('cron_temp')->put($scraper_data['path'], $csvfile);
+            unset($csvfile);
+
+            $array =  $scraper->csvtoarray($scraper_data,true);
+            $total = count($array);
+
+            $array = array_chunk(array_chunk($array,5000),100);
+            $count = count($array);
+
+            extract($array,EXTR_PREFIX_ALL ,"data");
+            unset($array);
+
+            Cache::tags(['temp','temp.NYT','temp.NYT.avarages'])->put($scraper_data['cache_key'], $count, now()->addDays(2));
+            for ($i=0; $i < $count; $i++) {
+                $name = "data_$i";
+                Cache::tags(['temp','temp.NYT','temp.NYT.avarages'])->put($scraper_data['cache_key']."_$i", $$name, now()->addDays(2));
+                unset($$name);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        $cacheUpdater = new cacheUpdater;
+        $cacheUpdater->nyt_big($total,$count);
+        return 0;
+    }
+
+    static public function google_mobility()
+    {
+        $scraper_data = array(
+            'cache_key' => 'temp.google.files',
+            'path' => 'zips\\google',
+            'website' => 'https://www.gstatic.com/covid19/mobility/Region_Mobility_Report_CSVs.zip',
+            'type'  => 'zip',
+            'Filename'  => 'google.zip',
+            'success'   => false,
+        );
+        try {
+            File::deleteDirectory(storage_path('cron_temp//'.$scraper_data['path']));
+            Storage::disk('cron_temp')->delete($scraper_data['Filename']);
+            $guzzle = new Client();
+            $response = $guzzle->get($scraper_data['website']);
+            Storage::disk('cron_temp')->put($scraper_data['Filename'], $response->getBody());
+            $path = storage_path('cron_temp//'.$scraper_data['Filename']);
+            $manager = new ZipManager();
+            $manager->addZip( Zip::open($path) );
+            $zip = Zip::open(storage_path('cron_temp//'.$scraper_data['Filename']));
+            Cache::tags(['temp','temp.google'])->put($scraper_data['cache_key'], $zip->listFiles(), now()->addDays(2));
+            $zip->extract(storage_path('cron_temp//'.$scraper_data['path']));
+            $scraper_data['success'] = true;
+
+            unset($guzzle,$response);
+
+            foreach($zip->listFiles() as $file){
+                $name = explode('_',$file);
+                $cachekeys[] = "temp.google.$name[0].$name[1]";
+            }
+
+            Cache::tags(['temp','temp.google','temp.google.data'])->put('temp.google.cache', $cachekeys, now()->addDays(2));
+            return $zip->listFiles();
+
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+    }
+
+    static public function google_mobility_fun($cachekey)
+    {
+        $scraper = new ScraperHelper;
+        // dd($cachekey);
+
+        // foreach($cachekey as $cachekey){
+            $data = explode("_",$cachekey);
+            $cachekeys = "temp.google.$data[0].$data[1]";
+
+            // if( $cachekey == '2020_TZ_Region_Mobility_Report.csv'){
+            //     // dd( memory_get_usage());
+            //     return 0;
+            // }
+
+            $array =  $scraper->csvtoarray(array('hasHeader' => true, 'path' => "zips\\google\\".$cachekey),true);
+
+            $array = array_chunk($array,5000);
+
+            Cache::tags(['temp','temp.google','temp.google.data'])->put($cachekeys, $array, now()->addDays(2));
+            unset($array);
+            $return = cacheUpdater::google_mobility($cachekeys);
+        // }
+        return $return;
     }
 
 
@@ -1382,9 +1561,6 @@ class ScraperHelper
             $reader = new SpreadsheetReader($path);
             $insert = [];
 
-            $success = array();
-
-
             foreach ($reader as $key => $row) {
                 if ($hasHeader && $key == 0) {
                     continue;
@@ -1403,29 +1579,21 @@ class ScraperHelper
                     $insert[] = $tmp;
                 }
             }
+            unset($tmp,$reader);
 
             $for_insert = array_chunk($insert, 100);
+            unset($insert);
 
             foreach ($for_insert as $insert_item) {
 
                 $scraper = new ScraperHelper;
-                $success[] = $scraper->updateorinsert($model,$insert_item,$data);
+                $scraper->updateorinsert($model,$insert_item,$data);
             }
 
-            $rows  = count($insert);
-            $table = Str::plural($modelName);
-            $update = 0;
-            $insert = 0;
-            $sus = array();
-            foreach($success as $item){
-                $update = $update + $item['updates'];
-                $insert = $insert + $item['inserts'];
-                $sus[] = $item['success'];
-            }
 
             File::delete($path);
 
-            return array("success"=>$sus, 'rows' => $rows, 'table' => $table , "updates" => $update , 'new_data' => $insert);
+            return 0;
 
         } catch (\Exception $ex) {
 
@@ -1445,6 +1613,7 @@ class ScraperHelper
         }else $useDefaultHeader = true;
         try {
             $reader = new SpreadsheetReader($path);
+
             $insert = [];
 
             foreach ($reader as $key => $row) {
@@ -1469,11 +1638,12 @@ class ScraperHelper
                     $insert[] = $tmp;
                 }
             }
+            unset($tmp);
             // File::delete($path);
             return $insert;
 
         } catch (\Throwable $th) {
-            // throw $th;
+            throw $th;
         }
         return array();
 

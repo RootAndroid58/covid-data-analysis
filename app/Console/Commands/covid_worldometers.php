@@ -38,10 +38,13 @@ class covid_worldometers extends Command
      */
     public function handle()
     {
-        $data = ScraperHelper::COVID_worldometers();
-        $this->info("scraped and saved COVID_worldometers into cache of today:". ($data['success'][0] ? "success": "failed") ." ,yesterday:". ($data['success'][1] ? "success": "failed") ." ,yesterday2:". ($data['success'][2] ? "success": "failed"));
-        $data1 = ScraperHelper::COVID_worldometers_usa();
-        $this->info("scraped and saved COVID_worldometers into cache of today:". ($data1['success'][0] ? "success": "failed") ." ,yesterday:". ($data1['success'][1] ? "success": "failed"));
+        $start = microtime(true);
+        $this->info("starting COVID_worldometers scraper\t\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        ScraperHelper::COVID_worldometers();
+        $this->info("completed COVID_worldometers scraper\t\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
+        $this->info("starting COVID_worldometers_usa scraper\t\t".(microtime(true) - $start) . "\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        ScraperHelper::COVID_worldometers_usa();
+        $this->info("completed COVID_worldometers_usa scraper\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }

@@ -38,7 +38,10 @@ class Gov_India extends Command
      */
     public function handle()
     {
-        $data = ScraperHelper::Gov_India();
+        $start = microtime(true);
+        $this->info("starting Gov_India scraper\t\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        ScraperHelper::Gov_India();
+        $this->info("completed Gov_India scraper\t\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }

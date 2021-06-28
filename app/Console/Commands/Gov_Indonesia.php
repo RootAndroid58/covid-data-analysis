@@ -38,7 +38,10 @@ class Gov_Indonesia extends Command
      */
     public function handle()
     {
-        $data = ScraperHelper::Gov_Indonesia();
+        $start = microtime(true);
+        $this->info("starting Gov_Indonesia scraper\t\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        ScraperHelper::Gov_Indonesia();
+        $this->info("completed Gov_Indonesia scraper\t\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }
