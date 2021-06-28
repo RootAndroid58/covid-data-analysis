@@ -1440,7 +1440,7 @@ class ScraperHelper
     {
         $scraper_data = array(
             'cache_key' => 'temp.google.files',
-            'path' => 'zips\\google',
+            'path' => 'zips//google',
             'website' => 'https://www.gstatic.com/covid19/mobility/Region_Mobility_Report_CSVs.zip',
             'type'  => 'zip',
             'Filename'  => 'google.zip',
