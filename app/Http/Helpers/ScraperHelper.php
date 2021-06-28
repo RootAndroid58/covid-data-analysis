@@ -47,7 +47,7 @@ class ScraperHelper
             ),
             'hasHeader' => true,
             'model' => 'Resource',
-            'modelRelationship' => array('categories'),
+            'modelRelationship' => array('categories.subcatogary','country','state','city','subcats'),
             'website' => 'http://covidhelpnagpur.in/',
         );
 
@@ -1517,7 +1517,7 @@ class ScraperHelper
             //     return 0;
             // }
 
-            $array =  $scraper->csvtoarray(array('hasHeader' => true, 'path' => "zips\\google\\".$cachekey),true);
+            $array =  $scraper->csvtoarray(array('hasHeader' => true, 'path' => "zips//google//".$cachekey),true);
 
             $array = array_chunk($array,5000);
 
