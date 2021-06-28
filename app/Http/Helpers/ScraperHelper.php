@@ -47,7 +47,7 @@ class ScraperHelper
             ),
             'hasHeader' => true,
             'model' => 'Resource',
-            'modelRelationship' => array('Category'),
+            'modelRelationship' => array('categories'),
             'website' => 'http://covidhelpnagpur.in/',
         );
 
@@ -1582,6 +1582,7 @@ class ScraperHelper
             $fields = array_flip(array_filter($fields));
 
             $modelName = $data['model'];
+            $relation = $data['modelRelationship'];
             $model     = 'App\\Models\\' . $modelName;
 
             $reader = new SpreadsheetReader($path);
@@ -1613,7 +1614,7 @@ class ScraperHelper
             foreach ($for_insert as $insert_item) {
 
                 $scraper = new ScraperHelper;
-                $scraper->updateorinsert($model,$insert_item,$data);
+                $scraper->updateorinsert($model,$insert_item,$data,$relation);
             }
 
 
@@ -1706,7 +1707,7 @@ class ScraperHelper
         return array('category'=> $category , 'sub_category' => $sub_category);
     }
 
-    public function updateorinsert($model,  $insert_item,$data)
+    public function updateorinsert($model,  $insert_item,$data,$relation)
     {
         $new_updates = 0;
         $new_data = 0;
@@ -1743,7 +1744,7 @@ class ScraperHelper
                 Log::debug("There is no country for ".$data['website']." #pool id ");
                 continue;
             }
-            $updatedata = $model::updateOrCreate(
+            $updatedata = $model::with($relation)->updateOrCreate(
                 [
                     'name' => $name,
                     'country_id' => $location['country']->id,
