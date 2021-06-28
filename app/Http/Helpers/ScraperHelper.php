@@ -1452,9 +1452,9 @@ class ScraperHelper
             $guzzle = new Client();
             $response = $guzzle->get($scraper_data['website']);
             Storage::disk('cron_temp')->put($scraper_data['Filename'], $response->getBody());
-            $path = storage_path('cron_temp//'.$scraper_data['Filename']);
-            $manager = new ZipManager();
-            $manager->addZip( Zip::open($path) );
+            // $path = storage_path('cron_temp//'.$scraper_data['Filename']);
+            // $manager = new ZipManager();
+            // $manager->addZip( Zip::open($path) );
             $zip = Zip::open(storage_path('cron_temp//'.$scraper_data['Filename']));
             Cache::tags(['temp','temp.google'])->put($scraper_data['cache_key'], $zip->listFiles(), now()->addDays(2));
             $zip->extract(storage_path('cron_temp//'.$scraper_data['path']));
@@ -1475,6 +1475,32 @@ class ScraperHelper
             throw $th;
         }
 
+    }
+
+    static public function zip_download()
+    {
+        $scraper_data[] = array(
+            'cache_key' => 'temp.google.files',
+            'path' => 'zips//google',
+            'website' => 'https://www.gstatic.com/covid19/mobility/Region_Mobility_Report_CSVs.zip',
+            'type'  => 'zip',
+            'Filename'  => 'google.zip',
+            'success'   => false,
+        );
+
+        foreach ($scraper_data as $data) {
+            File::deleteDirectory(storage_path('cron_temp//'.$data['path']));
+            Storage::disk('cron_temp')->delete($data['Filename']);
+            $guzzle = new Client();
+            $response = $guzzle->get($data['website']);
+            Storage::disk('cron_temp')->put($data['Filename'], $response->getBody());
+            unset($guzzle,$response);
+            $zip = Zip::open(storage_path('cron_temp//'.$data['Filename']));
+            Cache::tags(['temp','temp.google'])->put($data['cache_key'], $zip->listFiles(), now()->addDays(2));
+            $zip->extract(storage_path('cron_temp//'.$data['path']));
+            unset($zip);
+        }
+        return 0;
     }
 
     static public function google_mobility_fun($cachekey)

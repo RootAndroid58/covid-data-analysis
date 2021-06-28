@@ -39,9 +39,9 @@ class Gov_Colombia extends Command
     public function handle()
     {
         $start = microtime(true);
-        $this->info("starting Gov_Colombia scraper\t\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        $this->info("starting Gov_Colombia scraper\t\t\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
         ScraperHelper::Gov_Colombia();
-        $this->info("completed Gov_Colombia scraper\t\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
+        $this->info("completed Gov_Colombia scraper\t\t\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }

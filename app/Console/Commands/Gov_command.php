@@ -41,7 +41,7 @@ class Gov_command extends Command
     public function handle()
     {
         $start = microtime(true);
-        $this->info("starting scraper:government scraper\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        $this->info("starting scraper:government scraper\t\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
         $this->call('covid:gov-austria');
         $this->call('covid:gov-canada');
         $this->call('covid:gov-colombia');
@@ -57,7 +57,7 @@ class Gov_command extends Command
         $this->call('covid:gov-switzerland');
         $this->call('covid:gov-uk');
         $this->call('covid:gov-vietnam');
-        $this->info("completed scraper:government scraper\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
+        $this->info("completed scraper:government scraper\t\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         return 0;
     }
 }

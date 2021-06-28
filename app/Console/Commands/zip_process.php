@@ -6,23 +6,22 @@ use App\Http\Helpers\cacheUpdater;
 use App\Http\Helpers\ScraperHelper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
-use Illuminated\Console\WithoutOverlapping;
 
-class GoogleMobility extends Command
+class zip_process extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'scraper:google';
+    protected $signature = 'scraper:zip_process';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Scrapes google mobility data';
+    protected $description = 'Processes downloaded zip files';
 
     /**
      * Create a new command instance.
@@ -42,13 +41,9 @@ class GoogleMobility extends Command
     public function handle()
     {
         $start = microtime(true);
-        $this->info('Starting Mibility Scraper');
-        $data = ScraperHelper::google_mobility();
-        // dd($data[127]);
+        $data = cacheUpdater::getCache('temp.google.files','scraper:zip');
         $count = count($data); //270
         $i = 1;
-        // skip 127 file
-        $this->info("%\tno\tpeak mem\tmemory   \tfile    \t\t\t\ttime \t\t\t-");
         foreach($data as $data_){
             if($data_ == '2020_US_Region_Mobility_Report.csv'){ //2020_US_Region_Mobility_Report.csv
                 $this->info(round(($i/$count) * 100 , 1) . "%" . "\t$i\t" . memory_get_peak_usage(). "\t" . memory_get_usage(). "\t".$data_. "\t".(microtime(true) - $start). "\t\tSkipped");
@@ -68,7 +63,6 @@ class GoogleMobility extends Command
         $time_elapsed_secs = microtime(true) - $start;
         $this->info("Time required to get raw dataset $time_required");
         $this->info("Total time requried to process $time_elapsed_secs");
-
         return 0;
     }
 }

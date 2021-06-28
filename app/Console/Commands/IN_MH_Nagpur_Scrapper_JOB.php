@@ -39,9 +39,9 @@ class IN_MH_Nagpur_Scrapper_JOB extends Command
     public function handle()
     {
         $start = microtime(true);
-        $this->info("starting IN_MH_Nagpur scraper\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
+        $this->info("starting IN_MH_Nagpur scraper\t\t\ttime \t\t".memory_get_peak_usage(). "\t" . memory_get_usage());
         $data = ScraperHelper::Scrap_IN_MH_Nagpur();
-        $this->info("completed IN_MH_Nagpur scraper\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
+        $this->info("completed IN_MH_Nagpur scraper\t\t\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
         // $this->info('IN-MH-Nagpur successfully scraped of '.$data['status']['rows'].' rows updated:'.$data['status']['updates'].' Added:'.$data['status']['new_data']." new data");
         return 0;
     }
