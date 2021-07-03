@@ -58,12 +58,14 @@ class ApiHelper
             }else{
                 $response = $data;
             }
+            if($search != null){
+                $response_key = $ApiHelper->searcharray($response,$search,'country');
+                if($response_key){
+                    $response = $data[$response_key];
+                }
+            }
         } catch (\Throwable $th) {
             throw $th;
-        }
-        if($search != null){
-            $response_key = $ApiHelper->searcharray($response,$search,'country');
-            $response = $data[$response_key];
         }
         return $ApiHelper->SuccessorFail(200,$response,true);
     }

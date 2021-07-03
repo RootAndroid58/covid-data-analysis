@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\ApiHelper;
 use App\Http\Helpers\CacheSorter;
 use App\Http\Helpers\cacheUpdater;
 use App\Http\Helpers\DataHelper;
@@ -30,8 +31,12 @@ class TestController extends Controller
     public function index()
     {
         // phpinfo();
-        Artisan::call('inspire');
-        return Artisan::output();
+        // Artisan::call('inspire');
+        // return Artisan::output();
+
+        $data = ApiHelper::apple_trends_region("prod.mobility.apple.country");
+        dd($data['meta']);
+        return view('test');
     }
 
     public function test2(Request $request)

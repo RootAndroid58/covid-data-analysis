@@ -648,6 +648,44 @@ class CacheSorter
         );
     }
 
+    static public function mobility_apple_trends($data)
+    {
+        $CacheSorter = new CacheSorter;
+        $sorted = array();
+        foreach($data as $pages){
+            foreach($pages as $item){
+                $sorted[] = $CacheSorter->apple_trends($item);
+            }
+        }
+
+        return array(
+            'pages' => array_chunk($sorted,5000)
+        );
+    }
+
+    static public function apple_trends($data)
+    {
+        $unset = array('geo_type','region','transportation_type','alternative_name','sub-region','country');
+        $timeline = $data;
+        foreach($unset as $item){
+            if(isset($timeline[$item])){
+                unset($timeline[$item] );
+            }
+        }
+        $array = array(
+            'geo_type' => $data['geo_type'],
+            'region'=> $data['region'],
+            'transportation_type'=> $data['transportation_type'],
+            'alternative_name'=> $data['alternative_name'],
+            'sub_region'=> $data['sub-region'],
+            'country' => $data['country'],
+            'timeline' => $timeline,
+        );
+        unset($timeline,$data);
+        return $array;
+
+    }
+
     static public function therapeutics($data)
     {
         $array = [];

@@ -470,7 +470,7 @@ class cacheUpdater
         $raw_appletrends = $cacheupdater->getCache($data[0]['cache'],'scraper:apple');
 
         $CacheSorter = new CacheSorter;
-        $appletrends = $CacheSorter->mobility($raw_appletrends);
+        $appletrends = $CacheSorter->mobility_apple_trends($raw_appletrends);
         unset($raw_appletrends);
         $country_apple_us = $cacheupdater->chunkSearch($appletrends['pages'],'region');
 
