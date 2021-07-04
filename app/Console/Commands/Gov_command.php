@@ -8,7 +8,7 @@ use Illuminated\Console\WithoutOverlapping;
 
 class Gov_command extends Command
 {
-    use WithoutOverlapping;
+    // use WithoutOverlapping;
     /**
      * The name and signature of the console command.
      *
