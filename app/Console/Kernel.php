@@ -30,11 +30,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('truncate:audit')->cron('*/20 * * * *');
-        $schedule->command('scraper:start')->cron('*/20 * * * *')->withoutOverlapping();
-        $schedule->command('scraper:covid')->cron('*/20 * * * *')->withoutOverlapping();
-        $schedule->command('scraper:government')->cron('*/20 * * * *')->withoutOverlapping();
-        $schedule->command('scraper:raps')->cron('*/20 * * * *')->withoutOverlapping();
+        $schedule->command('truncate:audit')->everyThirtyMinutes();
+        $schedule->command('scraper:start')->everyThirtyMinutes()->withoutOverlapping();
+        $schedule->command('scraper:covid')->everyThirtyMinutes()->withoutOverlapping();
+        $schedule->command('scraper:government')->everyThirtyMinutes()->withoutOverlapping();
+        $schedule->command('scraper:raps')->everyThirtyMinutes()->withoutOverlapping();
         $schedule->command('scraper:apple')->everySixHours()->withoutOverlapping();
         // $schedule->command('scraper:google')->everySixHours()->withoutOverlapping();
         // $schedule->command('scraper:big-data')->hourly()->withoutOverlapping();
