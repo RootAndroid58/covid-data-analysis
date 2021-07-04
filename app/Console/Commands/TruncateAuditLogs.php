@@ -40,9 +40,12 @@ class TruncateAuditLogs extends Command
      */
     public function handle()
     {
+        $start = microtime(true);
+        $AuditLog = AuditLog::where('created_at',"<",Carbon::now()->subDays(30))->count();
+        $ScheduleEvents = ScheduleEvents::where('created_at',"<",Carbon::now()->subDays(30))->count();
         AuditLog::where('created_at',"<",Carbon::now()->subDays(30))->delete();
         ScheduleEvents::where('created_at',"<",Carbon::now()->subDays(30))->delete();
-
+        $this->info("deleted $AuditLog audit log and $ScheduleEvents cron logs old logs in ". (microtime(true) - $start) . " Sec");
         return 0;
     }
 }
