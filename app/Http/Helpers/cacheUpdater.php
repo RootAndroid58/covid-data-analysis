@@ -24,7 +24,7 @@ class cacheUpdater
         $CacheSorter = new CacheSorter;
         $prod = $CacheSorter->historical($cases,$deaths,$recovered,'all');
         unset($cases,$deaths,$recovered);
-        Cache::tags(['prod','prod.historical'])->put($data[3]['prod'], $prod,now()->addHour());
+        Cache::tags(['prod','prod.historical'])->put($data[3]['prod'], $prod, now()->addDays(1));
         unset($prod);
     }
 
@@ -47,12 +47,12 @@ class cacheUpdater
         $sort = new CacheSorter;
         $response = $sort->worldometer($today,$yesterday,$yesterday2);
         unset($today,$yesterday,$yesterday2);
-        Cache::tags(['prod','prod.worldometer'])->put($data[3]['prod'], $response,now()->addHour());
+        Cache::tags(['prod','prod.worldometer'])->put($data[3]['prod'], $response, now()->addDays(1));
         $worldometer_continent = $sort->worldometer_continent($response,$response);
-        Cache::tags(['prod','prod.worldometer'])->put($data[4]['prod'], $worldometer_continent,now()->addHour());
+        Cache::tags(['prod','prod.worldometer'])->put($data[4]['prod'], $worldometer_continent, now()->addDays(1));
         unset($worldometer_continent);
         $worldometer_countries = $sort->worldometer_countries($response,$response);
-        Cache::tags(['prod','prod.worldometer'])->put($data[5]['prod'], $worldometer_countries,now()->addHour());
+        Cache::tags(['prod','prod.worldometer'])->put($data[5]['prod'], $worldometer_countries, now()->addDays(1));
         unset($response,$worldometer_countries);
 
         return 0;
@@ -71,7 +71,7 @@ class cacheUpdater
         $sort = new CacheSorter;
         $response = $sort->worldometer_states($today,$yesterday);
         unset($today,$yesterday);
-        Cache::tags(['prod','prod.worldometer','prod.worldometer.usa'])->put($data[2]['prod'], $response,now()->addHour());
+        Cache::tags(['prod','prod.worldometer','prod.worldometer.usa'])->put($data[2]['prod'], $response, now()->addDays(1));
         unset($response);
         return 0;
     }
@@ -102,12 +102,12 @@ class cacheUpdater
             if($data_['prod'] == 'prod.gov.austria.default'){
                 $prod = $CacheSorter->gov_sorter_Austria_hospital($temp);
                 $cacheKey = $CacheSorter->search_by_find($data,'type','hospital_beds');
-                Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[$cacheKey]['prod'],$prod, now()->addHour());
+                Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data[$cacheKey]['prod'],$prod,  now()->addDays(1));
                 unset($prod,$cacheKey);
             }
             $prod = $CacheSorter->gov_sorter_Austria($temp);
             unset($temp);
-            Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data_['prod'],$prod, now()->addHour());
+            Cache::tags(['prod','prod.gov','prod.gov.austria'])->put($data_['prod'],$prod,  now()->addDays(1));
             unset($prod);
         }
         return 0;
@@ -123,7 +123,7 @@ class cacheUpdater
         $canada = $CacheSorter->gov_sorter_canada($data);
         unset($data);
 
-        Cache::tags(['prod','prod.gov','prod.gov.canada'])->put('prod.gov.canada',$canada, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.canada'])->put('prod.gov.canada',$canada,  now()->addDays(1));
         unset($canada);
 
         return 0;
@@ -148,7 +148,7 @@ class cacheUpdater
             $temp =  $cacheupdater->getCache($data['cache'],'covid:gov-canada');
             $prod = $CacheSorter->gov_sorter_canada_timeline($temp,$data['type']);
             unset($temp);
-            Cache::tags(['prod','prod.gov','prod.gov.canada'])->put($data['prod'],$prod, now()->addHour());
+            Cache::tags(['prod','prod.gov','prod.gov.canada'])->put($data['prod'],$prod,  now()->addDays(1));
             unset($prod);
         }
 
@@ -168,7 +168,7 @@ class cacheUpdater
             $temp = $cacheupdater->getCache($data['cache'],'covid:gov-colombia');
             $prod =  $CacheSorter->gov_sorter_Colombia($temp);
             unset($temp);
-            Cache::tags(['prod','prod.gov','prod.gov.canada'])->put($data['prod'],$prod, now()->addHour());
+            Cache::tags(['prod','prod.gov','prod.gov.canada'])->put($data['prod'],$prod,  now()->addDays(1));
             unset($prod);
         }
 
@@ -190,7 +190,7 @@ class cacheUpdater
         unset($cases);
 
 
-        Cache::tags(['prod','prod.gov','prod.gov.colombia'])->put($data[0]['prod'],$bigdata, now()->addHours(6));
+        Cache::tags(['prod','prod.gov','prod.gov.colombia'])->put($data[0]['prod'],$bigdata, now()->addDays(1));
         unset($bigdata);
         return 0;
     }
@@ -207,7 +207,7 @@ class cacheUpdater
         $Germany_data = $CacheSorter->gov_sorter_germany($temp_data);
         unset($temp_data);
 
-        Cache::tags(['prod','prod.gov','prod.gov.canada'])->put($data[0]['prod'],$Germany_data, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.canada'])->put($data[0]['prod'],$Germany_data,  now()->addDays(1));
         unset($Germany_data);
 
         return 0;
@@ -225,7 +225,7 @@ class cacheUpdater
         $India_data = $CacheSorter->gov_sorter_india($temp_data);
         unset($temp_data);
 
-        Cache::tags(['prod','prod.gov','prod.gov.canada'])->put($data[0]['prod'],$India_data, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.canada'])->put($data[0]['prod'],$India_data,  now()->addDays(1));
         unset($India_data);
         return 0;
     }
@@ -244,7 +244,7 @@ class cacheUpdater
             $temp = $cacheupdater->getCache($data['cache'],'covid:gov-indo');
             $prod = $CacheSorter->gov_sorter_indo($temp);
             unset($temp);
-            Cache::tags(['prod','prod.gov','prod.gov.indonesia'])->put($data['prod'],$prod, now()->addHour());
+            Cache::tags(['prod','prod.gov','prod.gov.indonesia'])->put($data['prod'],$prod,  now()->addDays(1));
             unset($prod);
         }
         return 0;
@@ -264,7 +264,7 @@ class cacheUpdater
         $israel_data = $CacheSorter->gov_sorter_israel($temp_data);
         unset($temp_data);
 
-        Cache::tags(['prod','prod.gov','prod.gov.israel'])->put($data[0]['prod'],$israel_data, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.israel'])->put($data[0]['prod'],$israel_data,  now()->addDays(1));
         unset($israel_data);
 
         return 0;
@@ -281,7 +281,7 @@ class cacheUpdater
         $italy_data = $CacheSorter->gov_sorter_italy($temp_data);
         unset($temp_data);
 
-        Cache::tags(['prod','prod.gov','prod.gov.italy'])->put($data[0]['prod'],$italy_data, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.italy'])->put($data[0]['prod'],$italy_data,  now()->addDays(1));
         unset($italy_data);
         return 0;
     }
@@ -299,7 +299,7 @@ class cacheUpdater
         $newzealand_data = $CacheSorter->gov_sorter_NewZealand($temp_data);
         unset($temp_data);
 
-        Cache::tags(['prod','prod.gov','prod.gov.newzealand'])->put($data[0]['prod'],$newzealand_data, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.newzealand'])->put($data[0]['prod'],$newzealand_data,  now()->addDays(1));
         unset($newzealand_data);
         return 0;
     }
@@ -315,7 +315,7 @@ class cacheUpdater
         $nigeria_data = $CacheSorter->gov_sorter_nigeria($temp_data);
         unset($temp_data);
 
-        Cache::tags(['prod','prod.gov','prod.gov.nigeria'])->put($data[0]['prod'],$nigeria_data, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.nigeria'])->put($data[0]['prod'],$nigeria_data,  now()->addDays(1));
         unset($nigeria_data);
         return 0;
     }
@@ -356,7 +356,7 @@ class cacheUpdater
             $temp = $cacheupdater->getCache($data['cache'],'covid:gov-southafrica');
             $prod = $CacheSorter->gov_sorter_southafrica($temp);
             unset($temp);
-            Cache::tags(['prod','prod.gov','prod.gov.southafrica'])->put($data['prod'],$prod, now()->addHour());
+            Cache::tags(['prod','prod.gov','prod.gov.southafrica'])->put($data['prod'],$prod,  now()->addDays(1));
             unset($prod);
         }
 
@@ -375,7 +375,7 @@ class cacheUpdater
         $newzealand_data = $CacheSorter->gov_sorter_southkorea($temp_data);
         unset($temp_data);
 
-        Cache::tags(['prod','prod.gov','prod.gov.southkorea'])->put($data[0]['prod'],$newzealand_data, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.southkorea'])->put($data[0]['prod'],$newzealand_data,  now()->addDays(1));
         unset($newzealand_data);
         return 0;
     }
@@ -391,7 +391,7 @@ class cacheUpdater
         $switzerland = $CacheSorter->gov_sorter_switzerland($temp_data);
         unset($temp_data);
 
-        Cache::tags(['prod','prod.gov','prod.gov.switzerland'])->put($data[0]['prod'],$switzerland, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.switzerland'])->put($data[0]['prod'],$switzerland,  now()->addDays(1));
         unset($switzerland);
 
         return 0;
@@ -407,7 +407,7 @@ class cacheUpdater
         $CacheSorter = new CacheSorter;
         $uk_data = $CacheSorter->gov_sorter_uk($temp_data);
         unset($temp_data);
-        Cache::tags(['prod','prod.gov','prod.gov.UK'])->put($data[0]['prod'],$uk_data, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.UK'])->put($data[0]['prod'],$uk_data,  now()->addDays(1));
         unset($uk_data);
         return 0;
     }
@@ -422,7 +422,7 @@ class cacheUpdater
         $CacheSorter = new CacheSorter;
         $stats = $CacheSorter->gov_sorter_vietnam($temp_stats);
         unset($temp_stats);
-        Cache::tags(['prod','prod.gov','prod.gov.vietnam'])->put($data[0]['prod'],$stats, now()->addHour());
+        Cache::tags(['prod','prod.gov','prod.gov.vietnam'])->put($data[0]['prod'],$stats,  now()->addDays(1));
         unset($stats);
 
         return 0;
