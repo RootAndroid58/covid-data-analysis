@@ -216,10 +216,10 @@ class GovernmentApiController extends Controller
                 //     $cacheKey = 'prod.gov.colombia.bigdata';
                 //     break;
                 case $data[0]:
-                    $cacheKey = 'prod.gov.canada.vaccines_allocations';
+                    $cacheKey = 'prod.gov.colombia.vaccines_allocations';
                     break;
                 case $data[1]:
-                    $cacheKey = 'prod.gov.canada.pcr_tests_municipal';
+                    $cacheKey = 'prod.gov.colombia.pcr_tests_municipal';
                     break;
 
                 default:

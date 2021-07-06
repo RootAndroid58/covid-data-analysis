@@ -20,16 +20,9 @@ class HomeController extends Controller
 
     public function status()
     {
-        $data = ApiHelper::worldometer(null,null);
-        $data = $data['meta'];
-        for ($i=0; $i < count((array)$data); $i++) {
-            if( !isset($data[$i]['iso2'])){
-                unset($data[$i]);
-            }
-        }
-        $data = array_values((array)$data);
-        // dd($data);
-        return view('website.trends',compact('data'));
+        $country = ApiHelper::apple_mobility_country('prod.mobility.apple.country');
+
+        return view('website.trends', compact('country'));
     }
 
     public function country(Request $request,$search)
@@ -45,6 +38,11 @@ class HomeController extends Controller
         }
         return view('website.trends',compact('data'))->with(['error' => "cannot find ".$search,'search' => $search]);
 
+    }
+
+    public function worldometer(Request $request)
+    {
+        return view('website.worldometer');
     }
 
 }

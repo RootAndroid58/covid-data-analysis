@@ -3,6 +3,7 @@
 @section('content')
     <div class="site-section bg-primary-light" style="overflow: auto;">
         <div class="container" style="">
+            <h1 class="text-center">Apple Trends in {{ $search }}</h1>
             <div class="stats">
                 <div class="row justify-content-center mb-2">
                     <div class="col">

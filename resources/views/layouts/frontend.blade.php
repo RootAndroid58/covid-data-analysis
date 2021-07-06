@@ -67,11 +67,12 @@
                             <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
                                 <li class="{{ request()->is("/") ? "active" : "" }}"><a href="{{ route('homepage') }}#"
                                         class="nav-link">Home</a></li>
-                                {{-- <li class="has-children">
-                                    <a href="#" class="nav-link">Prevention</a>
+                                <li class="has-children">
+                                    <a href="#" class="nav-link">Analysis</a>
                                     <ul class="dropdown">
-                                        <li><a href="#" class="nav-link">Stay at home</a></li>
-                                        <li><a href="#" class="nav-link">Keep social distancing</a></li>
+                                        <li><a href="{{ route('apple_trends') }}" class="nav-link">Apple Trends</a></li>
+                                        <li><a href="{{ route('worldometer') }}" class="nav-link">Worldometer</a></li>
+                                        {{-- <li><a href="#" class="nav-link">Keep social distancing</a></li>
                                         <li><a href="#" class="nav-link">Wear facemasl</a></li>
                                         <li><a href="#" class="nav-link">Wash your hands</a></li>
                                         <li class="has-children">
@@ -81,12 +82,12 @@
                                                 <li><a href="#">Menu Two</a></li>
                                                 <li><a href="#">Menu Three</a></li>
                                             </ul>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </li>
-                                <li><a href="#" class="nav-link">Symptoms</a></li>
+                                {{-- <li><a href="#" class="nav-link">Symptoms</a></li>
                                 <li><a href="#" class="nav-link">About</a></li> --}}
-                                <li><a href="{{ route('apple_trends') }}" class="nav-link">Apple Trends</a></li>
+                                <li><a href="{{ route('apple_trends') }}" class="nav-link">Status</a></li>
                                 <li><a href="#" class="nav-link">Help Line</a></li>
                                 <li><a href="#" class="nav-link">Contact</a></li>
                                 @if (Route::has('login'))
@@ -106,7 +107,7 @@
 
                                 <li class="btn btn-sm btn-primary" style="padding: 0"><a href="{{ route('apidoc') }}"
                                         class="nav-link" style="color: white !important;    padding: 10px;">Api
-                                        documentation</a></li>
+                                        doc</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -212,6 +213,49 @@
                 }
             });
         }
+
+        async function drawworldometerMap(dataset,type,id) {
+        await loadGoogleCharts();
+
+        const data = new google.visualization.DataTable();
+        // console.log(dataset);
+        data.addColumn('string', 'Country');
+        data.addColumn('number', 'cases');
+        data.addColumn({type: 'string', role:'tooltip', p:{html:true} });
+
+        if(dataset){
+        dataset.forEach((val,key) => {
+
+            let cases = Number((val['timeline'][type]['cases']).replaceAll(',',''));
+            let deaths = Number((val['timeline'][type]['deaths']).replaceAll(',',''));
+            let recovered = Number((val['timeline'][type]['recovered']).replaceAll(',',''));
+            let active = Number((val['timeline'][type]['active']).replaceAll(',',''));
+            if( isNaN(active)){
+                active = 0
+            }
+            // console.log(active);
+            data.addRows([
+                [
+                    { v:val['iso2'] ,f:`${val['country']} [${val['iso2']}]`},
+                    active,
+                    `<b>${type.toUpperCase()}</b><br>Active: ${active}<br>Cases: ${cases} <br>Deaths: ${deaths}<br> Recovered: ${recovered}`
+                ]
+            ]);
+        })
+    }
+
+        var options = {
+            title: "Worldometer's World's Stats",
+            tooltip: {
+                isHtml: true
+            },
+            backgroundColor: "#f8f5fc",
+            colors: ['#6f42c1']
+        };
+        const chart = new google.visualization.GeoChart(document.getElementById(id));
+
+        chart.draw(data, options);
+      }
 
     </script>
 

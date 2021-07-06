@@ -252,7 +252,7 @@ class ScraperHelper
             Cache::tags(['temp','temp.hestorical'])->put($data['cache_key'],$response, now()->addMinutes(10));
             unset($response);
         }
-        $sorted_data = cacheUpdater::historical();
+        cacheUpdater::historical();
 
         return true;
 
@@ -624,7 +624,7 @@ class ScraperHelper
 
             $array =  $scraper->csvtoarray($scraper_data);
 
-            Cache::tags(['temp','temp.gov','temp.gov.Colombia','temp.bigdata'])->put($scraper_data['cache_key'],array_chunk($array,5000), now()->addHours(6));
+            Cache::tags(['temp','temp.gov','temp.gov.Colombia','temp.colombia.bigdata'])->put($scraper_data['cache_key'],array_chunk($array,5000), now()->addHours(6));
             unset($array);
 
 
@@ -1253,7 +1253,7 @@ class ScraperHelper
                     $array =  $scraper->csvtoarray($scraper_data,true);
                     $array = array_chunk($array,5000);
 
-                    Cache::tags(['temp','temp.mobility','temp.mobility.apple'])->put($scraper_data['cache_key'],$array, now()->addDays(2));
+                    Cache::tags(['temp','temp.raps'])->put($scraper_data['cache_key'],$array, now()->addDays(2));
                     unset($array);
                     $getData = false;
                 }
@@ -1387,7 +1387,7 @@ class ScraperHelper
                 $array =  $scraper->csvtoarray($data,true);
                 $array = array_chunk($array,5000);
 
-                Cache::tags(['temp','temp.NYT','temp.NYT.avarages'])->put($data['cache_key'],$array, now()->addDays(2));
+                Cache::tags(['temp','temp.NYT.avarages'])->put($data['cache_key'],$array, now()->addDays(2));
                 unset($array);
             }
         } catch (\Throwable $th) {

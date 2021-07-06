@@ -30,6 +30,7 @@ Route::get('login/{provider}/callback','SocialController@Callback');
 // Route::redirect('/', '/login');
 Route::get('/', 'HomeController@index')->name('homepage');
 Route::get('/apple', 'HomeController@status')->name('apple_trends');
+Route::get('/worldometer', 'HomeController@worldometer')->name('worldometer');
 Route::get('/apple/{search}', 'HomeController@country')->name('apple_trends.search');
 Route::get('/home', function () {
     if (session('status')) {

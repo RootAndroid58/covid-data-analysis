@@ -357,12 +357,13 @@
 </div> --}}
 @endsection
 
-{{-- @section('scripts')
-<script type="module">
+@section('scripts')
+<script>
 
-    Livewire.on('counter' , data => {
-        var countUp = new CountUp('.counter', data.active_cases);
-        countUp.start();
-    })
+
+    // Livewire.on('counter' , data => {
+    //     var countUp = new CountUp('.counter', data.active_cases);
+    //     countUp.start();
+    // })
 </script>
-@endsection --}}
+@endsection

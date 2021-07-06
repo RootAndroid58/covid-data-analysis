@@ -104,15 +104,15 @@ Route::group(['middleware' => 'json.response'],function () {
                 Route::get('avarage','NYTApiController@nyt_average')->name('avarage');
             });
 
+            // Gov api
+            Route::group(['as' => 'gov.'], function () {
+
+                Route::get('/gov', 'GovernmentApiController@get_Gov')->name('get');
+                Route::get('/gov/{country}', 'GovernmentApiController@gov')->name('byCountry');
+            });
 
         });
 
-        // Gov api
-        Route::group(['as' => 'gov.'], function () {
-
-            Route::get('/gov', 'GovernmentApiController@get_Gov')->name('get');
-            Route::get('/gov/{country}', 'GovernmentApiController@gov')->name('byCountry');
-        });
 
 
 

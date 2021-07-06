@@ -71,7 +71,7 @@ class cacheUpdater
         $sort = new CacheSorter;
         $response = $sort->worldometer_states($today,$yesterday);
         unset($today,$yesterday);
-        Cache::tags(['prod','prod.worldometer','prod.worldometer.usa'])->put($data[2]['prod'], $response, now()->addDays(1));
+        Cache::tags(['prod','prod.worldometer.usa'])->put($data[2]['prod'], $response, now()->addDays(1));
         unset($response);
         return 0;
     }
@@ -158,8 +158,8 @@ class cacheUpdater
     static public function gov_updater_colombia()
     {
         $data = array(
-            ['cache' => 'temp.gov_colombia_vaccines_allocations','prod' => 'prod.gov.canada.vaccines_allocations'],
-            ['cache' => 'temp.gov_colombia_pcr_tests_municipal','prod' => 'prod.gov.canada.pcr_tests_municipal'],
+            ['cache' => 'temp.gov_colombia_vaccines_allocations','prod' => 'prod.gov.colombia.vaccines_allocations'],
+            ['cache' => 'temp.gov_colombia_pcr_tests_municipal','prod' => 'prod.gov.colombia.pcr_tests_municipal'],
         );
         $cacheupdater = new cacheUpdater;
         $CacheSorter = new CacheSorter;
@@ -168,7 +168,7 @@ class cacheUpdater
             $temp = $cacheupdater->getCache($data['cache'],'covid:gov-colombia');
             $prod =  $CacheSorter->gov_sorter_Colombia($temp);
             unset($temp);
-            Cache::tags(['prod','prod.gov','prod.gov.canada'])->put($data['prod'],$prod,  now()->addDays(1));
+            Cache::tags(['prod','prod.gov','prod.gov.colombia'])->put($data['prod'],$prod,  now()->addDays(1));
             unset($prod);
         }
 
@@ -190,7 +190,7 @@ class cacheUpdater
         unset($cases);
 
 
-        Cache::tags(['prod','prod.gov','prod.gov.colombia'])->put($data[0]['prod'],$bigdata, now()->addDays(1));
+        Cache::tags(['prod','prod.gov','prod.gov.colombia','prod.gov.colombia.bigdata'])->put($data[0]['prod'],$bigdata, now()->addDays(1));
         unset($bigdata);
         return 0;
     }
@@ -207,7 +207,7 @@ class cacheUpdater
         $Germany_data = $CacheSorter->gov_sorter_germany($temp_data);
         unset($temp_data);
 
-        Cache::tags(['prod','prod.gov','prod.gov.canada'])->put($data[0]['prod'],$Germany_data,  now()->addDays(1));
+        Cache::tags(['prod','prod.gov','prod.gov.germany'])->put($data[0]['prod'],$Germany_data,  now()->addDays(1));
         unset($Germany_data);
 
         return 0;
@@ -225,7 +225,7 @@ class cacheUpdater
         $India_data = $CacheSorter->gov_sorter_india($temp_data);
         unset($temp_data);
 
-        Cache::tags(['prod','prod.gov','prod.gov.canada'])->put($data[0]['prod'],$India_data,  now()->addDays(1));
+        Cache::tags(['prod','prod.gov','prod.gov.india'])->put($data[0]['prod'],$India_data,  now()->addDays(1));
         unset($India_data);
         return 0;
     }
@@ -445,6 +445,7 @@ class cacheUpdater
         unset($raw_apple);
         Cache::tags(['prod','prod.mobility','prod.mobility.apple'])->put($data[0]['prod'],$apple, now()->addDays(1));
         $country_apple = $cacheupdater->chunkSearch($apple['pages'],'country');
+        unset($apple);
         Cache::tags(['prod','prod.mobility','prod.mobility.apple'])->put($data[2]['prod'],$country_apple, now()->addDays(1));
         unset($country_apple);
 
@@ -453,6 +454,7 @@ class cacheUpdater
         unset($raw_apple_us);
         Cache::tags(['prod','prod.mobility','prod.mobility.apple'])->put($data[1]['prod'],$apple_us, now()->addDays(1));
         $country_apple_us = $cacheupdater->chunkSearch($apple_us['pages'],'state');
+        unset($apple_us);
         Cache::tags(['prod','prod.mobility','prod.mobility.apple'])->put($data[3]['prod'],$country_apple_us, now()->addDays(1));
         unset($country_apple_us);
 
@@ -568,7 +570,7 @@ class cacheUpdater
                 unset($state);
 
             }
-            Cache::tags(['prod','prod.NYT','prod.NYT.avarage'])->put($data['prod'],$prod, now()->addDays(1));
+            Cache::tags(['prod','prod.NYT.avarage'])->put($data['prod'],$prod, now()->addDays(1));
         }
         return 0;
     }

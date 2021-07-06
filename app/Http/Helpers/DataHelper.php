@@ -274,4 +274,143 @@ class DataHelper
     );
 
     public $austria_version = 'V 2.4.0.0';
+
+    public $cacheKeys = array(
+        array('title' => 'worldometers','temp_tags' => 'temp.worldometers','prod_tags' => 'prod.worldometer', 'keys' =>
+            array('name' => 'worldometers_today', 'temp' => 'temp.worldometers.today' , 'prod' => 'worldometer'),
+            array('name' => 'worldometers_yesterday', 'temp' => 'temp.worldometers.yesterday' , 'prod' => 'worldometer'),
+            array('name' => 'worldometers_yesterday2', 'temp' => 'temp.worldometers.yesterday2' , 'prod' => 'worldometer'),
+        ),
+        array('title' => 'worldometers_info','temp_tags' => null,'prod_tags' => 'prod.worldometer', 'keys' =>
+            array('name' => 'worldometers_continents', 'temp' => null , 'prod' => 'worldometer.continents'),
+            array('name' => 'worldometers_countries', 'temp' => null , 'prod' => 'worldometer.countries'),
+        ),
+        array('title' => 'worldometers_us','temp_tags' => 'temp.worldometers','prod_tags' => 'prod.worldometer.usa', 'keys' =>
+            array('name' => 'worldometers_today', 'temp' => 'temp.worldometers.states.today' , 'prod' => 'worldometer.usa'),
+            array('name' => 'worldometers_yesterday', 'temp' => 'temp.worldometers.states.yesterday' , 'prod' => 'worldometer.usa'),
+        ),
+        array('title' => 'historical','temp_tags' => 'temp.hestorical','prod_tags' => 'prod.historical', 'keys' =>
+            array('name' => 'hestorical_casesResponse', 'temp' => 'casesResponse_temp' , 'prod' => 'historical_all'),
+            array('name' => 'hestorical_deathsResponse', 'temp' => 'deathsResponse_temp' , 'prod' => 'historical_all'),
+            array('name' => 'hestorical_recoveredResponse', 'temp' => 'recoveredResponse_temp' , 'prod' => 'historical_all'),
+        ),
+        array('title' => 'Gov_Austria','temp_tags' => 'temp.gov.Austria','prod_tags' => 'prod.gov.austria', 'keys' =>
+            array('name' => 'Austria_default', 'temp' => 'temp.gov_austria_default' , 'prod' => 'prod.gov.austria.default'),
+            array('name' => 'Austria_historical', 'temp' => 'temp.gov_austria_historical' , 'prod' => 'prod.gov.austria.historical'),
+            array('name' => 'Austria_historical_cases_ems', 'temp' => 'temp.gov_austria_historical_cases_ems' , 'prod' => 'prod.gov.austria.historical_cases_ems'),
+            array('name' => 'Austria_vaccination', 'temp' => 'temp.gov_austria_vaccination' , 'prod' => 'prod.gov.austria.vaccination'),
+            array('name' => 'Austria_byage', 'temp' => 'temp.gov_austria_by_age_grps' , 'prod' => 'prod.gov.austria.byage'),
+            array('name' => 'Austria_bydistrict', 'temp' => 'temp.gov_austria_by_district' , 'prod' => 'prod.gov.austria.bydistrict'),
+            array('name' => 'Austria_timeline_bbg', 'temp' => 'temp.gov_austria_timeline_bbg' , 'prod' => 'prod.gov.austria.timeline_bbg'),
+            array('name' => 'Austria_timeline', 'temp' => 'temp.gov_austria_timeline' , 'prod' => 'prod.gov.austria.timeline'),
+            array('name' => 'Austria_hospital', 'temp' => 'temp.gov_austria_hospital' , 'prod' => 'prod.gov.austria.hospital'),
+            array('name' => 'Austria_timeline_cases_federal_states', 'temp' => 'temp.gov_austria_timeline_faelle_bundeslaender' , 'prod' => 'prod.gov.austria.timeline_cases_federal_states'),
+            array('name' => 'Austria_hospital_beds', 'temp' => null , 'prod' => 'prod.gov.austria.hospital_beds'),
+        ),
+        array('title' => 'Gov_Canada','temp_tags' => 'temp.gov.Canada','prod_tags' => 'prod.gov.canada', 'keys' =>
+            array('name' => 'canada', 'temp' => 'temp.gov_canada' , 'prod' => 'prod.gov.canada'),
+            array('name' => 'canada_timeline_active', 'temp' => 'temp.gov_canada_timeline_active' , 'prod' => 'prod.gov.canada.timeline_active'),
+            array('name' => 'canada_timeline_cases', 'temp' => 'temp.gov_canada_timeline_cases' , 'prod' => 'prod.gov.canada.timeline_cases'),
+            array('name' => 'canada_timeline_deaths', 'temp' => 'temp.gov_canada_timeline_deaths' , 'prod' => 'prod.gov.canada.timeline_deaths'),
+            array('name' => 'canada_timeline_recovered', 'temp' => 'temp.gov_canada_timeline_recovered' , 'prod' => 'prod.gov.canada.timeline_recovered'),
+            array('name' => 'canada_timeline_testing', 'temp' => 'temp.gov_canada_timeline_testing' , 'prod' => 'prod.gov.canada.timeline_testing'),
+            array('name' => 'canada_timeline_vaccine_administration', 'temp' => 'temp.gov_canada_timeline_vaccine_administration' , 'prod' => 'prod.gov.canada.timeline_vaccine_administration'),
+            array('name' => 'canada_vaccine_completion', 'temp' => 'temp.gov_canada_timeline_vaccine_completion' , 'prod' => 'prod.gov.canada.vaccine_completion'),
+            array('name' => 'canada_vaccine_distribution', 'temp' => 'temp.gov_canada_timeline_vaccine_distribution' , 'prod' => 'prod.gov.canada.vaccine_distribution'),
+        ),
+        array('title' => 'Gov_Colombia','temp_tags' => 'temp.gov.Colombia','prod_tags' => 'prod.gov.colombia', 'keys' =>
+            array('name' => 'colombia_vaccines', 'temp' => 'temp.gov_colombia_vaccines_allocations' , 'prod' => 'prod.gov.colombia.vaccines_allocations'),
+            array('name' => 'colombia_pcr_tests', 'temp' => 'temp.gov_colombia_pcr_tests_municipal' , 'prod' => 'prod.gov.colombia.pcr_tests_municipal'),
+        ),
+        array('title' => 'Gov_Colombia_bigdata','temp_tags' => 'temp.colombia.bigdata','prod_tags' => 'prod.gov.colombia.bigdata', 'disabled' => true, 'keys' =>
+            array('name' => 'colombia_bigdata', 'temp' => 'temp.gov_colombia_bigdata' , 'prod' => 'prod.gov.colombia.bigdata'),
+        ),
+        array('title' => 'Gov_Germany','temp_tags' => 'temp.gov.germany','prod_tags' => 'prod.gov.germany', 'keys' =>
+            array('name' => 'Germany', 'temp' => 'temp.gov_germany' , 'prod' => 'prod.gov.germany'),
+        ),
+        array('title' => 'Gov_India','temp_tags' => 'temp.gov.germany','prod_tags' => 'prod.gov.india', 'keys' =>
+            array('name' => 'India', 'temp' => 'temp.gov_india' , 'prod' => 'prod.gov.india'),
+        ),
+        array('title' => 'Gov_Israel','temp_tags' => 'temp.gov.israel','prod_tags' => 'prod.gov.israel', 'keys' =>
+            array('name' => 'Israel', 'temp' => 'temp.gov_israel' , 'prod' => 'prod.gov.israel_data'),
+        ),
+        array('title' => 'Gov_Indonesia','temp_tags' => 'temp.gov.israel','prod_tags' => 'prod.gov.indonesia', 'keys' =>
+            array('name' => 'Indonesia_data', 'temp' => 'temp.gov_indonesia.data' , 'prod' => 'prod.gov.indonesia.data'),
+            array('name' => 'Indonesia_update', 'temp' => 'temp.gov_indonesia.update' , 'prod' => 'prod.gov.indonesia.update'),
+            array('name' => 'Indonesia_prev', 'temp' => 'temp.gov_indonesia.prev' , 'prod' => 'prod.gov.indonesia.prev'),
+        ),
+        array('title' => 'Gov_Italy','temp_tags' => 'temp.gov.Italy','prod_tags' => 'prod.gov.italy', 'keys' =>
+            array('name' => 'Italy', 'temp' => 'temp.gov_italy' , 'prod' => 'prod.gov.italy'),
+        ),
+        array('title' => 'Gov_NewZealand','temp_tags' => 'temp.gov.newzealand','prod_tags' => 'prod.gov.newzealand', 'keys' =>
+            array('name' => 'Italy', 'temp' => 'temp.gov_newzealand' , 'prod' => 'prod.gov.newzealand'),
+        ),
+        array('title' => 'Gov_Nigeria','temp_tags' => 'temp.gov.nigeria','prod_tags' => 'prod.gov.nigeria', 'keys' =>
+            array('name' => 'Nigeria', 'temp' => 'temp.gov_nigeria' , 'prod' => 'prod.gov.nigeria'),
+        ),
+        array('title' => 'Gov_SouthAfrica','temp_tags' => 'temp.gov.south_africa','prod_tags' => 'prod.gov.southafrica', 'keys' =>
+            array('name' => 'southafrica_confirmed', 'temp' => 'temp.gov_south_africa_confirmed' , 'prod' => 'prod.gov.southafrica.confirmed'),
+            array('name' => 'southafrica_deaths', 'temp' => 'temp.gov_south_africa_deaths' , 'prod' => 'prod.gov.southafrica.deaths'),
+            array('name' => 'southafrica_recovered', 'temp' => 'temp.gov_south_africa_recovered' , 'prod' => 'prod.gov.southafrica.recovered'),
+            array('name' => 'southafrica_testing', 'temp' => 'temp.gov_south_africa_testing' , 'prod' => 'prod.gov.southafrica.testing'),
+            array('name' => 'southafrica_vaccination', 'temp' => 'temp.gov_south_africa_vaccination' , 'prod' => 'prod.gov.southafrica.vaccination'),
+            array('name' => 'southafrica_fullforms', 'temp' => null , 'prod' => 'prod.gov.southafrica.fullforms'),
+        ),
+        array('title' => 'Gov_SouthKorea','temp_tags' => 'temp.gov.south_korea','prod_tags' => 'prod.gov.southkorea', 'keys' =>
+            array('name' => 'SouthKorea', 'temp' => 'temp.gov_south_korea' , 'prod' => 'prod.gov.southkorea'),
+        ),
+        array('title' => 'Gov_Switzerland','temp_tags' => 'temp.gov.switzerland','prod_tags' => 'prod.gov.switzerland', 'keys' =>
+            array('name' => 'Switzerland', 'temp' => 'temp.gov_switzerland' , 'prod' => 'prod.gov.switzerland'),
+        ),
+        array('title' => 'Gov_UK','temp_tags' => 'temp.gov.UK','prod_tags' => 'prod.gov.UK', 'keys' =>
+            array('name' => 'UK', 'temp' => 'temp.gov_UK' , 'prod' => 'prod.gov.UK'),
+        ),
+        array('title' => 'Gov_Vietnam','temp_tags' => 'temp.gov.vietnam','prod_tags' => 'prod.gov.vietnam', 'keys' =>
+            array('name' => 'Vietnam', 'temp' => 'temp.gov_vietnam' , 'prod' => 'prod.gov.vietnam.stats'),
+        ),
+        array('title' => 'apple_mobility','temp_tags' => 'temp.mobility.apple','prod_tags' => 'prod.mobility.apple', 'keys' =>
+            array('name' => 'apple_mobility', 'temp' => 'temp.apple_mobility' , 'prod' => 'prod.mobility.apple'),
+            array('name' => 'apple_mobility_US', 'temp' => 'temp.apple_mobility_us' , 'prod' => 'prod.mobility.apple_us'),
+            array('name' => 'apple_mobility_country', 'temp' => null , 'prod' => 'prod.mobility.apple.country'),
+            array('name' => 'apple_mobility_US_states', 'temp' => null , 'prod' => 'prod.mobility.apple_us.states'),
+        ),
+        array('title' => 'apple_mobility_trends','temp_tags' => 'temp.mobility.apple','prod_tags' => 'prod.mobility.apple', 'keys' =>
+            array('name' => 'apple_mobility_trends', 'temp' => 'temp.apple_mobility_trends' , 'prod' => 'prod.mobility.appletrends'),
+            array('name' => 'apple_mobility_trends_regions', 'temp' => null , 'prod' => 'prod.mobility.appletrends.regions'),
+        ),
+        array('title' => 'TherapeuticsApi','temp_tags' => 'temp.raps','prod_tags' => 'prod.raps', 'keys' =>
+            array('name' => 'Therapeutics', 'temp' => 'temp.therapeutics' , 'prod' => 'prod.therapeutics'),
+        ),
+        array('title' => 'VaccineCoverageData','temp_tags' => 'temp.vaccine','prod_tags' => 'prod.vaccine', 'keys' =>
+            array('name' => 'vaccine', 'temp' => 'temp.VaccineCoverage' , 'prod' => 'prod.vaccine'),
+            array('name' => 'vaccine_location', 'temp' => null , 'prod' => 'prod.vaccine.location'),
+        ),
+        array('title' => 'NYT','temp_tags' => 'temp.NYT','prod_tags' => 'prod.NYT', 'keys' =>
+            array('name' => 'NYT_us_counties_recent', 'temp' => 'temp.NYT.us-counties-recent' , 'prod' => 'prod.NYT.us-countries-recent'),
+            array('name' => 'NYT_us_counties', 'temp' => 'temp.NYT.us-counties' , 'prod' => 'prod.NYT.us-countries'),
+            array('name' => 'NYT_us_states', 'temp' => 'temp.NYT.us-states' , 'prod' => 'prod.NYT.us-states'),
+            array('name' => 'NYT_us', 'temp' => 'temp.NYT.us' , 'prod' => 'prod.NYT.us'),
+            array('name' => 'NYT_us_counties_recent', 'temp' => null , 'prod' => 'prod.NYT.us-countries-recent.states'),
+            array('name' => 'NYT_us_counties', 'temp' => null , 'prod' => 'prod.NYT.us-countries.states'),
+            array('name' => 'NYT_us_states', 'temp' => null , 'prod' => 'prod.NYT.us-states.states'),
+        ),
+        array('title' => 'NYT_1','temp_tags' => 'temp.NYT.avarages','prod_tags' => 'prod.NYT.avarage', 'keys' =>
+            array('name' => 'NYT_averages_us_counties_recent', 'temp' => 'temp.NYT.rolling-averages.us-counties-recent' , 'prod' => 'prod.NYT.avarage.us-countries-recent'),
+            array('name' => 'NYT_averages_us_counties', 'temp' => 'temp.NYT.rolling-averages.us-states' , 'prod' => 'prod.NYT.avarage.us-states'),
+            array('name' => 'NYT_averages_us_states', 'temp' => 'temp.NYT.rolling-averages.us','prod' => 'prod.NYT.avarage.us'),
+            array('name' => 'NYT_averages_us_counties_recent_States', 'temp' => null , 'prod' => 'prod.NYT.avarage.us-countries-recent.states'),
+            array('name' => 'NYT_averages_us_counties_states', 'temp' => null , 'prod' => 'prod.NYT.avarage.us-states.states'),
+        ),
+        array('title' => 'NYT_BIG','temp_tags' => 'temp.NYT.avarages','prod_tags' => 'prod.NYT.avarage', 'disabled' => true , 'keys' =>
+            array('name' => 'NYT_averages_us_counties_recent', 'temp' => 'temp.NYT.rolling-averages.us-counties' , 'prod' => 'prod.NYT.avarage.us-countries' , 'note' => 'Add the counter at end of prod key using NYT_averages_us_counties_recent_counter'),
+            array('name' => 'NYT_averages_us_counties_recent_counter', 'temp' => null , 'prod' => 'prod.NYT.avarage.us-countries.count'),
+            array('name' => 'NYT_averages_us_counties_recent_total', 'temp' => null , 'prod' => 'prod.NYT.avarage.us-countries.total'),
+        ),
+        array('title' => 'google_mobility','temp_tags' => 'temp.NYT.avarages','prod_tags' => 'prod.NYT.avarage', 'disabled' => true , 'keys' =>
+            array('name' => 'temp.google.files', 'temp' => 'temp.google.files' , 'prod' => null),
+            array('name' => 'temp.google.files', 'temp' => 'temp.google.cache' , 'prod' => null,'note' => 'multiple cache keys in temp cache key','type' => 'each_temp'),
+        ),
+    );
 }
+
+// array('name' => '', 'temp' => '' , 'prod' => ''),
