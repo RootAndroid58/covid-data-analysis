@@ -37,6 +37,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('scraper:raps')->hourly()->withoutOverlapping();
         $schedule->command('scraper:apple')->hourly()->withoutOverlapping();
         $schedule->command('scraper:nyt')->hourly()->withoutOverlapping();
+        $schedule->command('scraper:vaccine')->hourly()->withoutOverlapping();
         $schedule->command('scraper:status')->hourly()->withoutOverlapping();
         // $schedule->command('scraper:google')->everySixHours()->withoutOverlapping();
         // $schedule->command('scraper:big-data')->hourly()->withoutOverlapping();
