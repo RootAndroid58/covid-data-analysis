@@ -35,7 +35,7 @@ class TestController extends Controller
         // return Artisan::output();
 
         $data = ApiHelper::apple_trends_region("prod.mobility.apple.country");
-        dd($data['meta']);
+        // dd($data['meta']);
         return view('test');
     }
 

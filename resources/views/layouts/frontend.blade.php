@@ -87,7 +87,7 @@
                                 </li>
                                 {{-- <li><a href="#" class="nav-link">Symptoms</a></li>
                                 <li><a href="#" class="nav-link">About</a></li> --}}
-                                <li><a href="{{ route('apple_trends') }}" class="nav-link">Status</a></li>
+                                <li><a href="{{ route('status') }}#" class="nav-link">Status</a></li>
                                 <li><a href="#" class="nav-link">Help Line</a></li>
                                 <li><a href="#" class="nav-link">Contact</a></li>
                                 @if (Route::has('login'))
@@ -214,7 +214,7 @@
             });
         }
 
-        async function drawworldometerMap(dataset,type,id) {
+        async function drawworldometerMap(dataset,type,id,Showtype) {
         await loadGoogleCharts();
 
         const data = new google.visualization.DataTable();
@@ -233,11 +233,14 @@
             if( isNaN(active)){
                 active = 0
             }
-            // console.log(active);
+            let show = Number((val['timeline'][type][Showtype]).replaceAll(',',''));
+            if(isNaN(show)){
+                show = 0
+            }
             data.addRows([
                 [
                     { v:val['iso2'] ,f:`${val['country']} [${val['iso2']}]`},
-                    active,
+                    show,
                     `<b>${type.toUpperCase()}</b><br>Active: ${active}<br>Cases: ${cases} <br>Deaths: ${deaths}<br> Recovered: ${recovered}`
                 ]
             ]);
@@ -247,7 +250,8 @@
         var options = {
             title: "Worldometer's World's Stats",
             tooltip: {
-                isHtml: true
+                isHtml: true,
+                // trigger: 'selection'
             },
             backgroundColor: "#f8f5fc",
             colors: ['#6f42c1']

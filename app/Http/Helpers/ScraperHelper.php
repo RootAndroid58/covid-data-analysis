@@ -144,7 +144,7 @@ class ScraperHelper
                 unset($csvFile,$all_data);
 
                 $array = $scraper->csvtoarray($data);
-                Cache::tags(['temp','temp.worldometers'])->put($data['cache_key'], $array, now()->addMinutes(10));
+                Cache::tags(['temp','temp.worldometers'])->put($data['cache_key'], $array, now()->addDays(1));
                 unset($array);
 
             }
@@ -206,7 +206,7 @@ class ScraperHelper
                 unset($csvFile,$all_data);
 
                 $array = $scraper->csvtoarray($data);
-                Cache::tags(['temp','temp.worldometers'])->put($data['cache_key'], $array, now()->addMinutes(10));
+                Cache::tags(['temp','temp.worldometers'])->put($data['cache_key'], $array, now()->addDays(1));
                 unset($array);
 
             }
@@ -249,7 +249,7 @@ class ScraperHelper
 
             $response = $scraper->csvtoarray($data,true);
 
-            Cache::tags(['temp','temp.hestorical'])->put($data['cache_key'],$response, now()->addMinutes(10));
+            Cache::tags(['temp','temp.hestorical'])->put($data['cache_key'],$response, now()->addDays(1));
             unset($response);
         }
         cacheUpdater::historical();
@@ -400,7 +400,7 @@ class ScraperHelper
 
                     $array =  $scraper->csvtoarray($data);
                 }
-                Cache::tags(['temp','temp.gov','temp.gov.Austria'])->put($data['cache_key'],$array, now()->addMinutes(10));
+                Cache::tags(['temp','temp.gov','temp.gov.Austria'])->put($data['cache_key'],$array, now()->addDays(1));
             }
         } catch (\Throwable $th) {
             throw $th;
@@ -521,7 +521,7 @@ class ScraperHelper
                 unset($csvfile);
 
                 $array =  $scraper->csvtoarray($data);
-                Cache::tags(['temp','temp.gov','temp.gov.Canada'])->put($data['cache_key'],$array, now()->addMinutes(10));
+                Cache::tags(['temp','temp.gov','temp.gov.Canada'])->put($data['cache_key'],$array, now()->addDays(1));
                 unset($array);
             }
 
@@ -581,7 +581,7 @@ class ScraperHelper
                 unset($csvfile);
 
                 $array =  $scraper->csvtoarray($data);
-                Cache::tags(['temp','temp.gov','temp.gov.Colombia'])->put($data['cache_key'],$array, now()->addMinutes(10));
+                Cache::tags(['temp','temp.gov','temp.gov.Colombia'])->put($data['cache_key'],$array, now()->addDays(1));
                 unset($array);
 
             }
@@ -624,7 +624,7 @@ class ScraperHelper
 
             $array =  $scraper->csvtoarray($scraper_data);
 
-            Cache::tags(['temp','temp.gov','temp.gov.Colombia','temp.colombia.bigdata'])->put($scraper_data['cache_key'],array_chunk($array,5000), now()->addHours(6));
+            Cache::tags(['temp','temp.gov','temp.gov.Colombia','temp.colombia.bigdata'])->put($scraper_data['cache_key'],array_chunk($array,5000), now()->addDays(1));
             unset($array);
 
 
@@ -674,7 +674,7 @@ class ScraperHelper
 
             $array =  $scraper->csvtoarray($scraper_data);
 
-            Cache::tags(['temp','temp.gov','temp.gov.germany'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+            Cache::tags(['temp','temp.gov','temp.gov.germany'])->put($scraper_data['cache_key'],$array, now()->addDays(1));
             unset($array);
         } catch (\Throwable $th) {
             throw $th;
@@ -700,7 +700,7 @@ class ScraperHelper
             $data = json_decode($resp);
             unset($resp);
 
-            Cache::tags(['temp','temp.gov','temp.gov.india'])->put($scraper_data['cache_key'],$data, now()->addMinutes(10));
+            Cache::tags(['temp','temp.gov','temp.gov.india'])->put($scraper_data['cache_key'],$data, now()->addDays(1));
             unset($data);
         } catch (\Throwable $th) {
             throw $th;
@@ -728,7 +728,7 @@ class ScraperHelper
 
         $resp = json_decode($resp);
 
-        Cache::tags(['temp','temp.gov','temp.gov.israel'])->put($scraper_data['cache_key'],$resp, now()->addMinutes(10));
+        Cache::tags(['temp','temp.gov','temp.gov.israel'])->put($scraper_data['cache_key'],$resp, now()->addDays(1));
         unset($resp);
 
         $cacheUpdater = new cacheUpdater;
@@ -761,7 +761,7 @@ class ScraperHelper
                 $array = json_decode($resp);
                 unset($resp);
 
-                Cache::tags(['temp','temp.gov','temp.gov.indonesia'])->put($data['cache_key'],$array, now()->addMinutes(10));
+                Cache::tags(['temp','temp.gov','temp.gov.indonesia'])->put($data['cache_key'],$array, now()->addDays(1));
                 unset($array);
             }
         } catch (\Throwable $th) {
@@ -798,7 +798,7 @@ class ScraperHelper
             unset($csvfile);
 
             $array =  $scraper->csvtoarray($scraper_data);
-            Cache::tags(['temp','temp.gov','temp.gov.Italy'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+            Cache::tags(['temp','temp.gov','temp.gov.Italy'])->put($scraper_data['cache_key'],$array, now()->addDays(1));
             unset($array);
 
         } catch (\Throwable $th) {
@@ -847,7 +847,7 @@ class ScraperHelper
         unset($csvfile);
 
         $array =  $scraper->csvtoarray($scraper_data);
-        Cache::tags(['temp','temp.gov','temp.gov.newzealand'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+        Cache::tags(['temp','temp.gov','temp.gov.newzealand'])->put($scraper_data['cache_key'],$array, now()->addDays(1));
         unset($array);
         $cacheUpdater = new cacheUpdater;
         $cacheUpdater->gov_updater_NewZealand();
@@ -894,7 +894,7 @@ class ScraperHelper
         unset($csvfile,$header,$data);
 
         $array =  $scraper->csvtoarray($scraper_data);
-        Cache::tags(['temp','temp.gov','temp.gov.nigeria'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+        Cache::tags(['temp','temp.gov','temp.gov.nigeria'])->put($scraper_data['cache_key'],$array, now()->addDays(1));
         unset($array);
 
         $cacheUpdater = new cacheUpdater;
@@ -968,7 +968,7 @@ class ScraperHelper
                 unset($csvfile);
 
                 $array =  $scraper->csvtoarray($data);
-                Cache::tags(['temp','temp.gov','temp.gov.south_africa'])->put($data['cache_key'],$array, now()->addMinutes(10));
+                Cache::tags(['temp','temp.gov','temp.gov.south_africa'])->put($data['cache_key'],$array, now()->addDays(1));
                 unset($array);
             }
 
@@ -1023,7 +1023,7 @@ class ScraperHelper
         unset($csvfile);
 
         $array =  $scraper->csvtoarray($scraper_data);
-        Cache::tags(['temp','temp.gov','temp.gov.south_korea'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+        Cache::tags(['temp','temp.gov','temp.gov.south_korea'])->put($scraper_data['cache_key'],$array, now()->addDays(1));
         unset($array);
 
         $cacheUpdater = new cacheUpdater;
@@ -1056,7 +1056,7 @@ class ScraperHelper
             $array =  $scraper->csvtoarray($scraper_data);
 
             $array = array_chunk($array,5000);
-            Cache::tags(['temp','temp.gov','temp.gov.switzerland'])->put($scraper_data['cache_key'],$array, now()->addMinutes(10));
+            Cache::tags(['temp','temp.gov','temp.gov.switzerland'])->put($scraper_data['cache_key'],$array, now()->addDays(1));
             unset($array);
 
         } catch (\Throwable $th) {
@@ -1095,7 +1095,7 @@ class ScraperHelper
             }
             unset($response,$client);
 
-            Cache::tags(['temp','temp.gov','temp.gov.UK'])->put($scraper_data['cache_key'],$dataWithPages, now()->addMinutes(10));
+            Cache::tags(['temp','temp.gov','temp.gov.UK'])->put($scraper_data['cache_key'],$dataWithPages, now()->addDays(1));
             unset($dataWithPages);
 
         } catch (\Throwable $th) {
@@ -1141,7 +1141,7 @@ class ScraperHelper
             );
             unset($deaths,$treated,$recovered,$infected);
 
-            Cache::tags(['temp','temp.gov','temp.gov.vietnam'])->put($scraper_data['cache_key'],$data, now()->addMinutes(10));
+            Cache::tags(['temp','temp.gov','temp.gov.vietnam'])->put($scraper_data['cache_key'],$data, now()->addDays(1));
             unset($data);
 
         } catch (\Throwable $th) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Api\V1\AppleApiController;
 use Illuminate\Http\Request;
 use App\Http\Helpers\ApiHelper;
+use App\Http\Helpers\DataHelper;
 
 class HomeController extends Controller
 {
@@ -18,7 +19,7 @@ class HomeController extends Controller
         return view('website.index');
     }
 
-    public function status()
+    public function trends()
     {
         $country = ApiHelper::apple_mobility_country('prod.mobility.apple.country');
 
@@ -43,6 +44,11 @@ class HomeController extends Controller
     public function worldometer(Request $request)
     {
         return view('website.worldometer');
+    }
+
+    public function status(Request $request)
+    {
+        return view('website.status');
     }
 
 }

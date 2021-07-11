@@ -9,6 +9,7 @@ class GlobalWorldMap extends Component
 {
     public $data = array();
     public $date = 'today';
+    public $type = 'active';
 
     public function worldMap()
     {
@@ -21,11 +22,18 @@ class GlobalWorldMap extends Component
             }
         }
         $this->data = array_values((array)$this->data);
+        $this->emit('WorldMapVerSet',$this->data);
+        unset($this->data);
     }
 
     public function date($value)
     {
         if($value == 'today' || $value == 'yesterday' || $value == 'yesterday2') $this->date = $value;
+    }
+
+    public function type($type)
+    {
+        $this->type = $type;
     }
 
 
