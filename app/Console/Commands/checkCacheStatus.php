@@ -53,6 +53,7 @@ class checkCacheStatus extends Command
         }
         // dd($status);
         Cache::tags(['status'])->put('cache.status',$status);
+        unset($status);
         $this->info("completed status scraper\t". round(microtime(true) - $start,11). "\t" .memory_get_peak_usage(). "\t" . memory_get_usage());
 
         return 0;
