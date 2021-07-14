@@ -28948,7 +28948,7 @@ html {
           .site-mobile-menu .site-mobile-menu-header .site-mobile-menu-logo a:hover {
             text-decoration: none; }
     .site-mobile-menu .site-mobile-menu-body {
-      overflow-y: scroll;
+      overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       position: relative;
       padding: 0 20px 20px 20px;

@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{{ asset('css/css-bootstrap-datepicker.css')}}">
     <link rel="stylesheet" href="{{ asset('css/font-flaticon.css')}}">
     <link rel="stylesheet" href="{{ asset('css/css-aos.css')}}">
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
     {{-- <link rel="stylesheet" href="{{ asset('css/css-style.css')}}"> --}}
     <style>
         .logo a:hover:before {
@@ -36,6 +37,7 @@
     @livewireStyles
     @livewireScripts
     @yield('style')
+    @stack('style')
 </head>
 
 <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
@@ -72,6 +74,7 @@
                                     <ul class="dropdown">
                                         <li><a href="{{ route('apple_trends') }}" class="nav-link">Apple Trends</a></li>
                                         <li><a href="{{ route('worldometer') }}" class="nav-link">Worldometer</a></li>
+                                        <li><a href="{{ route('status') }}#" class="nav-link">Status</a></li>
                                         {{-- <li><a href="#" class="nav-link">Keep social distancing</a></li>
                                         <li><a href="#" class="nav-link">Wear facemasl</a></li>
                                         <li><a href="#" class="nav-link">Wash your hands</a></li>
@@ -87,15 +90,16 @@
                                 </li>
                                 {{-- <li><a href="#" class="nav-link">Symptoms</a></li>
                                 <li><a href="#" class="nav-link">About</a></li> --}}
-                                <li><a href="{{ route('status') }}#" class="nav-link">Status</a></li>
-                                <li><a href="#" class="nav-link">Help Line</a></li>
+                                <li><a href="{{ route('helpline') }}#" class="nav-link">Help Line</a></li>
                                 <li><a href="#" class="nav-link">Contact</a></li>
                                 @if (Route::has('login'))
                                 @auth
-                                <li><a href="{{ url('/home') }}" class="text-sm text-gray-700 underline">Dashboard</a>
+                                <li>
+                                    <a href="{{ url('/home') }}" class="text-sm text-gray-700 underline">Dashboard</a>
                                 </li>
                                 @else
-                                <li><a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
+                                <li>
+                                    <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
                                 </li>
 
                                 @if (Route::has('register'))
@@ -105,9 +109,11 @@
                                 @endauth
                                 @endif
 
-                                <li class="btn btn-sm btn-primary" style="padding: 0"><a href="{{ route('apidoc') }}"
-                                        class="nav-link" style="color: white !important;    padding: 10px;">Api
-                                        doc</a></li>
+                                <li class="btn btn-sm btn-primary" style="padding: 0">
+                                    <a href="{{ route('apidoc') }}"
+                                        class="nav-link" style="color: white !important;padding: 10px;">API documentation
+                                    </a>
+                                </li>
                             </ul>
                         </nav>
                     </div>
@@ -193,6 +199,10 @@
     <script src="{{ asset('js/jquery.sticky.js')}}"></script>
     <script src="{{ asset('js/isotope.pkgd.min.js')}}"></script>
     <script src="{{ asset('js/forntend-main.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
     <script type="text/javascript" src="{{ asset('js/loader.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/charts-loader.js') }}"></script>
     <script>
@@ -261,6 +271,13 @@
         chart.draw(data, options);
       }
 
+
+    </script>
+        @stack('scripts')
+    <script>
+    Livewire.on('varset' , (data,name) => {
+        window[name] = data;
+    })
     </script>
 
     @yield('scripts')

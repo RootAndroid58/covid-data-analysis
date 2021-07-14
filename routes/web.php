@@ -33,6 +33,7 @@ Route::get('/apple', 'HomeController@trends')->name('apple_trends');
 Route::get('/worldometer', 'HomeController@worldometer')->name('worldometer');
 Route::get('/apple/{search}', 'HomeController@country')->name('apple_trends.search');
 Route::get('status','HomeController@status')->name('status');
+Route::get('/helpline','HomeController@helpline')->name('helpline');
 Route::get('/home', function () {
     if (session('status')) {
         return redirect()->route('admin.home')->with('status', session('status'));

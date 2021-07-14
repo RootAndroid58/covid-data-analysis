@@ -27,6 +27,9 @@
                 {{-- {{ dd($data) }} --}}
 
             </div>
+            <div class="mt-3">
+                @livewire('frontend.appletrends-search')
+            </div>
         </div>
     </div>
 @endsection

@@ -11,7 +11,6 @@ class Statuspage extends Component
 
     public $data = array();
 
-
     public function init()
     {
         $this->data = Cache::get('cache.status');
@@ -19,6 +18,7 @@ class Statuspage extends Component
             Artisan::call('scraper:status');
             $this->data = Cache::get('cache.status');
         }
+
         // dd(Cache::get('temp.worldometers.today'));
     }
 

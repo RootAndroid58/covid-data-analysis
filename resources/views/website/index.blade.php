@@ -11,7 +11,7 @@
                 <p class="mb-5">
                     Prevention is better than cure!
                 </p>
-                <p class="mb-4"><a href="#" class="btn btn-primary" style="z-index: 10">How to prevent</a></p>
+                <p class="mb-4"><a href="#" class="btn btn-primary" style="z-index: 10;position: relative;">How to prevent</a></p>
             </div>
             <div class="col-lg-6">
                 <figure class="illustration">
@@ -185,11 +185,14 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-lg-6">
+                <img src="images/images-protect.png" alt="Image" class="img-fluid" style="">
+            </div>
             <div class="col-lg-6 ">
                 <div class="row mt-5 pt-5">
-                    <div class="col-lg-6 do ">
+                    <div class="col do ">
                         <h3>You should do</h3>
-                        <ul class="list-unstyled check">
+                        <ul class="list-unstyled check text-success">
                             <li>Stay at home</li>
                             <li>Wear mask</li>
                             <li>Use Sanitizer</li>
@@ -198,9 +201,9 @@
                             <li>Frequent self-isolation</li>
                         </ul>
                     </div>
-                    <div class="col-lg-6 dont ">
+                    <div class="col dont ">
                         <h3>You should avoid</h3>
-                        <ul class="list-unstyled cross">
+                        <ul class="list-unstyled cross text-danger">
                             <li>Avoid infected people</li>
                             <li>Avoid animals</li>
                             <li>Avoid handshaking</li>
@@ -210,9 +213,6 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <img src="images/images-protect.png" alt="Image" class="img-fluid">
             </div>
         </div>
     </div>
@@ -359,7 +359,6 @@
 
 @section('scripts')
 <script>
-
 
     // Livewire.on('counter' , data => {
     //     var countUp = new CountUp('.counter', data.active_cases);

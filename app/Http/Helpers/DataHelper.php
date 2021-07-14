@@ -361,7 +361,7 @@ class DataHelper
             array('name' => 'Italy', 'temp' => 'temp.gov_italy' , 'prod' => 'prod.gov.italy'),
             ),
         ),
-        array('title' => 'Government NewZealand','temp_tags' => 'temp.gov.newzealand','prod_tags' => 'prod.gov.newzealand', 'keys' => array(
+        array('title' => 'Government New Zealand','temp_tags' => 'temp.gov.newzealand','prod_tags' => 'prod.gov.newzealand', 'keys' => array(
             array('name' => 'Italy', 'temp' => 'temp.gov_newzealand' , 'prod' => 'prod.gov.newzealand'),
             ),
         ),
@@ -369,7 +369,7 @@ class DataHelper
             array('name' => 'Nigeria', 'temp' => 'temp.gov_nigeria' , 'prod' => 'prod.gov.nigeria'),
             ),
         ),
-        array('title' => 'Government SouthAfrica','temp_tags' => 'temp.gov.south_africa','prod_tags' => 'prod.gov.southafrica', 'keys' => array(
+        array('title' => 'Government South Africa','temp_tags' => 'temp.gov.south_africa','prod_tags' => 'prod.gov.southafrica', 'keys' => array(
             array('name' => 'southafrica_confirmed', 'temp' => 'temp.gov_south_africa_confirmed' , 'prod' => 'prod.gov.southafrica.confirmed'),
             array('name' => 'southafrica_deaths', 'temp' => 'temp.gov_south_africa_deaths' , 'prod' => 'prod.gov.southafrica.deaths'),
             array('name' => 'southafrica_recovered', 'temp' => 'temp.gov_south_africa_recovered' , 'prod' => 'prod.gov.southafrica.recovered'),
@@ -378,7 +378,7 @@ class DataHelper
             array('name' => 'southafrica_fullforms', 'temp' => null , 'prod' => 'prod.gov.southafrica.fullforms'),
             ),
         ),
-        array('title' => 'Government SouthKorea','temp_tags' => 'temp.gov.south_korea','prod_tags' => 'prod.gov.southkorea', 'keys' => array(
+        array('title' => 'Government South Korea','temp_tags' => 'temp.gov.south_korea','prod_tags' => 'prod.gov.southkorea', 'keys' => array(
             array('name' => 'SouthKorea', 'temp' => 'temp.gov_south_korea' , 'prod' => 'prod.gov.southkorea'),
             ),
         ),

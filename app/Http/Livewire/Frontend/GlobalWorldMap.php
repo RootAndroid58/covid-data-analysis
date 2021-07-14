@@ -10,6 +10,7 @@ class GlobalWorldMap extends Component
     public $data = array();
     public $date = 'today';
     public $type = 'active';
+    public $var_name = 'worldometerMap_data';
 
     public function worldMap()
     {
@@ -22,7 +23,7 @@ class GlobalWorldMap extends Component
             }
         }
         $this->data = array_values((array)$this->data);
-        $this->emit('WorldMapVerSet',$this->data);
+        $this->emit('varset',$this->data, $this->var_name);
         unset($this->data);
     }
 
@@ -40,7 +41,7 @@ class GlobalWorldMap extends Component
 
     public function render()
     {
-        $this->emit('WorldMap' , $this);
+        $this->emit('WorldMap' , $this,$this->var_name);
         return view('livewire.frontend.global-world-map');
     }
 }
