@@ -5,12 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700;900&amp;display=swap" rel="stylesheet">
-    <title>CRADA</title>
+    <title>CRADA | @yield('title','Covid Resources And Data Analysis')</title>
 
     <link rel="stylesheet" href="{{ asset('css/frontend.css') }}">
     <link rel="stylesheet" href="{{ asset('css/icomoon-style.css')}}">
-    {{-- <link rel="stylesheet" href="{{ asset('css/css-bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{ asset('css/css-jquery-ui.css')}}"> --}}
     <link rel="stylesheet" href="{{ asset('css/css-owl.carousel.min.css')}}">
     <link rel="stylesheet" href="{{ asset('css/css-owl.theme.default.min.css')}}">
     <link rel="stylesheet" href="{{ asset('css/css-owl.theme.default.min.css')}}">
@@ -19,6 +17,22 @@
     <link rel="stylesheet" href="{{ asset('css/font-flaticon.css')}}">
     <link rel="stylesheet" href="{{ asset('css/css-aos.css')}}">
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('image/apple-icon-57x57.png') }}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('image/apple-icon-60x60.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('image/apple-icon-72x72.png') }}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('image/apple-icon-76x76.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('image/apple-icon-114x114.png') }}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('image/apple-icon-120x120.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('image/apple-icon-144x144.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('image/apple-icon-152x152.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('image/apple-icon-180x180.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192"  href="{{ asset('image/android-icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('image/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('image/favicon-96x96.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('image/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('/manifest.json') }}">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{asset('image//ms-icon-144x144.png')}}">
     {{-- <link rel="stylesheet" href="{{ asset('css/css-style.css')}}"> --}}
     <style>
         .logo a:hover:before {
@@ -90,7 +104,7 @@
                                 </li>
                                 {{-- <li><a href="#" class="nav-link">Symptoms</a></li>
                                 <li><a href="#" class="nav-link">About</a></li> --}}
-                                <li><a href="{{ route('helpline') }}#" class="nav-link">Help Line</a></li>
+                                <li><a href="{{ route('construction') }}#" class="nav-link">Help Line</a></li>
                                 <li><a href="#" class="nav-link">Contact</a></li>
                                 @if (Route::has('login'))
                                 @auth
@@ -130,8 +144,8 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <h2 class="footer-heading mb-4">About</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi cumque tenetur inventore
-                            veniam, hic vel ipsa necessitatibus ducimus architecto fugiat!</p>
+                        <p>CRADA is an initiative for common people to provide them with various
+                            essential resources information in their city .</p>
                         <div class="my-5">
                             <a href="#" class="pl-0 pr-3"><span class="icon-facebook"></span></a>
                             <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
@@ -182,7 +196,8 @@
                                         document.write(new Date().getFullYear());
 
                                     </script>
-                                </small></p>
+                                </small>
+                            </p>
                         </div>
                     </div>
                 </div>

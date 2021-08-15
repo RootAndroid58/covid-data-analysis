@@ -151,7 +151,7 @@
                             </div>
                             <div class="body">
                                 <h3>Wash your hands</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, debitis!</p>
+                                <p>Handwashing is one of the best ways to protect yourself and your family from getting sick.</p>
                             </div>
                         </div>
                     </div>

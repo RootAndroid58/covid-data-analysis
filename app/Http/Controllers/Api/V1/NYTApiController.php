@@ -40,7 +40,9 @@ class NYTApiController extends Controller
         unset($type);
         $type = $request->input('type');
         $search = $request->input('state');
-        $county = $request->input('county');
+        if($search !== 'us-states'){
+            $county = $request->input('county');
+        }else $county = null;
 
         $cacheKeys = $this->cacheKeys[0][$type];
 

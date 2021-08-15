@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="site-section ">
-    <div class="table-responsive ml-4 mr-2 pl-2 pr-2 pt-3 pb-2 bg-white shadow">
+    {{-- <div class="table-responsive ml-4 mr-2 pl-2 pr-2 pt-3 pb-2 bg-white shadow">
         <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-Resource">
             <thead>
                 <tr>
@@ -80,12 +80,13 @@
                 </tr>
             </thead>
         </table>
-    </div>
+    </div> --}}
+    @livewire('frontend.helpline-world')
 </div>
 
 
 @endsection
-
+{{--
 @section('scripts')
 <script>
     $(function () {
@@ -176,4 +177,4 @@
       })
     });
     </script>
-@endsection
+@endsection --}}

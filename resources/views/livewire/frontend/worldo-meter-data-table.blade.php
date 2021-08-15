@@ -72,23 +72,14 @@
         var html = "";
         for (let i = 0; i < data.length; i++) {
             html += "<tr>"
-            // td = document.createElement('tr');
             for(let key in data[i]){
                 html += "<td>" +data[i][key] +  "</td>"
-                // td.appendChild( document.createElement('td') );
-                // td.cells[i].appendChild(document.createTextNode(data[i][key]));
             }
             html += "</tr>"
         }
         tbody.innerHTML = html;
 
-        // console.log(data[0]);
-
-        // $('#'.id).append(table);
-        table.classList.add('table');
-        table.classList.add('table-striped');
-        table.classList.add('table-bordered');
-        table.classList.add('table-hover');
+        table.classList.add('table','table-striped','table-bordered','table-hover');
 
         table.appendChild(tbody);
 

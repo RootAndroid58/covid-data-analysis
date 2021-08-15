@@ -497,12 +497,20 @@ class ApiHelper
             if($cacheKey != 'prod.NYT.avarage.us' && $cacheKey != 'prod.NYT.us' && $county !== null){
                 unset($filtered);
                 for ($i=0; $i < count($newData); $i++) {
-                    $filtered[] = $ApiHelper->searchMulti($newData[$i],'county',$county);
+                    if(isset($newData[$i][0]['county'])){
+                        $filtered[] = $ApiHelper->searchMulti($newData[$i],'county',$county);
+                    }else break;
                 }
-                $filtered = array_merge(...$filtered);
-                $newData = array_chunk($filtered,5000);
+                if(isset($filtered)){
+                    $filtered = array_merge(...$filtered);
+                    $newData = array_chunk($filtered,5000);
+                }
             }
-            $count = count($filtered);
+            if(isset($filtered)){
+                $count = count($filtered);
+            }else{
+                $count = count($newData);
+            }
             unset($filtered);
 
             $finilize = array(

@@ -1089,7 +1089,7 @@ paths:
           headers:
             Accept: application/json
       deprecated: false
-  /gov:
+  /covid-19/gov:
     get:
       tags:
       - Government
@@ -1097,7 +1097,7 @@ paths:
       description: >-
         Get a list of supported countries for government specific data
 
-      operationId: /gov
+      operationId: /covid-19/gov
       parameters:
       - name: Accept
         in: header
@@ -1134,7 +1134,7 @@ paths:
           headers:
             Accept: application/json
       deprecated: false
-  /gov/{government}:
+  /covid-19/gov/{government}:
     get:
       tags:
       - Government
@@ -1266,7 +1266,7 @@ paths:
         </table>
 
 
-      operationId: /gov/{government}
+      operationId: /covid-19/gov/{government}
       parameters:
       - name: Accept
         in: header
@@ -1303,6 +1303,597 @@ paths:
           headers:
             Accept: application/json
       deprecated: false
+
+  /covid-19/nyt/search/default:
+    get:
+      tags:
+      - NYT
+      summary: NYT Search default
+      description: >-
+        Get COVID-19 New York Times reported default data
+
+      operationId: /covid-19/nyt/search/default
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: type
+        in: query
+        required: true
+        schema:
+          type: string
+          example: recent ,countries ,us-states ,us
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/nyt'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /covid-19/nyt/search/avarage:
+    get:
+      tags:
+      - NYT
+      summary: NYT Search avarage
+      description: >-
+        Get COVID-19 New York Times reported avarage data
+
+      operationId: /covid-19/nyt/search/avarage
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: type
+        in: query
+        required: true
+        schema:
+          type: string
+          example: recent ,us-states ,us
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/nyt'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /covid-19/nyt/avarage:
+    get:
+      tags:
+      - NYT
+      summary: NYT avarage
+      description: >-
+        Get COVID-19 New York Times reported avarage data
+
+      operationId: /covid-19/nyt/avarage
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: type
+        in: query
+        required: true
+        schema:
+          type: string
+          example: recent ,us-states ,us
+      - name: state
+        in: query
+        required: true
+        description: required unless type is us
+        schema:
+          type: string
+      - name: county
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/nytavarage'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /covid-19/nyt/default:
+    get:
+      tags:
+      - NYT
+      summary: NYT default
+      description: >-
+        Get COVID-19 New York Times reported default data
+
+      operationId: /covid-19/nyt/default
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: type
+        in: query
+        required: true
+        schema:
+          type: string
+          example: recent ,countries ,us-states ,us
+      - name: state
+        in: query
+        required: true
+        description: required unless type is us
+        schema:
+          type: string
+      - name: county
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/nytavarage'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+
+  /covid-19/apple/country:
+    get:
+      tags:
+      - Apple
+      summary: Apple Country list
+      description: >-
+        Get COVID-19 Apple Mobility country list
+
+      operationId: /covid-19/apple/country
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/apple-country'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+
+  /covid-19/apple/country/{country}/{region?}:
+    get:
+      tags:
+      - Apple
+      summary: Apple Country Data
+      description: >-
+        Get COVID-19 Apple Mobility country list
+
+      operationId: /covid-19/apple/country/{country}/{region}
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: country
+        in: path
+        required: true
+        schema:
+          type: string
+          example: India , United Kingdom
+      - name: region
+        in: path
+        required: false
+        description: sub-region value ( try giving worng you will get list of all regions)
+        schema:
+          type: string
+
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/apple-country-data'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+
+  /covid-19/apple/us:
+    get:
+      tags:
+      - Apple
+      summary: Apple US list
+      description: >-
+        Get COVID-19 Apple Mobility US list
+
+      operationId: /covid-19/apple/us
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/apple-country'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  /covid-19/apple/us/{state}/{county_and_city?}/:
+    get:
+      tags:
+      - Apple
+      summary: Apple US data
+      description: >-
+        Get COVID-19 Apple Mobility US data
+
+      operationId: /covid-19/apple/us/{state}/{county_and_city?}/
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: state
+        in: path
+        required: true
+        schema:
+          type: string
+          example: Alabama, Texas, Washington
+      - name: county_and_city
+        in: path
+        required: false
+        description: county_and_city value ( try giving worng value to get list of all county_and_city)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/apple-us-data'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+
+  covid-19/vaccine/:
+    get:
+      tags:
+      - Vaccine
+      summary: Vaccine country list
+      description: >-
+        Get COVID-19 Vaccine avaiable countries list
+
+      operationId: /covid-19/vaccine/
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/Vaccine'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  covid-19/vaccine/{country}:
+    get:
+      tags:
+      - Vaccine
+      summary: Vaccine specific country
+      description: >-
+        Get COVID-19 Vaccine for specific country
+
+      operationId: /covid-19/vaccine/{country}
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      - name: country
+        in: path
+        required: true
+        schema:
+          type: string
+          example: Australia, France, Mexico, India
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/Vaccine_{country}'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+  covid-19/therapeutics:
+    get:
+      tags:
+      - Therapeutics
+      summary: Therapeutics info
+      description: >-
+        Get COVID-19 Therapeutics information
+
+      operationId: covid-19/therapeutics
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        style: simple
+        schema:
+          type: string
+          enum:
+          - application/json
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/Therapeutics'
+          headers:
+            Accept: application/json
+
+        '400':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-400'
+          headers:
+            Accept: application/json
+        '500':
+          description:
+          content:
+            application/json:
+               schema:
+                $ref: '#/components/schemas/error-500'
+          headers:
+            Accept: application/json
+      deprecated: false
+
+
+
+
 
 
 
@@ -1385,8 +1976,11 @@ tags:
     COVID-19 individual government reported data
 - name: Vaccine
   description: >-
+    This data is scrapped from  <a href="https://ourworldindata.org/" target="_blank"> ourworldindata </a>
 - name: Therapeutics
   description: >-
+    This data is taken from  <a href="https://www.raps.org/" target="_blank"> Regulatory Affairs Professionals Society (RAPS) </a>
+    you can get the data from <a href="https://www.raps.org/RAPS/media/news-images/data/{{date}}-tx-tracker-Craven.csv" target="_blank"> https://www.raps.org/RAPS/media/news-images/data/{{date}}-tx-tracker-Craven.csv </a> where {{date}} is valid date
 - name: models
   x-displayName: Models
   description: |-
@@ -2265,3 +2859,275 @@ components:
             supported:
               type: array
               example: [Austria , Canada,]
+
+    nyt-default:
+      description: ''
+      type: object
+      title: NYT Default
+      properties:
+        states/country:
+          type: array
+
+    nyt:
+      description: ''
+      type: object
+      title: NYT
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          $ref: '#/components/schemas/nyt-default'
+
+    nytavarage:
+      description: ''
+      type: object
+      title: NYT
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+            per_page:
+              type: integer
+            total_pages:
+              type: integer
+            pages:
+              type: array
+              items:
+                type: array
+
+    apple-country:
+      description: ''
+      type: object
+      title: NYT
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: array
+          example:
+          - list
+          - of
+          - countries
+          - or
+          - states
+    apple-country-data:
+      description: ''
+      type: object
+      title: NYT
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: object
+          properties:
+            total:
+              type: interger
+            per_page:
+              type: interger
+            total_pages:
+              type: interger
+            pages:
+              type: array
+              items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    country:
+                      type: string
+                    sub-region:
+                      type: string
+                    subregion_and_city:
+                      type: string
+                    geo_type:
+                      type: string
+                    date:
+                      type: string
+                    driving:
+                      type: number
+                    transit:
+                      type: number
+                    walking:
+                      type: number
+    apple-us-data:
+      description: ''
+      type: object
+      title: NYT
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: object
+          properties:
+            total:
+              type: interger
+            per_page:
+              type: interger
+            total_pages:
+              type: interger
+            pages:
+              type: array
+              items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    state:
+                      type: string
+                    county_and_city:
+                      type: string
+                    geo_type:
+                      type: string
+                    date:
+                      type: string
+                    driving:
+                      type: number
+                    transit:
+                      type: number
+                    walking:
+                      type: number
+    Vaccine:
+      description: ''
+      type: object
+      title: Vaccine
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: object
+          properties:
+            country:
+              type: array
+
+
+    Vaccine_{country}:
+      description: ''
+      type: object
+      title: Vaccine
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: object
+          properties:
+            total:
+              type: interger
+            per_page:
+              type: interger
+            total_pages:
+              type: interger
+            pages:
+              type: array
+              items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    location:
+                      type: string
+                    iso_code:
+                      type: string
+                    date:
+                      type: string
+                    total_vaccinations:
+                      type: number
+                    people_vaccinated:
+                      type: number
+                    people_fully_vaccinated:
+                      type: number
+                    total_boosters:
+                      type: number
+                    daily_vaccinations_raw:
+                      type: number
+                    daily_vaccinations:
+                      type: number
+                    total_vaccinations_per_hundred:
+                      type: number
+                    people_vaccinated_per_hundred:
+                      type: number
+                    people_fully_vaccinated_per_hundred:
+                      type: number
+                    total_boosters_per_hundred:
+                      type: number
+                    daily_vaccinations_per_million:
+                      type: number
+    Therapeutics:
+      description: ''
+      type: object
+      title: Therapeutics
+      properties:
+        status:
+          type: string
+        status_code:
+          type: integer
+        deprecated:
+          type: boolean
+          enum:
+          - false
+        meta:
+          type: array
+          items:
+            type: object
+            properties:
+              medication_class:
+                type: string
+              generic_name:
+                type: string
+              details:
+                type: string
+              Developer/Researcher:
+                type: string
+              Sponsor:
+                type: string
+              trial_phase:
+                type: string
+              last_update:
+                type: string
+
+
