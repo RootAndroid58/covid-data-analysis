@@ -27,7 +27,7 @@ info:
     Jump to <a href="#tag/COVID-19">Covid-19 Related API</a>
   version: '1.0'
 servers:
-- url: https://www.crada.ga/api/v1
+- url: https://www.crada.ga/api/v1/
 paths:
   /ping:
     get:
