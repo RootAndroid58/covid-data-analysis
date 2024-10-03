@@ -23,7 +23,7 @@
         "bootstrap": "^4.3.1",
         "countup.js": "^2.0.7",
         "jquery": "^3.6.0",
-        "jquery-ui": "^1.12.1",
+        "jquery-ui": "^1.14.0",
         "jquery-waypoints": "^2.0.3",
         "popper": "^1.0.1",
         "popper.js": "^1.16.1",
